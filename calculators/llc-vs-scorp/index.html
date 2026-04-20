@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLC vs S-Corp Tax Comparison Calculator 2026 | IndieCalc</title>
+<meta name="description" content="Free LLC vs S-Corp tax calculator for 2026. Compare sole proprietor self-employment tax vs S-Corp payroll tax savings. See your net annual savings and break-even income.">
+<link rel="canonical" href="https://indie-calc.com/calculators/llc-vs-scorp/">
+<meta property="og:title" content="LLC vs S-Corp Tax Comparison Calculator 2026 — IndieCalc">
+<meta property="og:description" content="Compare your total tax as a sole proprietor/LLC vs S-Corp. See payroll tax savings, QBI differences, and net annual savings after S-Corp costs.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://indie-calc.com/calculators/llc-vs-scorp/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LLC vs S-Corp Tax Comparison Calculator 2026 — IndieCalc">
+<meta name="twitter:description" content="Compare your total tax as a sole proprietor/LLC vs S-Corp. See payroll tax savings, QBI differences, and net annual savings.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --hint: #5e5e72;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --red: #dc3545;
+    --green: #28a745;
+    --orange: #e67e22;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *:focus { outline: none; }
+  *:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.6; }
+  h2, h3, h4, .subtitle { text-wrap: balance; }
+  p { text-wrap: pretty; }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .container { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  header .brand {
+    font-size: 20px; font-weight: 700; color: white; text-decoration: none;
+    padding: 6px 0; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header .brand span { color: var(--teal); }
+  header a.nav-link {
+    color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px;
+    padding: 12px 8px; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header a.nav-link:hover { color: white; }
+
+  main h1 { font-size: 28px; font-weight: 700; margin: 32px 0 8px; }
+  main h1 small { font-size: 16px; font-weight: 400; color: var(--medium); }
+  h2 { font-size: 22px; font-weight: 700; margin: 32px 0 8px; }
+  .subtitle { color: var(--medium); font-size: 15px; margin-bottom: 28px; }
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 9999;
+    background: var(--dark); color: white; padding: 12px 16px;
+    text-decoration: none; border-radius: 0 0 6px 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  /* Form */
+  .calc-form { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .form-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .form-group { flex: 1; min-width: 200px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--medium); margin-bottom: 4px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 6px;
+    font-size: 15px; font-family: var(--font); color: var(--dark);
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,106,90,0.1); }
+  .form-group .prefix { position: relative; }
+  .form-group .prefix::before { content: '$'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--light); font-size: 15px; }
+  .form-group .prefix input { padding-left: 24px; }
+  .form-group .field-help { font-size: 12px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
+
+  .info-tip { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 4px; cursor: help; }
+
+  /* Slider */
+  .salary-slider-group { margin-bottom: 16px; }
+  .salary-slider-group label { display: block; font-size: 13px; font-weight: 500; color: var(--medium); margin-bottom: 4px; }
+  .salary-slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+  .salary-slider-row input[type="range"] { flex: 1; accent-color: var(--teal); height: 6px; cursor: pointer; }
+  .salary-slider-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--hint); margin-bottom: 4px; }
+  .salary-value { font-size: 15px; font-weight: 600; color: var(--teal); min-width: 90px; text-align: right; }
+
+  /* Accordion for S-Corp costs */
+  .accordion-toggle { background: none; border: 1px solid var(--rule); border-radius: 6px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--teal); cursor: pointer; font-family: var(--font); width: 100%; text-align: left; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .accordion-toggle:hover { background: var(--teal-light); }
+  .accordion-toggle .arrow { transition: transform 0.2s; }
+  .accordion-toggle.open .arrow { transform: rotate(180deg); }
+  .accordion-body { display: none; border: 1px solid var(--rule); border-radius: 8px; padding: 20px; margin-bottom: 16px; background: var(--bg); }
+  .accordion-body.open { display: block; }
+  .accordion-body .form-group { margin-bottom: 12px; }
+  .accordion-body .form-group:last-child { margin-bottom: 0; }
+  .accordion-body .field-help { font-size: 12px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
+
+  /* Results */
+  .results { display: none; }
+  .results.visible { display: block; }
+
+  /* Hero savings number */
+  .hero-result { border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
+  .hero-result.positive { background: var(--teal); }
+  .hero-result.negative { background: var(--red); }
+  .hero-result .hero-value { font-size: 48px; font-weight: 700; letter-spacing: -1px; }
+  .hero-result .hero-label { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+  .hero-result .hero-sub { font-size: 13px; opacity: 0.6; margin-top: 8px; }
+
+  /* Recommendation box */
+  .recommendation-box { border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .recommendation-box h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .recommendation-box p { font-size: 14px; line-height: 1.7; }
+  .recommendation-box.stay-llc { background: #fff8f0; border: 1px solid #f0d8b8; color: #6b4a1a; }
+  .recommendation-box.moderate { background: #f0f8ff; border: 1px solid #b8d8f0; color: #1a4a6b; }
+  .recommendation-box.go-scorp { background: var(--teal-bg); border: 1px solid var(--teal); color: #1a4a3a; }
+
+  /* Comparison table */
+  .comparison-section { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; overflow-x: auto; }
+  .comparison-section h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 500px; }
+  .comparison-table th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; border-bottom: 1px solid var(--rule); }
+  .comparison-table th:not(:first-child) { text-align: right; }
+  .comparison-table td { padding: 10px 12px; border-bottom: 1px solid #f0f0f5; }
+  .comparison-table td:not(:first-child) { text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .comparison-table tr.total td { font-weight: 700; border-top: 2px solid var(--dark); border-bottom: none; padding-top: 12px; }
+  .comparison-table tr.savings td { color: var(--teal); font-weight: 700; }
+  .comparison-table .col-llc { min-width: 110px; }
+  .comparison-table .col-scorp { min-width: 110px; }
+  .comparison-table .col-diff { min-width: 90px; }
+  .comparison-table .highlight { color: var(--teal); }
+  .comparison-table .negative { color: var(--red); }
+
+  /* Summary grid */
+  .result-summary {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 24px; margin-bottom: 24px;
+  }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+  .summary-item { text-align: center; padding: 12px 8px; background: var(--bg); border-radius: 8px; }
+  .summary-item .value { font-size: 22px; font-weight: 700; color: var(--dark); }
+  .summary-item .label { font-size: 11px; color: var(--medium); margin-top: 2px; }
+  .summary-item.highlight .value { color: var(--teal); }
+
+  .methodology { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .methodology h2 { margin-top: 0; }
+  .methodology h3 { font-size: 16px; font-weight: 600; margin: 20px 0 8px; }
+  .methodology p, .methodology li { font-size: 13px; color: var(--medium); line-height: 1.7; }
+  .methodology ul, .methodology ol { padding-left: 20px; }
+  .methodology li { margin-bottom: 4px; }
+  .methodology .source { font-size: 12px; color: var(--light); margin-top: 12px; }
+  .methodology .source a { color: var(--teal); text-decoration: none; }
+
+  .disclaimer-box { background: #fff0f0; border: 1px solid #f0b8b8; border-radius: 8px; padding: 16px; margin: 24px 0; font-size: 12px; color: #6b1a1a; line-height: 1.6; }
+  .disclaimer-box strong { color: #4a1010; }
+
+  .empty-state {
+    background: var(--teal-bg); border: 1px dashed var(--teal);
+    border-radius: 12px; padding: 32px 24px; text-align: center;
+    color: var(--medium); margin-top: 24px;
+  }
+  .empty-state h3 { color: var(--teal); font-size: 16px; margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .form-row { flex-direction: column; }
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    main h1 { font-size: 22px; }
+    h2 { font-size: 19px; }
+    .comparison-section { padding: 20px 16px; }
+    .comparison-table { font-size: 13px; }
+    .hero-result .hero-value { font-size: 36px; }
+  }
+
+  @media print {
+    header, footer, .calc-form, .methodology { display: none !important; }
+    body { background: white; color: black; }
+    .container { max-width: 100%; padding: 0; }
+    .hero-result { background: white !important; color: black !important; border: 2px solid black; }
+    .hero-result .hero-value { color: black; }
+    .comparison-section, .result-summary, .recommendation-box { box-shadow: none; border: 1px solid #999; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<header>
+  <div class="container">
+    <a href="../../" class="brand">Indie<span>Calc</span></a>
+    <a href="../../" class="nav-link">&larr; All Calculators</a>
+  </div>
+</header>
+
+<main id="main" class="container">
+  <h1>LLC vs S-Corp Comparison Calculator <small>Tax Year 2026</small></h1>
+  <p class="subtitle">Compare your total tax as a sole proprietor / single-member LLC vs an S-Corp election. See how much you could save (or lose) after accounting for S-Corp costs.</p>
+
+  <div class="calc-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="netIncome">Net Business Income (after expenses)</label>
+        <div class="prefix"><input type="number" id="netIncome" placeholder="150,000" value="150000"></div>
+        <div class="field-help">Your net profit from Schedule C, before SE tax.</div>
+      </div>
+      <div class="form-group">
+        <label for="filingStatus">Filing Status</label>
+        <select id="filingStatus">
+          <option value="single">Single</option>
+          <option value="marriedJoint">Married Filing Jointly</option>
+          <option value="marriedSeparate">Married Filing Separately</option>
+          <option value="headOfHousehold">Head of Household</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="state">State</label>
+        <select id="state"></select>
+      </div>
+    </div>
+
+    <div class="salary-slider-group">
+      <label for="salarySlider">Reasonable Salary <span class="info-tip" title="The IRS requires S-Corp shareholders to pay themselves a 'reasonable salary' before taking distributions. This is subjective and heavily scrutinized. Too low = audit risk. Too high = less tax savings.">IRS-scrutinized</span></label>
+      <div class="salary-slider-row">
+        <input type="range" id="salarySlider" min="20" max="70" value="45" step="1">
+        <span class="salary-value" id="salaryDisplay">$67,500 (45%)</span>
+      </div>
+      <div class="salary-slider-labels">
+        <span>Aggressive (30%) - Higher savings, higher audit risk</span>
+        <span>Conservative (60%) - Safer</span>
+      </div>
+      <div class="form-row" style="margin-top: 8px; margin-bottom: 0;">
+        <div class="form-group" style="max-width: 240px;">
+          <label for="salaryManual">Or enter exact salary amount</label>
+          <div class="prefix"><input type="number" id="salaryManual" placeholder="Leave blank to use slider"></div>
+        </div>
+      </div>
+      <div class="field-help" style="margin-top: 8px;">"Reasonable salary" depends on your industry, experience, location, and comparable W-2 roles. The IRS has successfully challenged salaries below 30% of net income. Most CPAs recommend 40-60%.</div>
+    </div>
+
+    <button class="accordion-toggle" id="costsToggle" type="button" aria-expanded="false" aria-controls="costsBody">
+      S-Corp Annual Costs (default $2,720)
+      <span class="arrow" aria-hidden="true">&#9660;</span>
+    </button>
+    <div class="accordion-body" id="costsBody" hidden>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="costPayroll">Payroll Service</label>
+          <div class="prefix"><input type="number" id="costPayroll" value="600"></div>
+          <div class="field-help">Gusto, ADP, etc. Ranges $400-1,200/year.</div>
+        </div>
+        <div class="form-group">
+          <label for="costTaxReturn">Tax Return Preparation</label>
+          <div class="prefix"><input type="number" id="costTaxReturn" value="1200"></div>
+          <div class="field-help">S-Corp requires Form 1120-S + K-1. Ranges $1,000-2,500.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="costStateFees">State Franchise/Filing Fees</label>
+          <div class="prefix"><input type="number" id="costStateFees" value="300"></div>
+          <div class="field-help">Annual state filing fees. CA is $800, most others $0-500.</div>
+        </div>
+        <div class="form-group">
+          <label for="costFUTA">FUTA Tax</label>
+          <div class="prefix"><input type="number" id="costFUTA" value="420"></div>
+          <div class="field-help">6% on first $7,000 of wages = $420. SUTA credit may reduce to $42 in practice.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="max-width: 50%;">
+          <label for="costSUTA">SUTA Tax (estimate)</label>
+          <div class="prefix"><input type="number" id="costSUTA" value="200"></div>
+          <div class="field-help">State unemployment tax. Varies widely by state and experience rating.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" id="emptyState" hidden>
+    <h3>Enter your net business income to see results</h3>
+    <p>This calculator compares your total tax burden as a sole proprietor / single-member LLC vs an S-Corp election, including all additional costs.</p>
+  </div>
+
+  <section class="results" id="results" role="region" aria-live="polite" aria-atomic="false" aria-label="Comparison results">
+
+    <div class="hero-result positive" id="heroResult">
+      <div class="hero-label">Estimated Net Annual Savings with S-Corp</div>
+      <div class="hero-value" id="r-netSavings">--</div>
+      <div class="hero-sub" id="r-heroSub"></div>
+    </div>
+
+    <div class="recommendation-box stay-llc" id="recommendation">
+      <h3 id="recTitle">Recommendation</h3>
+      <p id="recBody"></p>
+    </div>
+
+    <div class="result-summary">
+      <div class="summary-grid">
+        <div class="summary-item highlight">
+          <div class="value" id="r-seTaxSaved">--</div>
+          <div class="label">SE Tax Saved</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-qbiLost">--</div>
+          <div class="label">QBI Deduction Lost</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-scorpCosts">--</div>
+          <div class="label">S-Corp Costs</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-breakeven">--</div>
+          <div class="label">Break-Even Income</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison-section">
+      <h3>Side-by-Side Comparison</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th class="col-llc">Sole Prop / LLC</th>
+            <th class="col-scorp">S-Corp</th>
+            <th class="col-diff">Difference</th>
+          </tr>
+        </thead>
+        <tbody id="comparisonBody"></tbody>
+      </table>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Important Legal Disclaimer:</strong> This calculator provides estimates for educational purposes only. It is <strong>not</strong> tax, legal, or financial advice. Entity selection (LLC vs S-Corp) has significant legal, liability, and tax implications that go far beyond the simplified comparison shown here. S-Corp election involves ongoing compliance requirements, payroll obligations, and potential penalties for non-compliance. The "reasonable salary" determination is fact-specific and legally complex. <strong>You must consult a qualified CPA and/or attorney before making any entity election decisions.</strong> IndieCalc is not responsible for decisions made based on these estimates.
+    </div>
+
+  </section>
+
+  <div class="methodology">
+    <h2>How This Calculator Works</h2>
+
+    <h3>Self-Employment Tax vs Payroll Tax</h3>
+    <p>As a sole proprietor or single-member LLC, you pay self-employment tax (15.3%) on all net earnings: 12.4% Social Security (capped at $184,500 for 2026) + 2.9% Medicare (uncapped). With an S-Corp, you split income into salary (subject to payroll tax) and distributions (not subject to payroll/SE tax). The S-Corp pays the employer half (7.65%) and withholds the employee half (7.65%) from your paycheck -- but distributions escape both halves.</p>
+
+    <h3>Why QBI is Different for S-Corp</h3>
+    <p>The Qualified Business Income (QBI) deduction under Section 199A allows a 20% deduction on qualified business income. For a sole proprietor, QBI = net profit minus half-SE, health insurance, and retirement contributions. For an S-Corp, QBI equals only the distribution portion (net income minus salary). Your W-2 salary from the S-Corp does NOT qualify for QBI. This means a higher salary reduces your QBI deduction -- an often-overlooked cost of S-Corp election that most calculators miss.</p>
+
+    <h3>What "Reasonable Salary" Means</h3>
+    <p>The IRS requires S-Corp owner-employees to pay themselves a "reasonable" salary before taking distributions. Factors include: comparable salaries for similar positions, your training and experience, time devoted to the business, and what you'd pay a non-owner to do the same work. The IRS has won multiple court cases (e.g., Watson v. Commissioner, Radtke v. United States) against shareholders paying unreasonably low salaries. There is no safe harbor percentage, but most CPAs advise 40-60% of net income as a starting point.</p>
+
+    <h3>FUTA and SUTA</h3>
+    <p>S-Corp wages are subject to Federal Unemployment Tax (FUTA): 6% on the first $7,000 of wages = $420/year. Most states provide a credit reducing the effective rate to 0.6% ($42), but new businesses or those without a state unemployment history may pay the full amount. State Unemployment Tax (SUTA) varies by state, industry, and claims history (typically $100-500/year for a single-employee S-Corp).</p>
+
+    <h3>Why Break-Even Matters</h3>
+    <p>At lower income levels, the S-Corp costs (payroll service, additional tax return, state fees, FUTA/SUTA) can exceed the payroll tax savings. The break-even point is the income level where savings first exceed costs. Below this point, an S-Corp costs more than it saves.</p>
+
+    <div class="source">
+      Sources: <a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporations" target="_blank" rel="noopener">IRS — S Corporations</a> &middot;
+      <a href="https://www.irs.gov/businesses/small-businesses-self-employed/paying-yourself" target="_blank" rel="noopener">IRS — Reasonable Compensation</a> &middot;
+      <a href="https://taxfoundation.org/data/all/federal/2026-tax-brackets/" target="_blank" rel="noopener">Tax Foundation — 2026 Federal Brackets</a> &middot;
+      <a href="https://www.ssa.gov/oact/cola/cbb.html" target="_blank" rel="noopener">SSA — 2026 Wage Base</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">Home</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or attorney.</p>
+  </div>
+</footer>
+
+<script src="../../src/tax-data.js"></script>
+<script src="../../src/calculator.js"></script>
+<script>
+  // Populate state dropdown
+  const stateSelect = document.getElementById('state');
+  const stateEntries = Object.entries(STATES).sort((a, b) => a[1].name.localeCompare(b[1].name));
+  for (const [key, st] of stateEntries) {
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = st.name + (st.hasIncomeTax ? '' : ' (no income tax)');
+    stateSelect.appendChild(option);
+  }
+
+  // Accordion
+  function toggleCosts() {
+    const toggle = document.getElementById('costsToggle');
+    const body = document.getElementById('costsBody');
+    const isOpen = !toggle.classList.contains('open');
+    toggle.classList.toggle('open', isOpen);
+    body.classList.toggle('open', isOpen);
+    body.toggleAttribute('hidden', !isOpen);
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+  document.getElementById('costsToggle').addEventListener('click', toggleCosts);
+
+  // Update costs total in accordion label
+  function getTotalCosts() {
+    const payroll = Math.max(0, parseFloat(document.getElementById('costPayroll').value) || 0);
+    const taxReturn = Math.max(0, parseFloat(document.getElementById('costTaxReturn').value) || 0);
+    const stateFees = Math.max(0, parseFloat(document.getElementById('costStateFees').value) || 0);
+    const futa = Math.max(0, parseFloat(document.getElementById('costFUTA').value) || 0);
+    const suta = Math.max(0, parseFloat(document.getElementById('costSUTA').value) || 0);
+    return payroll + taxReturn + stateFees + futa + suta;
+  }
+
+  function updateCostsLabel() {
+    const total = getTotalCosts();
+    document.getElementById('costsToggle').childNodes[0].textContent =
+      'S-Corp Annual Costs (total $' + Math.round(total).toLocaleString() + ') ';
+  }
+
+  // Salary slider sync
+  function getNetIncome() {
+    return Math.max(0, parseFloat(document.getElementById('netIncome').value) || 0);
+  }
+
+  function getSalary() {
+    const manual = document.getElementById('salaryManual').value;
+    if (manual && parseFloat(manual) > 0) {
+      return Math.max(0, parseFloat(manual));
+    }
+    const pct = parseInt(document.getElementById('salarySlider').value) / 100;
+    return getNetIncome() * pct;
+  }
+
+  function updateSalaryDisplay() {
+    const netIncome = getNetIncome();
+    const manual = document.getElementById('salaryManual').value;
+    if (manual && parseFloat(manual) > 0) {
+      const salary = parseFloat(manual);
+      const pct = netIncome > 0 ? Math.round((salary / netIncome) * 100) : 0;
+      document.getElementById('salaryDisplay').textContent = '$' + Math.round(salary).toLocaleString() + ' (' + pct + '%)';
+    } else {
+      const pct = parseInt(document.getElementById('salarySlider').value);
+      const salary = netIncome * (pct / 100);
+      document.getElementById('salaryDisplay').textContent = '$' + Math.round(salary).toLocaleString() + ' (' + pct + '%)';
+    }
+  }
+
+  document.getElementById('salarySlider').addEventListener('input', () => {
+    document.getElementById('salaryManual').value = '';
+    updateSalaryDisplay();
+    calculate();
+  });
+
+  // Debounce helper
+  let debounceTimer;
+  function debounce(fn, ms) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fn(...args), ms); }; }
+
+  // Auto-calculate on input change
+  const debouncedCalc = debounce(() => { calculate(); }, 200);
+
+  document.querySelectorAll('#netIncome, #salaryManual, #costPayroll, #costTaxReturn, #costStateFees, #costFUTA, #costSUTA').forEach(el => {
+    el.addEventListener('input', () => { updateSalaryDisplay(); updateCostsLabel(); debouncedCalc(); });
+  });
+  document.querySelectorAll('#filingStatus, #state').forEach(el => {
+    el.addEventListener('change', () => { calculate(); });
+  });
+
+  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+  function pct(n) { return (n * 100).toFixed(1) + '%'; }
+
+  function calculate() {
+    const netIncome = getNetIncome();
+    const emptyState = document.getElementById('emptyState');
+    const resultsEl = document.getElementById('results');
+
+    if (netIncome <= 0) {
+      resultsEl.classList.remove('visible');
+      emptyState.hidden = false;
+      return;
+    }
+    emptyState.hidden = true;
+
+    const filingStatus = document.getElementById('filingStatus').value;
+    const stateKey = document.getElementById('state').value;
+    const state = STATES[stateKey];
+    const federal = FEDERAL['2026'];
+    const salary = Math.min(getSalary(), netIncome);
+    const distributions = Math.max(0, netIncome - salary);
+    const scorpCosts = getTotalCosts();
+
+    // ==========================================
+    // COLUMN 1: Sole Proprietor / Single-Member LLC
+    // ==========================================
+    const llcResult = calculateAll(
+      { netProfit: netIncome, filingStatus, otherIncome: 0, isSSTB: false },
+      federal,
+      state,
+    );
+    const llcSETax = llcResult.summary.selfEmploymentTax;
+    const llcFedIncome = llcResult.summary.federalIncomeTax;
+    const llcStateTax = llcResult.summary.stateTax;
+    const llcQBI = llcResult.federalIncomeTax.qbiDeduction;
+    const llcTotalTax = llcResult.summary.totalTax;
+    const llcTakeHome = netIncome - llcTotalTax;
+
+    // ==========================================
+    // COLUMN 2: S-Corp
+    // ==========================================
+
+    // S-Corp payroll tax: employer + employee FICA on salary
+    // Social Security: 12.4% on salary up to $184,500
+    const ssWageBase = federal.ssWageBase;
+    const ssSalaryBase = Math.min(salary, ssWageBase);
+    const scorpSS = ssSalaryBase * federal.ssRate; // 12.4% total (6.2% employer + 6.2% employee)
+    const scorpMedicare = salary * federal.medicareRate; // 2.9% total (1.45% + 1.45%)
+
+    // Additional Medicare: 0.9% on salary above threshold (employee only)
+    const addlMedicareThreshold = federal.additionalMedicareThreshold[filingStatus] || 200000;
+    const scorpAddlMedicare = salary > addlMedicareThreshold
+      ? (salary - addlMedicareThreshold) * federal.additionalMedicareRate
+      : 0;
+
+    const scorpPayrollTax = scorpSS + scorpMedicare + scorpAddlMedicare;
+
+    // Employer half of FICA is a business deduction (reduces income for income tax)
+    const employerFICA = (ssSalaryBase * (federal.ssRate / 2)) + (salary * (federal.medicareRate / 2));
+
+    // S-Corp QBI: 20% of distributions only (salary does NOT qualify)
+    // Use the same QBI calculation logic but with distributions as the QBI base
+    const scorpQBIBase = distributions; // No half-SE reduction needed — that's an SE concept
+    const scorpHalfSE = 0; // No SE tax for S-Corp
+
+    // For S-Corp federal income tax: taxable income = salary + distributions - employer FICA deduction - standard deduction - QBI
+    const scorpTotalIncome = netIncome; // Same gross income
+    const scorpAGI = scorpTotalIncome - employerFICA; // Employer FICA is above-the-line
+    const standardDeduction = federal.standardDeduction[filingStatus] || federal.standardDeduction.single;
+    const scorpTaxableBeforeQBI = Math.max(0, scorpAGI - standardDeduction);
+
+    // QBI for S-Corp: 20% of distributions, capped at 20% of taxable income before QBI
+    const scorpQBIRaw = scorpQBIBase * federal.qbiDeductionRate;
+    const scorpQBICap = scorpTaxableBeforeQBI * federal.qbiDeductionRate;
+    let scorpQBI = Math.min(scorpQBIRaw, scorpQBICap);
+
+    // Apply QBI threshold phase-out (same rules, but on distributions)
+    const qbiThreshold = federal.qbiThreshold[filingStatus] || federal.qbiThreshold.single;
+    const qbiPhaseIn = federal.qbiPhaseInRange[filingStatus] || federal.qbiPhaseInRange.single;
+    if (scorpTaxableBeforeQBI > qbiThreshold) {
+      if (scorpTaxableBeforeQBI >= qbiThreshold + qbiPhaseIn) {
+        scorpQBI = 0;
+      } else {
+        const phaseInPct = (scorpTaxableBeforeQBI - qbiThreshold) / qbiPhaseIn;
+        scorpQBI = scorpQBI * (1 - phaseInPct);
+      }
+    }
+    // OBBBA minimum
+    if (federal.qbiMinimumDeduction && netIncome >= (federal.qbiMinimumQBIThreshold || 1000) && scorpQBI < federal.qbiMinimumDeduction) {
+      scorpQBI = Math.min(federal.qbiMinimumDeduction, scorpQBICap);
+    }
+
+    const scorpFedTaxableIncome = Math.max(0, scorpTaxableBeforeQBI - scorpQBI);
+    const bracketKey = federal.brackets[filingStatus] ? filingStatus : 'single';
+    const scorpFedIncomeTaxResult = calculateBracketTax(scorpFedTaxableIncome, federal.brackets[bracketKey]);
+    const scorpFedIncomeTax = scorpFedIncomeTaxResult.total;
+
+    // S-Corp state tax (applied to total income, same as LLC)
+    const scorpStateTaxResult = calculateStateTax(scorpTotalIncome, state, filingStatus);
+    const scorpStateTax = scorpStateTaxResult.total;
+
+    // S-Corp total tax + costs
+    const scorpTotalTax = scorpPayrollTax + scorpFedIncomeTax + scorpStateTax;
+    const scorpTotalWithCosts = scorpTotalTax + scorpCosts;
+    const scorpTakeHome = netIncome - scorpTotalWithCosts;
+
+    // ==========================================
+    // COLUMN 3: Net Savings
+    // ==========================================
+    const seTaxSaved = llcSETax - scorpPayrollTax;
+    const qbiLost = llcQBI - scorpQBI;
+    const qbiTaxImpact = qbiLost * getApproxMarginalRate(llcResult, federal, filingStatus);
+    const netSavings = llcTotalTax - scorpTotalWithCosts;
+
+    // Break-even calculation: binary search for income where savings = 0
+    const breakeven = findBreakeven(filingStatus, stateKey, scorpCosts);
+
+    // ==========================================
+    // RENDER RESULTS
+    // ==========================================
+
+    // Hero
+    const heroEl = document.getElementById('heroResult');
+    if (netSavings >= 0) {
+      heroEl.className = 'hero-result positive';
+      document.getElementById('r-netSavings').textContent = fmt(netSavings);
+      document.getElementById('r-heroSub').textContent = 'S-Corp saves you ' + fmt(netSavings) + '/year after all costs';
+    } else {
+      heroEl.className = 'hero-result negative';
+      document.getElementById('r-netSavings').textContent = '-' + fmt(Math.abs(netSavings));
+      document.getElementById('r-heroSub').textContent = 'S-Corp costs you ' + fmt(Math.abs(netSavings)) + '/year more than staying as an LLC';
+    }
+
+    // Recommendation
+    const recBox = document.getElementById('recommendation');
+    const recTitle = document.getElementById('recTitle');
+    const recBody = document.getElementById('recBody');
+    if (netSavings < 3000) {
+      recBox.className = 'recommendation-box stay-llc';
+      recTitle.textContent = 'Recommendation: Stay as Sole Proprietor / LLC';
+      recBody.textContent = 'At your income level, the tax savings (' + fmt(Math.max(0, netSavings)) + '/year) may be offset by the increased complexity and paperwork of an S-Corp. Most CPAs recommend staying as a sole proprietor/LLC when net savings are below $3,000-5,000. The administrative burden, payroll obligations, and audit risk rarely justify the modest savings.';
+    } else if (netSavings < 5000) {
+      recBox.className = 'recommendation-box moderate';
+      recTitle.textContent = 'Recommendation: Consider an S-Corp';
+      recBody.textContent = 'Moderate savings of ' + fmt(netSavings) + '/year. An S-Corp could make sense if you are comfortable with running payroll, filing Form 1120-S, and maintaining corporate formalities. The savings are meaningful but not overwhelming -- weigh them against the ongoing administrative commitment. Consider consulting a CPA to evaluate your specific situation.';
+    } else {
+      recBox.className = 'recommendation-box go-scorp';
+      recTitle.textContent = 'Recommendation: S-Corp Election Likely Beneficial';
+      recBody.textContent = 'Significant savings of ' + fmt(netSavings) + '/year. At your income level, an S-Corp election could meaningfully reduce your tax burden. Consider consulting a CPA to determine your optimal reasonable salary and ensure compliance. File Form 2553 (deadline: March 15 for existing businesses, or within 75 days of formation).';
+    }
+
+    // Summary grid
+    document.getElementById('r-seTaxSaved').textContent = fmt(seTaxSaved);
+    document.getElementById('r-qbiLost').textContent = fmt(qbiTaxImpact);
+    document.getElementById('r-scorpCosts').textContent = fmt(scorpCosts);
+    document.getElementById('r-breakeven').textContent = breakeven > 0 ? fmt(breakeven) : 'N/A';
+
+    // Comparison table
+    const tbody = document.getElementById('comparisonBody');
+    tbody.replaceChildren();
+    const rows = [
+      { label: 'Gross Business Income', llc: fmt(netIncome), scorp: fmt(netIncome), diff: '--' },
+      { label: 'SE Tax / Payroll Tax', llc: fmt(llcSETax), scorp: fmt(scorpPayrollTax), diff: fmt(seTaxSaved), diffClass: 'highlight' },
+      { label: '  Reasonable Salary', llc: 'N/A', scorp: fmt(salary), diff: '' },
+      { label: '  Distributions', llc: 'N/A', scorp: fmt(distributions), diff: '' },
+      { label: 'Federal Income Tax', llc: fmt(llcFedIncome), scorp: fmt(scorpFedIncomeTax), diff: fmt(llcFedIncome - scorpFedIncomeTax) },
+      { label: 'QBI Deduction', llc: '(' + fmt(llcQBI) + ')', scorp: '(' + fmt(scorpQBI) + ')', diff: fmt(llcQBI - scorpQBI), diffClass: (llcQBI > scorpQBI) ? 'negative' : '' },
+      { label: 'State Tax', llc: fmt(llcStateTax), scorp: fmt(scorpStateTax), diff: fmt(llcStateTax - scorpStateTax) },
+      { label: 'S-Corp Operating Costs', llc: '$0', scorp: fmt(scorpCosts), diff: '-' + fmt(scorpCosts), diffClass: 'negative' },
+    ];
+    const totalRow = { label: 'Total Tax + Costs', llc: fmt(llcTotalTax), scorp: fmt(scorpTotalWithCosts), diff: fmt(netSavings), isTotal: true };
+    const takeHomeRow = { label: 'Take-Home Pay', llc: fmt(llcTakeHome), scorp: fmt(scorpTakeHome), diff: fmt(netSavings), isTotal: true, isSavings: true };
+
+    const frag = document.createDocumentFragment();
+    for (const r of rows) {
+      const tr = document.createElement('tr');
+      const cells = [r.label, r.llc, r.scorp, r.diff];
+      for (let i = 0; i < cells.length; i++) {
+        const td = document.createElement('td');
+        td.textContent = cells[i];
+        if (i === 3 && r.diffClass) td.className = r.diffClass;
+        tr.appendChild(td);
+      }
+      frag.appendChild(tr);
+    }
+    for (const r of [totalRow, takeHomeRow]) {
+      const tr = document.createElement('tr');
+      tr.className = r.isSavings ? 'savings' : 'total';
+      const cells = [r.label, r.llc, r.scorp, r.diff];
+      for (let i = 0; i < cells.length; i++) {
+        const td = document.createElement('td');
+        td.textContent = cells[i];
+        if (i === 3 && r.isSavings) td.className = netSavings >= 0 ? 'highlight' : 'negative';
+        tr.appendChild(td);
+      }
+      frag.appendChild(tr);
+    }
+    tbody.appendChild(frag);
+
+    resultsEl.classList.add('visible');
+  }
+
+  /**
+   * Approximate marginal federal income tax rate for estimating QBI tax impact.
+   */
+  function getApproxMarginalRate(llcResult, federal, filingStatus) {
+    const taxable = llcResult.federalIncomeTax.taxableIncome;
+    const brackets = federal.brackets[filingStatus] || federal.brackets.single;
+    for (let i = brackets.length - 1; i >= 0; i--) {
+      if (taxable > brackets[i].min) return brackets[i].rate;
+    }
+    return 0.10;
+  }
+
+  /**
+   * Binary search for break-even income (where S-Corp savings first exceed $0).
+   * Returns 0 if no break-even found (savings always negative or always positive below $20K).
+   */
+  function findBreakeven(filingStatus, stateKey, scorpCosts) {
+    const state = STATES[stateKey];
+    const federal = FEDERAL['2026'];
+    let low = 20000;
+    let high = 500000;
+
+    // Check if at $20K there are already savings (unlikely but possible with very low costs)
+    const savingsAtLow = calcSavingsAt(low, filingStatus, state, federal, scorpCosts);
+    if (savingsAtLow > 0) return low;
+
+    // Check if at $500K there are still no savings (very unusual)
+    const savingsAtHigh = calcSavingsAt(high, filingStatus, state, federal, scorpCosts);
+    if (savingsAtHigh <= 0) return 0;
+
+    // Binary search
+    for (let i = 0; i < 20; i++) {
+      const mid = Math.round((low + high) / 2);
+      const savings = calcSavingsAt(mid, filingStatus, state, federal, scorpCosts);
+      if (savings > 0) high = mid;
+      else low = mid;
+      if (high - low < 1000) break;
+    }
+    return Math.round(high / 1000) * 1000; // Round to nearest $1,000
+  }
+
+  function calcSavingsAt(income, filingStatus, state, federal, scorpCosts) {
+    const salary = income * 0.45; // Use moderate salary for break-even calc
+    const distributions = income - salary;
+
+    // LLC
+    const llcResult = calculateAll({ netProfit: income, filingStatus, otherIncome: 0 }, federal, state);
+    const llcTotal = llcResult.summary.totalTax;
+
+    // S-Corp payroll
+    const ssSalaryBase = Math.min(salary, federal.ssWageBase);
+    const scorpSS = ssSalaryBase * federal.ssRate;
+    const scorpMedicare = salary * federal.medicareRate;
+    const scorpPayroll = scorpSS + scorpMedicare;
+
+    // S-Corp income tax (simplified for break-even search)
+    const employerFICA = (ssSalaryBase * (federal.ssRate / 2)) + (salary * (federal.medicareRate / 2));
+    const standardDeduction = federal.standardDeduction[filingStatus] || federal.standardDeduction.single;
+    const scorpTaxableBeforeQBI = Math.max(0, income - employerFICA - standardDeduction);
+    const scorpQBI = Math.min(distributions * 0.20, scorpTaxableBeforeQBI * 0.20);
+    const scorpTaxable = Math.max(0, scorpTaxableBeforeQBI - scorpQBI);
+    const bracketKey = federal.brackets[filingStatus] ? filingStatus : 'single';
+    const scorpFedTax = calculateBracketTax(scorpTaxable, federal.brackets[bracketKey]).total;
+    const scorpStateTax = calculateStateTax(income, state, filingStatus).total;
+
+    const scorpTotal = scorpPayroll + scorpFedTax + scorpStateTax + scorpCosts;
+    return llcTotal - scorpTotal;
+  }
+
+  // Initial calculation
+  updateSalaryDisplay();
+  updateCostsLabel();
+  setTimeout(() => { calculate(); }, 100);
+</script>
+
+</body>
+</html>
