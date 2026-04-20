@@ -19,7 +19,19 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://indie-calc.com/calculators/rate-calculator/</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://indie-calc.com/calculators/llc-vs-scorp/</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://indie-calc.com/calculators/expense-estimator/</loc>
     <lastmod>2026-04-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freelance Rate Calculator 2026 — What to Charge | IndieCalc</title>
+<meta name="description" content="Free freelance rate calculator for 2026. Work backwards from your income goal to find the hourly rate you need to charge after taxes and expenses. All 50 states.">
+<link rel="canonical" href="https://indie-calc.com/calculators/rate-calculator/">
+<meta property="og:title" content="Freelance Rate Calculator 2026 — IndieCalc">
+<meta property="og:description" content="Find your required hourly rate by working backwards from your target take-home pay. Accounts for federal, state, and SE taxes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://indie-calc.com/calculators/rate-calculator/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Freelance Rate Calculator 2026 — IndieCalc">
+<meta name="twitter:description" content="Find your required hourly rate by working backwards from your target take-home pay. Accounts for federal, state, and SE taxes.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --hint: #5e5e72;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --red: #dc3545;
+    --green: #28a745;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *:focus { outline: none; }
+  *:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.6; }
+  h2, h3, h4, .subtitle { text-wrap: balance; }
+  p { text-wrap: pretty; }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .container { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  header .brand {
+    font-size: 20px; font-weight: 700; color: white; text-decoration: none;
+    padding: 6px 0; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header .brand span { color: var(--teal); }
+  header a.nav-link {
+    color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px;
+    padding: 12px 8px; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header a.nav-link:hover { color: white; }
+
+  main h1 { font-size: 28px; font-weight: 700; margin: 32px 0 8px; }
+  main h1 small { font-size: 16px; font-weight: 400; color: var(--medium); }
+  h2 { font-size: 22px; font-weight: 700; margin: 32px 0 8px; }
+  .subtitle { color: var(--medium); font-size: 15px; margin-bottom: 28px; }
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 9999;
+    background: var(--dark); color: white; padding: 12px 16px;
+    text-decoration: none; border-radius: 0 0 6px 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  /* Form */
+  .calc-form { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .form-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .form-group { flex: 1; min-width: 200px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--medium); margin-bottom: 4px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 6px;
+    font-size: 15px; font-family: var(--font); color: var(--dark);
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,106,90,0.1); }
+  .form-group .prefix { position: relative; }
+  .form-group .prefix::before { content: '$'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--light); font-size: 15px; }
+  .form-group .prefix input { padding-left: 24px; }
+  .form-group .field-help { font-size: 12px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
+
+  .btn { background: var(--teal); color: white; border: none; padding: 12px 32px; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: var(--font); }
+  .btn:hover { background: #245a4c; }
+
+  /* Advanced accordion */
+  .accordion-toggle { background: none; border: 1px solid var(--rule); border-radius: 6px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--teal); cursor: pointer; font-family: var(--font); width: 100%; text-align: left; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .accordion-toggle:hover { background: var(--teal-light); }
+  .accordion-toggle .arrow { transition: transform 0.2s; }
+  .accordion-toggle.open .arrow { transform: rotate(180deg); }
+  .accordion-body { display: none; border: 1px solid var(--rule); border-radius: 8px; padding: 20px; margin-bottom: 16px; background: var(--bg); }
+  .accordion-body.open { display: block; }
+  .accordion-body .form-group { margin-bottom: 12px; }
+  .accordion-body .form-group:last-child { margin-bottom: 0; }
+  .accordion-body .field-help { font-size: 12px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
+
+  /* Results */
+  .results { display: none; }
+  .results.visible { display: block; }
+
+  /* Hero rate number */
+  .hero-result { background: var(--teal); border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
+  .hero-result .hero-value { font-size: 48px; font-weight: 700; letter-spacing: -1px; }
+  .hero-result .hero-label { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+  .hero-result .hero-sub { font-size: 13px; opacity: 0.6; margin-top: 8px; }
+
+  .result-summary {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 24px; margin-bottom: 24px;
+  }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+  .summary-item { text-align: center; padding: 12px 8px; background: var(--bg); border-radius: 8px; }
+  .summary-item .value { font-size: 22px; font-weight: 700; color: var(--dark); }
+  .summary-item .label { font-size: 11px; color: var(--medium); margin-top: 2px; }
+  .summary-item.highlight .value { color: var(--teal); }
+
+  .breakdown { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .breakdown h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .breakdown-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .breakdown-table th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .breakdown-table td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; }
+  .breakdown-table td:last-child { text-align: right; font-weight: 500; }
+  .breakdown-table tr.total td { font-weight: 700; border-top: 2px solid var(--dark); border-bottom: none; padding-top: 12px; }
+
+  .methodology { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .methodology h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .methodology p, .methodology li { font-size: 13px; color: var(--medium); line-height: 1.7; }
+  .methodology ol { padding-left: 20px; }
+  .methodology li { margin-bottom: 4px; }
+  .methodology .source { font-size: 12px; color: var(--light); margin-top: 12px; }
+  .methodology .source a { color: var(--teal); text-decoration: none; }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 24px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  .empty-state {
+    background: var(--teal-bg); border: 1px dashed var(--teal);
+    border-radius: 12px; padding: 32px 24px; text-align: center;
+    color: var(--medium); margin-top: 24px;
+  }
+  .empty-state h3 { color: var(--teal); font-size: 16px; margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .form-row { flex-direction: column; }
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    .result-summary { padding: 20px; }
+    main h1 { font-size: 22px; }
+    h2 { font-size: 19px; }
+    .breakdown { padding: 20px 16px; }
+    .breakdown-table { font-size: 13px; }
+  }
+
+  @media print {
+    header, footer, .calc-form, .toast { display: none !important; }
+    body { background: white; color: black; }
+    .container { max-width: 100%; padding: 0; }
+    .hero-result { background: white !important; color: black !important; border: 2px solid black; }
+    .hero-result .hero-value { color: black; }
+    .breakdown, .result-summary, .methodology { box-shadow: none; border: 1px solid #999; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<header>
+  <div class="container">
+    <a href="../../" class="brand">Indie<span>Calc</span></a>
+    <a href="../../" class="nav-link">&larr; All Calculators</a>
+  </div>
+</header>
+
+<main id="main" class="container">
+  <h1>Freelance Rate Calculator <small>Tax Year 2026</small></h1>
+  <p class="subtitle">Work backwards from your income goal to find the hourly rate you need to charge after taxes and expenses.</p>
+
+  <div class="calc-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="targetIncome">Target Annual Take-Home Pay</label>
+        <div class="prefix"><input type="number" id="targetIncome" placeholder="75,000" value="75000"></div>
+        <div class="field-help">What you want to keep after all taxes and expenses.</div>
+      </div>
+      <div class="form-group">
+        <label for="filingStatus">Filing Status</label>
+        <select id="filingStatus">
+          <option value="single">Single</option>
+          <option value="marriedJoint">Married Filing Jointly</option>
+          <option value="marriedSeparate">Married Filing Separately</option>
+          <option value="headOfHousehold">Head of Household</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="state">State</label>
+        <select id="state"></select>
+      </div>
+      <div class="form-group">
+        <label for="billableHours">Billable Hours Per Week</label>
+        <input type="number" id="billableHours" value="25" min="10" max="50">
+        <div class="field-help">Most freelancers bill 20-30 hours per week (the rest is admin, marketing, etc.).</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="workingWeeks">Working Weeks Per Year</label>
+        <input type="number" id="workingWeeks" value="48" min="40" max="52">
+        <div class="field-help">48 weeks accounts for vacation and sick time.</div>
+      </div>
+      <div class="form-group">
+        <label for="businessExpenses">Annual Business Expenses</label>
+        <div class="prefix"><input type="number" id="businessExpenses" placeholder="5,000" value="5000"></div>
+        <div class="field-help">Software, equipment, insurance, coworking, etc.</div>
+      </div>
+    </div>
+
+    <button class="accordion-toggle" id="advancedToggle" type="button" aria-expanded="false" aria-controls="advancedBody">
+      Advanced Options (Other Income, Dependents, Deductions)
+      <span class="arrow" aria-hidden="true">&#9660;</span>
+    </button>
+    <div class="accordion-body" id="advancedBody" hidden>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="otherIncome">Other Income (W-2, etc.)</label>
+          <div class="prefix"><input type="number" id="otherIncome" placeholder="0" value="0"></div>
+          <div class="field-help">If you also have W-2 income, it affects your tax brackets.</div>
+        </div>
+        <div class="form-group">
+          <label for="numChildren">Children Under 17</label>
+          <input type="number" id="numChildren" placeholder="0" value="0" min="0" max="20">
+          <div class="field-help">Child Tax Credit: $2,200 per child (2026).</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="healthInsurance">Health Insurance Premiums</label>
+          <div class="prefix"><input type="number" id="healthInsurance" placeholder="0" value="0"></div>
+          <div class="field-help">Self-employed health insurance deduction (above-the-line).</div>
+        </div>
+        <div class="form-group">
+          <label for="retirementContrib">Retirement Contributions (SEP/Solo 401k)</label>
+          <div class="prefix"><input type="number" id="retirementContrib" placeholder="0" value="0"></div>
+          <div class="field-help">Above-the-line deduction. SEP IRA max: 25% of net SE income (up to $70,000).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" id="emptyState" hidden>
+    <h3>Enter your target take-home pay to see results</h3>
+    <p>This calculator works backwards from your income goal to determine the hourly rate you need to charge.</p>
+  </div>
+
+  <section class="results" id="results" role="region" aria-live="polite" aria-atomic="false" aria-label="Rate calculation results">
+    <div class="hero-result">
+      <div class="hero-label">Required Hourly Rate</div>
+      <div class="hero-value" id="r-hourlyRate">--</div>
+      <div class="hero-sub" id="r-heroSub"></div>
+    </div>
+
+    <div class="result-summary">
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="value" id="r-grossRevenue">--</div>
+          <div class="label">Required Gross Revenue</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-totalTax">--</div>
+          <div class="label">Total Estimated Tax</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-effectiveRate">--</div>
+          <div class="label">Effective Tax Rate</div>
+        </div>
+        <div class="summary-item highlight">
+          <div class="value" id="r-dailyRate">--</div>
+          <div class="label">Daily Rate (8hr day)</div>
+        </div>
+        <div class="summary-item highlight">
+          <div class="value" id="r-monthlyRevenue">--</div>
+          <div class="label">Monthly Revenue Target</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="breakdown" id="rateCard">
+      <h3>Project Rate Card</h3>
+      <table class="breakdown-table">
+        <thead><tr><th>Engagement Length</th><th>Rate</th></tr></thead>
+        <tbody id="rateCardBody"></tbody>
+      </table>
+    </div>
+
+    <div class="breakdown" id="revenueBreakdown">
+      <h3>Revenue Breakdown</h3>
+      <table class="breakdown-table">
+        <thead><tr><th>Component</th><th>Amount</th></tr></thead>
+        <tbody id="breakdownBody"></tbody>
+      </table>
+    </div>
+
+    <div class="breakdown" id="rateComparison">
+      <h3>Rate Comparison</h3>
+      <p style="font-size: 13px; color: var(--medium); margin-bottom: 16px;">How different hourly rates translate to actual take-home pay.</p>
+      <table class="breakdown-table">
+        <thead><tr><th>Hourly Rate</th><th>Gross Revenue</th><th>Total Tax</th><th>Take-Home</th></tr></thead>
+        <tbody id="comparisonBody"></tbody>
+      </table>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Important:</strong> This calculator provides estimates for informational purposes only. It is not tax, legal, or financial advice.
+      Your actual tax liability depends on deductions, credits, other income, and factors not captured here.
+      <strong>Consult a qualified tax professional for your specific situation.</strong>
+    </div>
+  </section>
+
+  <div class="methodology">
+    <h2>How This Calculator Works</h2>
+    <h3>Reverse-Calculation Methodology</h3>
+    <p style="margin-bottom: 12px;">Unlike a standard tax calculator that starts with income and computes taxes, this calculator works <strong>backwards</strong> from your desired take-home pay. The challenge is that taxes depend on income, but income is what we are solving for.</p>
+    <ol>
+      <li><strong>Binary search:</strong> We use an iterative binary search algorithm to find the gross self-employment income that, after subtracting all taxes, yields your target take-home pay. The search starts with a low bound equal to your target and a high bound of 3x that amount, narrowing until the result is within $10 accuracy.</li>
+      <li><strong>Tax computation:</strong> At each iteration, we compute federal self-employment tax (15.3% on 92.35% of net earnings), federal income tax (using 2026 progressive brackets after standard deduction, half-SE deduction, and QBI deduction), and state income tax.</li>
+      <li><strong>Add business expenses:</strong> Once the required net SE income is found, we add your annual business expenses to get the total gross revenue you need to generate.</li>
+      <li><strong>Divide by hours:</strong> Gross revenue divided by your annual billable hours (hours/week times weeks/year) gives the required hourly rate.</li>
+      <li><strong>Derived rates:</strong> Daily rate (hourly times 8), monthly revenue (gross divided by 12), and project rates for standard engagement lengths.</li>
+    </ol>
+    <div class="source">
+      Sources: <a href="https://taxfoundation.org/data/all/federal/2026-tax-brackets/" target="_blank" rel="noopener">Tax Foundation — 2026 Federal Brackets</a> &middot;
+      <a href="https://www.irs.gov/businesses/small-businesses-self-employed/self-employed-individuals-tax-center" target="_blank" rel="noopener">IRS Self-Employment Tax Center</a> &middot;
+      <a href="https://www.ssa.gov/oact/cola/cbb.html" target="_blank" rel="noopener">SSA — Contribution and Benefit Base</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">Home</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+<script src="../../src/tax-data.js"></script>
+<script src="../../src/calculator.js"></script>
+<script>
+  // Populate state dropdown
+  const stateSelect = document.getElementById('state');
+  const stateEntries = Object.entries(STATES).sort((a, b) => a[1].name.localeCompare(b[1].name));
+  for (const [key, state] of stateEntries) {
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = state.name + (state.hasIncomeTax ? '' : ' (no income tax)');
+    stateSelect.appendChild(option);
+  }
+
+  // Strip leading zeros on blur
+  document.querySelectorAll('input[type="number"]').forEach(el => {
+    el.addEventListener('blur', () => {
+      if (el.value && el.value !== '') {
+        const num = parseFloat(el.value);
+        if (!isNaN(num)) el.value = num;
+      }
+    });
+  });
+
+  // Accordion
+  function toggleAdvanced() {
+    const toggle = document.getElementById('advancedToggle');
+    const body = document.getElementById('advancedBody');
+    const isOpen = !toggle.classList.contains('open');
+    toggle.classList.toggle('open', isOpen);
+    body.classList.toggle('open', isOpen);
+    body.toggleAttribute('hidden', !isOpen);
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+  document.getElementById('advancedToggle').addEventListener('click', toggleAdvanced);
+
+  // Auto-calculate on input change (debounced, NO auto-scrolling)
+  let debounceTimer;
+  function debounce(fn, ms) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fn(...args), ms); }; }
+
+  document.querySelectorAll('#targetIncome, #billableHours, #workingWeeks, #businessExpenses, #otherIncome, #numChildren, #healthInsurance, #retirementContrib').forEach(el => {
+    el.addEventListener('input', debounce(calculate, 200));
+  });
+  document.querySelectorAll('#filingStatus, #state').forEach(el => {
+    el.addEventListener('change', calculate);
+  });
+
+  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+  function pct(n) { return (n * 100).toFixed(1) + '%'; }
+
+  /**
+   * Binary search: find the gross SE income (net profit) that yields the
+   * target take-home pay after all taxes.
+   *
+   * Parameters:
+   *   targetTakeHome - desired after-tax income
+   *   filingStatus, stateKey, otherIncome, numChildren, healthInsurance, retirementContrib
+   *
+   * Returns: { netProfit, totalTax, seTax, federalTax, stateTax }
+   */
+  function findRequiredIncome(targetTakeHome, filingStatus, stateKey, otherIncome, numChildren, healthInsurance, retirementContrib) {
+    const federal = FEDERAL['2026'];
+    const state = STATES[stateKey];
+    const MAX_ITERATIONS = 60;
+    const TOLERANCE = 10;
+
+    let low = targetTakeHome;
+    let high = targetTakeHome * 3;
+
+    // Edge case: if target is very low, ensure high is at least reasonable
+    if (high < 30000) high = 30000;
+
+    for (let i = 0; i < MAX_ITERATIONS; i++) {
+      const mid = (low + high) / 2;
+      const takeHome = computeTakeHome(mid, filingStatus, state, federal, otherIncome, numChildren, healthInsurance, retirementContrib);
+
+      if (Math.abs(takeHome - targetTakeHome) < TOLERANCE) {
+        const result = computeFullResult(mid, filingStatus, state, federal, otherIncome, numChildren, healthInsurance, retirementContrib);
+        return result;
+      }
+
+      if (takeHome < targetTakeHome) {
+        low = mid;
+      } else {
+        high = mid;
+      }
+    }
+
+    // Return best guess after max iterations
+    const finalGuess = (low + high) / 2;
+    return computeFullResult(finalGuess, filingStatus, state, federal, otherIncome, numChildren, healthInsurance, retirementContrib);
+  }
+
+  /**
+   * Compute take-home pay for a given net profit (SE income).
+   * Mirrors the SE tax calculator logic including CTC.
+   */
+  function computeTakeHome(netProfit, filingStatus, state, federal, otherIncome, numChildren, healthInsurance, retirementContrib) {
+    const result = computeFullResult(netProfit, filingStatus, state, federal, otherIncome, numChildren, healthInsurance, retirementContrib);
+    return result.takeHome;
+  }
+
+  /**
+   * Full tax computation for a given net profit, returning all components.
+   */
+  function computeFullResult(netProfit, filingStatus, state, federal, otherIncome, numChildren, healthInsurance, retirementContrib) {
+    // Cap health insurance at net profit
+    const healthIns = Math.min(Math.max(0, healthInsurance), netProfit);
+    // Cap retirement at ~18.587% of net SE, max $70,000
+    const retirementCap = Math.min(Math.max(0, netProfit) * 0.18587, 70000);
+    const retirement = Math.min(Math.max(0, retirementContrib), retirementCap);
+
+    const calcResult = calculateAll(
+      {
+        netProfit,
+        filingStatus,
+        otherIncome,
+        isSenior: false,
+        spouseIsSenior: false,
+        isSSTB: false,
+        healthInsurance: healthIns,
+        retirementContrib: retirement,
+        otherAboveLine: 0,
+      },
+      federal,
+      state,
+    );
+
+    // Apply Child Tax Credit
+    const totalIncome = netProfit + otherIncome;
+    const ctcThreshold = (filingStatus === 'marriedJoint') ? 400000 : 200000;
+    let ctcPerChild = 2200;
+    if (totalIncome > ctcThreshold) {
+      const reduction = Math.ceil((totalIncome - ctcThreshold) / 1000) * 50;
+      ctcPerChild = Math.max(0, 2200 - reduction);
+    }
+    const totalCTC = numChildren * ctcPerChild;
+
+    const ctcAgainstTax = Math.min(calcResult.summary.federalIncomeTax, totalCTC);
+    const adjustedFederalIncome = Math.max(0, calcResult.summary.federalIncomeTax - ctcAgainstTax);
+
+    // ACTC (refundable)
+    const ctcRemainder = totalCTC - ctcAgainstTax;
+    const earnedIncome = netProfit + otherIncome;
+    const actcCap = numChildren * federal.actcMaxPerChild;
+    const actcEarnedLimit = Math.max(0, (earnedIncome - federal.actcEarnedIncomeFloor) * federal.actcEarnedIncomeRate);
+    const actcRefundable = Math.min(ctcRemainder, actcCap, actcEarnedLimit);
+
+    const seTax = calcResult.summary.selfEmploymentTax;
+    const federalTax = adjustedFederalIncome;
+    const stateTax = calcResult.summary.stateTax;
+    const totalTax = seTax + federalTax + stateTax - actcRefundable;
+    const takeHome = totalIncome - totalTax;
+
+    return {
+      netProfit,
+      totalIncome,
+      totalTax,
+      seTax,
+      federalTax,
+      stateTax,
+      actcRefundable,
+      takeHome,
+      effectiveRate: totalIncome > 0 ? totalTax / totalIncome : 0,
+    };
+  }
+
+  function calculate() {
+    const targetIncomeRaw = document.getElementById('targetIncome').value;
+    const targetIncome = parseFloat(targetIncomeRaw);
+    const emptyState = document.getElementById('emptyState');
+    const resultsEl = document.getElementById('results');
+
+    if (targetIncomeRaw === '' || isNaN(targetIncome) || targetIncome <= 0) {
+      resultsEl.classList.remove('visible');
+      emptyState.hidden = false;
+      return;
+    }
+    emptyState.hidden = true;
+
+    const filingStatus = document.getElementById('filingStatus').value;
+    const stateKey = document.getElementById('state').value;
+    const billableHours = Math.max(10, Math.min(50, parseInt(document.getElementById('billableHours').value) || 25));
+    const workingWeeks = Math.max(40, Math.min(52, parseInt(document.getElementById('workingWeeks').value) || 48));
+    const businessExpenses = Math.max(0, parseFloat(document.getElementById('businessExpenses').value) || 0);
+    const otherIncome = Math.max(0, parseFloat(document.getElementById('otherIncome').value) || 0);
+    const numChildren = Math.max(0, parseInt(document.getElementById('numChildren').value) || 0);
+    const healthInsurance = Math.max(0, parseFloat(document.getElementById('healthInsurance').value) || 0);
+    const retirementContrib = Math.max(0, parseFloat(document.getElementById('retirementContrib').value) || 0);
+
+    // The target take-home is from SE income only (other income already comes in separately)
+    // We need: SE take-home + other income - tax on other income = targetIncome
+    // Simplification: find the SE net profit such that total take-home = targetIncome + otherIncome
+    // (since other income is added to total income in the tax calc)
+    const adjustedTarget = targetIncome; // Target is what they keep from ALL sources minus other income kept
+    // Actually: target = totalIncome - totalTax, and totalIncome = netProfit + otherIncome
+    // So we want: netProfit + otherIncome - totalTax(netProfit, otherIncome) = targetIncome
+    // => find netProfit such that takeHome = targetIncome
+
+    // But the user wants to keep targetIncome AFTER taxes total. The other income is additional.
+    // The correct interpretation: user wants targetIncome as their total take-home from all sources.
+    const result = findRequiredIncome(targetIncome, filingStatus, stateKey, otherIncome, numChildren, healthInsurance, retirementContrib);
+
+    // Required gross revenue = net SE profit + business expenses
+    const grossRevenue = result.netProfit + businessExpenses;
+    const annualBillableHours = billableHours * workingWeeks;
+    const hourlyRate = grossRevenue / annualBillableHours;
+    const dailyRate = hourlyRate * 8;
+    const monthlyRevenue = grossRevenue / 12;
+
+    // Hero
+    document.getElementById('r-hourlyRate').textContent = fmt(hourlyRate) + '/hr';
+    document.getElementById('r-heroSub').textContent =
+      'Based on ' + billableHours + ' billable hrs/wk x ' + workingWeeks + ' weeks = ' + annualBillableHours.toLocaleString() + ' hrs/year';
+
+    // Summary grid
+    document.getElementById('r-grossRevenue').textContent = fmt(grossRevenue);
+    document.getElementById('r-totalTax').textContent = fmt(result.totalTax);
+    document.getElementById('r-effectiveRate').textContent = pct(result.effectiveRate);
+    document.getElementById('r-dailyRate').textContent = fmt(dailyRate);
+    document.getElementById('r-monthlyRevenue').textContent = fmt(monthlyRevenue);
+
+    // Rate card
+    const rateCardBody = document.getElementById('rateCardBody');
+    rateCardBody.replaceChildren();
+    const engagements = [
+      { label: 'Half-day engagement (4 hours)', hours: 4 },
+      { label: 'Small project (10 hours)', hours: 10 },
+      { label: 'Medium project (20 hours)', hours: 20 },
+      { label: 'Full-week project (40 hours)', hours: 40 },
+      { label: 'Two-week project (80 hours)', hours: 80 },
+    ];
+    const rcFrag = document.createDocumentFragment();
+    for (const eng of engagements) {
+      const tr = document.createElement('tr');
+      const td1 = document.createElement('td');
+      td1.textContent = eng.label;
+      const td2 = document.createElement('td');
+      td2.textContent = fmt(hourlyRate * eng.hours);
+      tr.append(td1, td2);
+      rcFrag.appendChild(tr);
+    }
+    rateCardBody.appendChild(rcFrag);
+
+    // Revenue breakdown
+    const breakdownBody = document.getElementById('breakdownBody');
+    breakdownBody.replaceChildren();
+    const bdRows = [
+      { label: 'Target Take-Home Pay', value: fmt(targetIncome) },
+      { label: 'Federal Income Tax', value: fmt(result.federalTax) },
+      { label: 'Self-Employment Tax (15.3%)', value: fmt(result.seTax) },
+      { label: 'State Tax (' + STATES[stateKey].name + ')', value: fmt(result.stateTax) },
+    ];
+    if (result.actcRefundable > 0) {
+      bdRows.push({ label: 'Child Tax Credit (refundable)', value: '-' + fmt(result.actcRefundable), color: 'var(--green)' });
+    }
+    bdRows.push({ label: 'Business Expenses', value: fmt(businessExpenses) });
+    bdRows.push({ label: 'Required Gross Revenue', value: fmt(grossRevenue), total: true });
+
+    const bdFrag = document.createDocumentFragment();
+    for (const r of bdRows) {
+      const tr = document.createElement('tr');
+      if (r.total) tr.className = 'total';
+      const td1 = document.createElement('td');
+      td1.textContent = r.label;
+      const td2 = document.createElement('td');
+      td2.textContent = r.value;
+      if (r.color) td2.style.color = r.color;
+      tr.append(td1, td2);
+      bdFrag.appendChild(tr);
+    }
+    breakdownBody.appendChild(bdFrag);
+
+    // Rate comparison table
+    const comparisonBody = document.getElementById('comparisonBody');
+    comparisonBody.replaceChildren();
+    const offsets = [-25, -10, 0, 10, 25];
+    const cFrag = document.createDocumentFragment();
+    for (const offset of offsets) {
+      const compareRate = hourlyRate + offset;
+      if (compareRate <= 0) continue;
+      const compareGross = compareRate * annualBillableHours;
+      const compareNetProfit = compareGross - businessExpenses;
+      if (compareNetProfit <= 0) continue;
+
+      const compareResult = computeFullResult(
+        compareNetProfit, filingStatus, STATES[stateKey], FEDERAL['2026'],
+        otherIncome, numChildren, healthInsurance, retirementContrib
+      );
+
+      const tr = document.createElement('tr');
+      if (offset === 0) tr.style.fontWeight = '700';
+      const td1 = document.createElement('td');
+      td1.textContent = fmt(compareRate) + '/hr' + (offset === 0 ? ' (yours)' : '');
+      const td2 = document.createElement('td');
+      td2.textContent = fmt(compareGross);
+      const td3 = document.createElement('td');
+      td3.textContent = fmt(compareResult.totalTax);
+      const td4 = document.createElement('td');
+      td4.textContent = fmt(compareResult.takeHome);
+      if (offset === 0) td4.style.color = 'var(--teal)';
+      tr.append(td1, td2, td3, td4);
+      cFrag.appendChild(tr);
+    }
+    comparisonBody.appendChild(cFrag);
+
+    resultsEl.classList.add('visible');
+  }
+
+  // Run on page load
+  setTimeout(calculate, 100);
+</script>
+
+</body>
+</html>

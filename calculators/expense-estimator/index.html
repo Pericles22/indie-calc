@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Expense Deduction Estimator 2026 — Schedule C | IndieCalc</title>
+<meta name="description" content="Free business expense deduction estimator for freelancers. See how Schedule C deductions reduce your tax bill dollar-for-dollar. Home office, vehicle, meals, equipment, and more.">
+<link rel="canonical" href="https://indie-calc.com/calculators/expense-estimator/">
+<meta property="og:title" content="Business Expense Deduction Estimator 2026 — IndieCalc">
+<meta property="og:description" content="Calculate how your business deductions reduce your actual tax bill. All common Schedule C categories covered.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://indie-calc.com/calculators/expense-estimator/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Business Expense Deduction Estimator 2026 — IndieCalc">
+<meta name="twitter:description" content="Calculate how your business deductions reduce your actual tax bill. All common Schedule C categories covered.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --hint: #5e5e72;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --red: #dc3545;
+    --green: #28a745;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *:focus { outline: none; }
+  *:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.6; }
+  h2, h3, h4, .subtitle { text-wrap: balance; }
+  p { text-wrap: pretty; }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .container { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  header .brand {
+    font-size: 20px; font-weight: 700; color: white; text-decoration: none;
+    padding: 6px 0; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header .brand span { color: var(--teal); }
+  header a.nav-link {
+    color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px;
+    padding: 12px 8px; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header a.nav-link:hover { color: white; }
+
+  main h1 { font-size: 28px; font-weight: 700; margin: 32px 0 8px; }
+  main h1 small { font-size: 16px; font-weight: 400; color: var(--medium); }
+  h2 { font-size: 22px; font-weight: 700; margin: 32px 0 8px; }
+  .subtitle { color: var(--medium); font-size: 15px; margin-bottom: 28px; }
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 9999;
+    background: var(--dark); color: white; padding: 12px 16px;
+    text-decoration: none; border-radius: 0 0 6px 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  /* Form */
+  .calc-form { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .form-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .form-group { flex: 1; min-width: 200px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--medium); margin-bottom: 4px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 6px;
+    font-size: 15px; font-family: var(--font); color: var(--dark);
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,106,90,0.1); }
+  .form-group .prefix { position: relative; }
+  .form-group .prefix::before { content: '$'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--light); font-size: 15px; }
+  .form-group .prefix input { padding-left: 24px; }
+  .form-group .field-help { font-size: 12px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
+
+  /* Slider */
+  .slider-row { display: flex; align-items: center; gap: 12px; }
+  .slider-row input[type="range"] { flex: 1; accent-color: var(--teal); }
+  .slider-row .slider-value { font-size: 14px; font-weight: 600; color: var(--teal); min-width: 40px; text-align: right; }
+
+  /* Accordion sections for expense categories */
+  .expense-section { margin-bottom: 12px; }
+  .expense-toggle {
+    background: none; border: 1px solid var(--rule); border-radius: 6px;
+    padding: 12px 16px; font-size: 14px; font-weight: 500; color: var(--teal);
+    cursor: pointer; font-family: var(--font); width: 100%; text-align: left;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .expense-toggle:hover { background: var(--teal-light); }
+  .expense-toggle .arrow { transition: transform 0.2s; font-size: 12px; }
+  .expense-toggle.open .arrow { transform: rotate(180deg); }
+  .expense-toggle .section-total {
+    font-size: 12px; color: var(--hint); font-weight: 400; margin-left: auto; margin-right: 12px;
+  }
+  .expense-toggle .section-total.has-value { color: var(--teal); font-weight: 600; }
+  .expense-body {
+    display: none; border: 1px solid var(--rule); border-top: none;
+    border-radius: 0 0 8px 8px; padding: 20px; background: var(--bg);
+  }
+  .expense-body.open { display: block; }
+  .expense-body .form-group { margin-bottom: 12px; }
+  .expense-body .form-group:last-child { margin-bottom: 0; }
+
+  /* Toggle switch for home office method */
+  .toggle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .toggle-row label { font-size: 13px; color: var(--medium); cursor: pointer; }
+  .toggle-switch {
+    position: relative; width: 44px; height: 24px; background: var(--rule);
+    border-radius: 12px; cursor: pointer; transition: background 0.2s; flex-shrink: 0;
+  }
+  .toggle-switch.active { background: var(--teal); }
+  .toggle-switch::after {
+    content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px;
+    background: white; border-radius: 50%; transition: transform 0.2s;
+  }
+  .toggle-switch.active::after { transform: translateX(20px); }
+
+  /* Results */
+  .results { display: none; }
+  .results.visible { display: block; }
+
+  .hero-result { background: var(--teal); border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
+  .hero-result .hero-value { font-size: 48px; font-weight: 700; letter-spacing: -1px; }
+  .hero-result .hero-label { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+  .hero-result .hero-sub { font-size: 13px; opacity: 0.6; margin-top: 8px; }
+
+  .result-summary {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 24px; margin-bottom: 24px;
+  }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+  .summary-item { text-align: center; padding: 12px 8px; background: var(--bg); border-radius: 8px; }
+  .summary-item .value { font-size: 22px; font-weight: 700; color: var(--dark); }
+  .summary-item .label { font-size: 11px; color: var(--medium); margin-top: 2px; }
+  .summary-item.highlight .value { color: var(--teal); }
+  .summary-item.savings .value { color: var(--green); }
+
+  .breakdown { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .breakdown h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .breakdown-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .breakdown-table th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .breakdown-table th:nth-child(2), .breakdown-table th:nth-child(3) { text-align: right; }
+  .breakdown-table td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; }
+  .breakdown-table td:nth-child(2), .breakdown-table td:nth-child(3) { text-align: right; font-weight: 500; }
+  .breakdown-table tr.total td { font-weight: 700; border-top: 2px solid var(--dark); border-bottom: none; padding-top: 12px; }
+  .breakdown-table .note { font-size: 11px; color: var(--hint); font-weight: 400; }
+
+  /* Before/After comparison */
+  .comparison { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .comparison h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .comparison-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; font-size: 14px; }
+  .comparison-grid .col-header { font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--medium); padding: 8px 12px; border-bottom: 1px solid var(--rule); }
+  .comparison-grid .col-header.diff { color: var(--green); }
+  .comparison-grid .cell { padding: 10px 12px; border-bottom: 1px solid #f0f0f5; }
+  .comparison-grid .cell.label { color: var(--medium); font-weight: 500; }
+  .comparison-grid .cell.value { text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .comparison-grid .cell.diff { text-align: right; font-weight: 600; color: var(--green); font-variant-numeric: tabular-nums; }
+
+  /* Missed deductions checklist */
+  .checklist { background: var(--teal-bg); border: 1px solid var(--teal); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .checklist h3 { font-size: 16px; font-weight: 600; color: var(--teal); margin-bottom: 12px; }
+  .checklist ul { list-style: none; padding: 0; }
+  .checklist li { font-size: 13px; color: var(--medium); padding: 6px 0 6px 24px; position: relative; line-height: 1.5; }
+  .checklist li::before { content: '\2610'; position: absolute; left: 0; color: var(--teal); font-size: 15px; }
+
+  .methodology { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .methodology h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .methodology p, .methodology li { font-size: 13px; color: var(--medium); line-height: 1.7; }
+  .methodology ol { padding-left: 20px; }
+  .methodology li { margin-bottom: 4px; }
+  .methodology .source { font-size: 12px; color: var(--light); margin-top: 12px; }
+  .methodology .source a { color: var(--teal); text-decoration: none; }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 24px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  .empty-state {
+    background: var(--teal-bg); border: 1px dashed var(--teal);
+    border-radius: 12px; padding: 32px 24px; text-align: center;
+    color: var(--medium); margin-top: 24px;
+  }
+  .empty-state h3 { color: var(--teal); font-size: 16px; margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .form-row { flex-direction: column; }
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    .result-summary { padding: 20px; }
+    main h1 { font-size: 22px; }
+    h2 { font-size: 19px; }
+    .breakdown { padding: 20px 16px; }
+    .breakdown-table { font-size: 13px; }
+    .comparison-grid { grid-template-columns: 1fr; }
+    .comparison-grid .col-header { display: none; }
+    .comparison-grid .cell { padding: 8px 12px; }
+    .comparison-grid .cell::before { content: attr(data-label); display: block; font-size: 11px; color: var(--light); margin-bottom: 2px; }
+  }
+
+  @media print {
+    header, footer, .calc-form, .checklist { display: none !important; }
+    body { background: white; color: black; }
+    .container { max-width: 100%; padding: 0; }
+    .hero-result { background: white !important; color: black !important; border: 2px solid black; }
+    .hero-result .hero-value { color: black; }
+    .breakdown, .result-summary, .comparison, .methodology { box-shadow: none; border: 1px solid #999; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<header>
+  <div class="container">
+    <a href="../../" class="brand">Indie<span>Calc</span></a>
+    <a href="../../" class="nav-link">&larr; Home</a>
+  </div>
+</header>
+
+<main id="main" class="container">
+  <h1>Business Expense Deduction Estimator <small>Tax Year 2026</small></h1>
+  <p class="subtitle">See how your Schedule C business deductions reduce your actual tax bill &mdash; not just your taxable income, but the real dollar savings.</p>
+
+  <div class="calc-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="grossIncome">Gross Business Income</label>
+        <div class="prefix"><input type="number" id="grossIncome" placeholder="100,000" value="100000"></div>
+      </div>
+      <div class="form-group">
+        <label for="filingStatus">Filing Status</label>
+        <select id="filingStatus">
+          <option value="single">Single</option>
+          <option value="marriedJoint">Married Filing Jointly</option>
+          <option value="marriedSeparate">Married Filing Separately</option>
+          <option value="headOfHousehold">Head of Household</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="state">State</label>
+        <select id="state"></select>
+      </div>
+    </div>
+
+    <h2 style="font-size: 18px; margin: 24px 0 16px;">Expense Categories</h2>
+
+    <!-- Office & Workspace -->
+    <div class="expense-section">
+      <button class="expense-toggle" type="button" data-section="office" aria-expanded="false">
+        <span>Office &amp; Workspace</span>
+        <span class="section-total" id="office-total"></span>
+        <span class="arrow" aria-hidden="true">&#9660;</span>
+      </button>
+      <div class="expense-body" id="office-body">
+        <div class="form-group">
+          <label>Home Office Method</label>
+          <div class="toggle-row">
+            <label>Simplified ($5/sqft)</label>
+            <div class="toggle-switch" id="homeOfficeMethodToggle" role="switch" aria-checked="false" tabindex="0"></div>
+            <label>Actual Expenses</label>
+          </div>
+        </div>
+        <div id="homeOfficeSimplified">
+          <div class="form-group">
+            <label for="homeOfficeSqft">Home Office Square Footage</label>
+            <input type="number" id="homeOfficeSqft" placeholder="0" value="0" min="0" max="300">
+            <div class="field-help">Simplified method: $5/sq ft, max 300 sq ft ($1,500). Space must be used exclusively and regularly for business.</div>
+          </div>
+        </div>
+        <div id="homeOfficeActual" style="display: none;">
+          <div class="form-group">
+            <label for="homeOfficeActualAmt">Home Office Actual Expenses</label>
+            <div class="prefix"><input type="number" id="homeOfficeActualAmt" placeholder="0" value="0"></div>
+            <div class="field-help">Total of rent/mortgage interest, utilities, insurance, repairs allocated to business-use percentage of your home.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="rent">Rent / Coworking Space</label>
+          <div class="prefix"><input type="number" id="rent" placeholder="0" value="0"></div>
+        </div>
+        <div class="form-group">
+          <label for="officeSupplies">Office Supplies &amp; Equipment</label>
+          <div class="prefix"><input type="number" id="officeSupplies" placeholder="0" value="0"></div>
+        </div>
+        <div class="form-group">
+          <label for="internetPhone">Internet &amp; Phone (Total Bill)</label>
+          <div class="prefix"><input type="number" id="internetPhone" placeholder="0" value="0"></div>
+          <div class="field-help">Enter your total bill; the business percentage below will be applied.</div>
+        </div>
+        <div class="form-group">
+          <label for="internetPhonePct">Business Use Percentage</label>
+          <div class="slider-row">
+            <input type="range" id="internetPhonePct" min="0" max="100" value="50">
+            <span class="slider-value" id="internetPhonePctValue">50%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Professional Services -->
+    <div class="expense-section">
+      <button class="expense-toggle" type="button" data-section="professional" aria-expanded="false">
+        <span>Professional Services</span>
+        <span class="section-total" id="professional-total"></span>
+        <span class="arrow" aria-hidden="true">&#9660;</span>
+      </button>
+      <div class="expense-body" id="professional-body">
+        <div class="form-group">
+          <label for="accounting">Accounting &amp; Bookkeeping</label>
+          <div class="prefix"><input type="number" id="accounting" placeholder="0" value="0"></div>
+        </div>
+        <div class="form-group">
+          <label for="legalFees">Legal Fees</label>
+          <div class="prefix"><input type="number" id="legalFees" placeholder="0" value="0"></div>
+        </div>
+        <div class="form-group">
+          <label for="businessInsurance">Business Insurance</label>
+          <div class="prefix"><input type="number" id="businessInsurance" placeholder="0" value="0"></div>
+        </div>
+        <div class="form-group">
+          <label for="profDevelopment">Professional Development / Courses / Books</label>
+          <div class="prefix"><input type="number" id="profDevelopment" placeholder="0" value="0"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technology & Tools -->
+    <div class="expense-section">
+      <button class="expense-toggle" type="button" data-section="technology" aria-expanded="false">
+        <span>Technology &amp; Tools</span>
+        <span class="section-total" id="technology-total"></span>
+        <span class="arrow" aria-hidden="true">&#9660;</span>
+      </button>
+      <div class="expense-body" id="technology-body">
+        <div class="form-group">
+          <label for="software">Software &amp; Subscriptions</label>
+          <div class="prefix"><input type="number" id="software" placeholder="0" value="0"></div>
+          <div class="field-help">SaaS, cloud storage, project management tools, design software, etc.</div>
+        </div>
+        <div class="form-group">
+          <label for="computerEquipment">Computer &amp; Equipment</label>
+          <div class="prefix"><input type="number" id="computerEquipment" placeholder="0" value="0"></div>
+          <div class="field-help">Items over $2,500 may need to be depreciated or deducted under Section 179. This calculator assumes full expensing.</div>
+        </div>
+        <div class="form-group">
+          <label for="websiteHosting">Website &amp; Hosting</label>
+          <div class="prefix"><input type="number" id="websiteHosting" placeholder="0" value="0"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marketing & Sales -->
+    <div class="expense-section">
+      <button class="expense-toggle" type="button" data-section="marketing" aria-expanded="false">
+        <span>Marketing &amp; Sales</span>
+        <span class="section-total" id="marketing-total"></span>
+        <span class="arrow" aria-hidden="true">&#9660;</span>
+      </button>
+      <div class="expense-body" id="marketing-body">
+        <div class="form-group">
+          <label for="advertising">Advertising &amp; Marketing</label>
+          <div class="prefix"><input type="number" id="advertising" placeholder="0" value="0"></div>
+        </div>
+        <div class="form-group">
+          <label for="meals">Business Meals</label>
+          <div class="prefix"><input type="number" id="meals" placeholder="0" value="0"></div>
+          <div class="field-help">Only 50% of business meals are deductible. The calculator applies this limit automatically.</div>
+        </div>
+        <div class="form-group">
+          <label for="travel">Travel (Flights, Hotels, Ground Transport)</label>
+          <div class="prefix"><input type="number" id="travel" placeholder="0" value="0"></div>
+        </div>
+        <div class="form-group">
+          <label for="vehicleMiles">Vehicle / Mileage (Business Miles Driven)</label>
+          <input type="number" id="vehicleMiles" placeholder="0" value="0" min="0">
+          <div class="field-help">Standard mileage rate for 2026: $0.70/mile. Enter total business miles driven.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Health & Retirement -->
+    <div class="expense-section">
+      <button class="expense-toggle" type="button" data-section="health" aria-expanded="false">
+        <span>Health &amp; Retirement</span>
+        <span class="section-total" id="health-total"></span>
+        <span class="arrow" aria-hidden="true">&#9660;</span>
+      </button>
+      <div class="expense-body" id="health-body">
+        <div class="form-group">
+          <label for="healthInsurance">Health Insurance Premiums</label>
+          <div class="prefix"><input type="number" id="healthInsurance" placeholder="0" value="0"></div>
+          <div class="field-help">100% deductible for self-employed individuals. Capped at net self-employment income.</div>
+        </div>
+        <div class="form-group">
+          <label for="retirement">Retirement Contributions (SEP IRA / Solo 401k)</label>
+          <div class="prefix"><input type="number" id="retirement" placeholder="0" value="0"></div>
+          <div class="field-help">Capped at 25% of net self-employment income or $70,000, whichever is less.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" id="emptyState" hidden>
+    <h3>Enter your business income to see results</h3>
+    <p>Add your gross income and any business expenses to see how deductions reduce your total tax bill.</p>
+  </div>
+
+  <section class="results" id="results" role="region" aria-live="polite" aria-atomic="false" aria-label="Deduction estimate results">
+    <div class="hero-result">
+      <div class="hero-label">Your Total Tax Savings from Deductions</div>
+      <div class="hero-value" id="r-taxSavings">--</div>
+      <div class="hero-sub" id="r-taxSavingsSub"></div>
+    </div>
+
+    <div class="result-summary">
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="value" id="r-totalDeductions">--</div>
+          <div class="label">Total Deductions</div>
+        </div>
+        <div class="summary-item savings">
+          <div class="value" id="r-combinedSavings">--</div>
+          <div class="label">Tax Savings<br>(Fed + SE + State)</div>
+        </div>
+        <div class="summary-item highlight">
+          <div class="value" id="r-newEffRate">--</div>
+          <div class="label">New Effective Rate</div>
+        </div>
+        <div class="summary-item highlight">
+          <div class="value" id="r-newTakeHome">--</div>
+          <div class="label">New Take-Home Pay</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="breakdown" id="categoryBreakdown">
+      <h3>Deduction Breakdown by Category</h3>
+      <table class="breakdown-table">
+        <thead><tr><th>Category</th><th>Deductible</th><th>Tax Savings</th></tr></thead>
+        <tbody id="categoryBody"></tbody>
+      </table>
+    </div>
+
+    <div class="comparison" id="beforeAfter">
+      <h3>Before vs. After Deductions</h3>
+      <div class="comparison-grid" id="comparisonGrid">
+        <div class="col-header">Without Deductions</div>
+        <div class="col-header">With Deductions</div>
+        <div class="col-header diff">Savings</div>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <h3>Commonly Missed Deductions</h3>
+      <ul>
+        <li>Self-employment tax deduction (half of SE tax) -- already automatic, no action needed</li>
+        <li>Business use of personal phone and internet service</li>
+        <li>Professional memberships and industry dues</li>
+        <li>Bank and credit card fees on business accounts</li>
+        <li>Continuing education and professional certifications</li>
+        <li>Home office deduction -- even a small dedicated space qualifies</li>
+        <li>Mileage for client meetings, networking events, and conferences</li>
+        <li>Business-related books, publications, and research subscriptions</li>
+      </ul>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Important:</strong> This calculator provides estimates for informational purposes only. It is not tax, legal, or financial advice.
+      Always keep receipts and documentation for all business expenses. Deductions must be ordinary and necessary for your trade or business.
+      Equipment over $2,500 may need to be capitalized and depreciated rather than expensed in a single year (Section 179 and bonus depreciation rules apply).
+      <strong>Consult a qualified CPA or tax professional for complex deductions, home office audits, and vehicle use substantiation.</strong>
+    </div>
+  </section>
+
+  <div class="methodology">
+    <h2>How This Calculator Works</h2>
+    <ol>
+      <li><strong>Tax without deductions:</strong> Calculates your total tax liability (SE tax + federal income tax + state tax) on your gross business income with no business expense deductions.</li>
+      <li><strong>Tax with deductions:</strong> Recalculates using net income (gross minus your deductions) through the same tax engine.</li>
+      <li><strong>Tax savings:</strong> The difference between the two total tax amounts is your actual dollar-for-dollar tax reduction from deductions.</li>
+      <li><strong>Business meals:</strong> Only 50% of business meal expenses are deductible per IRC Section 274.</li>
+      <li><strong>Home office (simplified):</strong> $5 per square foot, maximum 300 sq ft = $1,500 maximum deduction.</li>
+      <li><strong>Vehicle mileage:</strong> Standard mileage rate of $0.70/mile for 2026 (IRS Rev. Proc.).</li>
+      <li><strong>Health insurance:</strong> 100% deductible above-the-line, but capped at net self-employment income.</li>
+      <li><strong>Retirement:</strong> SEP IRA contributions capped at 25% of net SE income or $70,000 (2026 Section 415 limit).</li>
+      <li><strong>Marginal tax savings:</strong> Each category's tax savings is estimated by multiplying the deductible amount by your combined marginal rate (federal + SE + state).</li>
+    </ol>
+    <div class="source">
+      Sources: <a href="https://www.irs.gov/businesses/small-businesses-self-employed/deducting-business-expenses" target="_blank" rel="noopener">IRS - Deducting Business Expenses</a> &middot;
+      <a href="https://www.irs.gov/businesses/small-businesses-self-employed/home-office-deduction" target="_blank" rel="noopener">IRS - Home Office Deduction</a> &middot;
+      <a href="https://www.irs.gov/tax-professionals/standard-mileage-rates" target="_blank" rel="noopener">IRS - Standard Mileage Rates</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">Home</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+<script src="../../src/tax-data.js"></script>
+<script src="../../src/calculator.js"></script>
+<script>
+  // Constants
+  const HOME_OFFICE_RATE_PER_SQFT = 5;
+  const HOME_OFFICE_MAX_SQFT = 300;
+  const MEAL_DEDUCTION_RATE = 0.50;
+  const MILEAGE_RATE_2026 = 0.70;
+  const RETIREMENT_MAX_2026 = 70000;
+  const RETIREMENT_NET_PERCENT = 0.25;
+
+  // Populate state dropdown
+  const stateSelect = document.getElementById('state');
+  const stateEntries = Object.entries(STATES).sort((a, b) => a[1].name.localeCompare(b[1].name));
+  for (const [key, state] of stateEntries) {
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = state.name + (state.hasIncomeTax ? '' : ' (no income tax)');
+    stateSelect.appendChild(option);
+  }
+
+  // Accordion toggles for expense sections
+  document.querySelectorAll('.expense-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const section = toggle.getAttribute('data-section');
+      const body = document.getElementById(section + '-body');
+      const isOpen = toggle.classList.contains('open');
+      toggle.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+      toggle.setAttribute('aria-expanded', !isOpen ? 'true' : 'false');
+    });
+  });
+
+  // Home office method toggle
+  const homeOfficeToggle = document.getElementById('homeOfficeMethodToggle');
+  homeOfficeToggle.addEventListener('click', toggleHomeOfficeMethod);
+  homeOfficeToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleHomeOfficeMethod(); }
+  });
+
+  function toggleHomeOfficeMethod() {
+    const isActual = homeOfficeToggle.classList.toggle('active');
+    homeOfficeToggle.setAttribute('aria-checked', isActual ? 'true' : 'false');
+    document.getElementById('homeOfficeSimplified').style.display = isActual ? 'none' : '';
+    document.getElementById('homeOfficeActual').style.display = isActual ? '' : 'none';
+    calculate();
+  }
+
+  // Slider value display
+  const pctSlider = document.getElementById('internetPhonePct');
+  const pctValue = document.getElementById('internetPhonePctValue');
+  pctSlider.addEventListener('input', () => {
+    pctValue.textContent = pctSlider.value + '%';
+    debouncedCalculate();
+  });
+
+  // Normalize number inputs on blur (strip leading zeros)
+  document.querySelectorAll('input[type="number"]').forEach(el => {
+    el.addEventListener('blur', () => {
+      if (el.value && el.value !== '') {
+        const num = parseFloat(el.value);
+        if (!isNaN(num)) el.value = num;
+      }
+    });
+  });
+
+  // Auto-calculate on input change (debounced)
+  let debounceTimer;
+  function debouncedCalculate() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(calculate, 200);
+  }
+
+  // Attach listeners to all inputs
+  document.querySelectorAll('.calc-form input[type="number"], .calc-form select').forEach(el => {
+    el.addEventListener('input', debouncedCalculate);
+    el.addEventListener('change', debouncedCalculate);
+  });
+
+  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+  function pct(n) { return (n * 100).toFixed(1) + '%'; }
+
+  function getVal(id) { return Math.max(0, parseFloat(document.getElementById(id).value) || 0); }
+
+  function calculate() {
+    const grossIncome = getVal('grossIncome');
+    const filingStatus = document.getElementById('filingStatus').value;
+    const stateKey = document.getElementById('state').value;
+    const state = STATES[stateKey];
+    const federal = FEDERAL['2026'];
+
+    const emptyState = document.getElementById('emptyState');
+    const resultsEl = document.getElementById('results');
+
+    if (grossIncome <= 0) {
+      resultsEl.classList.remove('visible');
+      emptyState.hidden = false;
+      return;
+    }
+    emptyState.hidden = true;
+
+    // Gather expenses
+    const isActualMethod = homeOfficeToggle.classList.contains('active');
+    const homeOfficeSqft = Math.min(getVal('homeOfficeSqft'), HOME_OFFICE_MAX_SQFT);
+    const homeOfficeSimplified = homeOfficeSqft * HOME_OFFICE_RATE_PER_SQFT;
+    const homeOfficeActual = getVal('homeOfficeActualAmt');
+    const homeOfficeDeduction = isActualMethod ? homeOfficeActual : homeOfficeSimplified;
+
+    const rent = getVal('rent');
+    const officeSupplies = getVal('officeSupplies');
+    const internetPhone = getVal('internetPhone');
+    const internetPhonePct = parseInt(pctSlider.value) / 100;
+    const internetPhoneDeduction = internetPhone * internetPhonePct;
+
+    const accounting = getVal('accounting');
+    const legalFees = getVal('legalFees');
+    const businessInsurance = getVal('businessInsurance');
+    const profDevelopment = getVal('profDevelopment');
+
+    const software = getVal('software');
+    const computerEquipment = getVal('computerEquipment');
+    const websiteHosting = getVal('websiteHosting');
+
+    const advertising = getVal('advertising');
+    const mealsRaw = getVal('meals');
+    const mealsDeductible = mealsRaw * MEAL_DEDUCTION_RATE;
+    const travel = getVal('travel');
+    const vehicleMiles = getVal('vehicleMiles');
+    const vehicleDeduction = vehicleMiles * MILEAGE_RATE_2026;
+
+    const healthInsuranceRaw = getVal('healthInsurance');
+    const retirementRaw = getVal('retirement');
+
+    // Calculate net income to determine caps for health/retirement
+    const scheduleC_deductions = homeOfficeDeduction + rent + officeSupplies + internetPhoneDeduction
+      + accounting + legalFees + businessInsurance + profDevelopment
+      + software + computerEquipment + websiteHosting
+      + advertising + mealsDeductible + travel + vehicleDeduction;
+
+    const netSEIncome = Math.max(0, grossIncome - scheduleC_deductions);
+
+    // Cap health insurance at net SE income
+    const healthInsurance = Math.min(healthInsuranceRaw, netSEIncome);
+    // Cap retirement at 25% of net SE income or $70K
+    const retirementCap = Math.min(netSEIncome * RETIREMENT_NET_PERCENT, RETIREMENT_MAX_2026);
+    const retirement = Math.min(retirementRaw, retirementCap);
+
+    const totalDeductions = scheduleC_deductions + healthInsurance + retirement;
+
+    // Calculate tax WITHOUT deductions (gross income, no expenses)
+    const resultWithout = calculateAll(
+      { netProfit: grossIncome, filingStatus, otherIncome: 0 },
+      federal, state
+    );
+
+    // Calculate tax WITH deductions
+    // Schedule C deductions reduce net profit; health/retirement are above-the-line
+    const netProfit = Math.max(0, grossIncome - scheduleC_deductions);
+    const resultWith = calculateAll(
+      { netProfit, filingStatus, otherIncome: 0, healthInsurance, retirementContrib: retirement, otherAboveLine: 0 },
+      federal, state
+    );
+
+    const taxWithout = resultWithout.summary.totalTax;
+    const taxWith = resultWith.summary.totalTax;
+    const taxSavings = Math.max(0, taxWithout - taxWith);
+
+    const takeHomeWithout = grossIncome - taxWithout;
+    const takeHomeWith = grossIncome - taxWith;
+    const effectiveRateWithout = grossIncome > 0 ? taxWithout / grossIncome : 0;
+    const effectiveRateWith = grossIncome > 0 ? taxWith / grossIncome : 0;
+
+    // Marginal rate for per-category savings estimation
+    const marginalRate = grossIncome > 0 && totalDeductions > 0 ? taxSavings / totalDeductions : 0;
+
+    // Hero
+    document.getElementById('r-taxSavings').textContent = fmt(taxSavings);
+    document.getElementById('r-taxSavingsSub').textContent =
+      fmt(totalDeductions) + ' in deductions saving you ' + pct(totalDeductions > 0 ? taxSavings / totalDeductions : 0) + ' per dollar deducted';
+
+    // Summary grid
+    document.getElementById('r-totalDeductions').textContent = fmt(totalDeductions);
+    document.getElementById('r-combinedSavings').textContent = fmt(taxSavings);
+    document.getElementById('r-newEffRate').textContent = pct(effectiveRateWith);
+    document.getElementById('r-newTakeHome').textContent = fmt(takeHomeWith);
+
+    // Category breakdown table
+    const categories = [];
+    if (homeOfficeDeduction > 0) categories.push({ name: 'Home Office' + (isActualMethod ? ' (actual)' : ' (' + homeOfficeSqft + ' sqft)'), entered: isActualMethod ? homeOfficeActual : homeOfficeSqft * HOME_OFFICE_RATE_PER_SQFT, deductible: homeOfficeDeduction, note: isActualMethod ? '' : '$5/sqft, max 300 sqft' });
+    if (rent > 0) categories.push({ name: 'Rent / Coworking', entered: rent, deductible: rent });
+    if (officeSupplies > 0) categories.push({ name: 'Office Supplies & Equipment', entered: officeSupplies, deductible: officeSupplies });
+    if (internetPhoneDeduction > 0) categories.push({ name: 'Internet & Phone (' + Math.round(internetPhonePct * 100) + '% business)', entered: internetPhone, deductible: internetPhoneDeduction });
+    if (accounting > 0) categories.push({ name: 'Accounting & Bookkeeping', entered: accounting, deductible: accounting });
+    if (legalFees > 0) categories.push({ name: 'Legal Fees', entered: legalFees, deductible: legalFees });
+    if (businessInsurance > 0) categories.push({ name: 'Business Insurance', entered: businessInsurance, deductible: businessInsurance });
+    if (profDevelopment > 0) categories.push({ name: 'Professional Development', entered: profDevelopment, deductible: profDevelopment });
+    if (software > 0) categories.push({ name: 'Software & Subscriptions', entered: software, deductible: software });
+    if (computerEquipment > 0) categories.push({ name: 'Computer & Equipment', entered: computerEquipment, deductible: computerEquipment, note: computerEquipment > 2500 ? 'Items >$2,500 may require depreciation' : '' });
+    if (websiteHosting > 0) categories.push({ name: 'Website & Hosting', entered: websiteHosting, deductible: websiteHosting });
+    if (advertising > 0) categories.push({ name: 'Advertising & Marketing', entered: advertising, deductible: advertising });
+    if (mealsRaw > 0) categories.push({ name: 'Business Meals (50% limit)', entered: mealsRaw, deductible: mealsDeductible, note: 'Only 50% deductible' });
+    if (travel > 0) categories.push({ name: 'Travel', entered: travel, deductible: travel });
+    if (vehicleDeduction > 0) categories.push({ name: 'Vehicle (' + Math.round(vehicleMiles).toLocaleString() + ' mi x $0.70)', entered: vehicleMiles * MILEAGE_RATE_2026, deductible: vehicleDeduction });
+    if (healthInsurance > 0) categories.push({ name: 'Health Insurance', entered: healthInsuranceRaw, deductible: healthInsurance, note: healthInsuranceRaw > healthInsurance ? 'Capped at net SE income' : '100% deductible' });
+    if (retirement > 0) categories.push({ name: 'Retirement (SEP/Solo 401k)', entered: retirementRaw, deductible: retirement, note: retirementRaw > retirement ? 'Capped at ' + fmt(retirementCap) : '' });
+
+    const categoryBody = document.getElementById('categoryBody');
+    categoryBody.replaceChildren();
+    const frag = document.createDocumentFragment();
+    for (const cat of categories) {
+      const tr = document.createElement('tr');
+      const td1 = document.createElement('td');
+      td1.textContent = cat.name;
+      if (cat.note) {
+        const noteSpan = document.createElement('span');
+        noteSpan.className = 'note';
+        noteSpan.textContent = ' ' + cat.note;
+        td1.appendChild(noteSpan);
+      }
+      const td2 = document.createElement('td');
+      td2.textContent = fmt(cat.deductible);
+      const td3 = document.createElement('td');
+      td3.textContent = fmt(cat.deductible * marginalRate);
+      td3.style.color = 'var(--green)';
+      tr.append(td1, td2, td3);
+      frag.appendChild(tr);
+    }
+    // Total row
+    const trTotal = document.createElement('tr');
+    trTotal.className = 'total';
+    const tdT1 = document.createElement('td'); tdT1.textContent = 'Total';
+    const tdT2 = document.createElement('td'); tdT2.textContent = fmt(totalDeductions);
+    const tdT3 = document.createElement('td'); tdT3.textContent = fmt(taxSavings); tdT3.style.color = 'var(--green)';
+    trTotal.append(tdT1, tdT2, tdT3);
+    frag.appendChild(trTotal);
+    categoryBody.appendChild(frag);
+
+    // Before/After comparison
+    const compGrid = document.getElementById('comparisonGrid');
+    compGrid.replaceChildren();
+
+    const headers = ['Without Deductions', 'With Deductions', 'Savings'];
+    const headerFrag = document.createDocumentFragment();
+    headers.forEach((h, i) => {
+      const div = document.createElement('div');
+      div.className = 'col-header' + (i === 2 ? ' diff' : '');
+      div.textContent = h;
+      headerFrag.appendChild(div);
+    });
+    compGrid.appendChild(headerFrag);
+
+    const rows = [
+      { label: 'Gross Income', without: fmt(grossIncome), with: fmt(grossIncome), diff: '--' },
+      { label: 'Total Tax', without: fmt(taxWithout), with: fmt(taxWith), diff: '-' + fmt(taxSavings) },
+      { label: 'Effective Rate', without: pct(effectiveRateWithout), with: pct(effectiveRateWith), diff: '-' + pct(effectiveRateWithout - effectiveRateWith) },
+      { label: 'Take-Home Pay', without: fmt(takeHomeWithout), with: fmt(takeHomeWith), diff: '+' + fmt(takeHomeWith - takeHomeWithout) },
+    ];
+
+    const rowFrag = document.createDocumentFragment();
+    for (const row of rows) {
+      const cells = [
+        { text: row.without, cls: 'cell value', label: row.label + ' (without)' },
+        { text: row.with, cls: 'cell value', label: row.label + ' (with)' },
+        { text: row.diff, cls: 'cell diff', label: row.label + ' (savings)' },
+      ];
+      for (const c of cells) {
+        const div = document.createElement('div');
+        div.className = c.cls;
+        div.textContent = c.text;
+        div.setAttribute('data-label', c.label);
+        rowFrag.appendChild(div);
+      }
+    }
+    compGrid.appendChild(rowFrag);
+
+    // Update section totals in accordion headers
+    updateSectionTotals(homeOfficeDeduction, rent, officeSupplies, internetPhoneDeduction,
+      accounting, legalFees, businessInsurance, profDevelopment,
+      software, computerEquipment, websiteHosting,
+      advertising, mealsDeductible, travel, vehicleDeduction,
+      healthInsurance, retirement);
+
+    resultsEl.classList.add('visible');
+  }
+
+  function updateSectionTotals(homeOffice, rent, supplies, internetPhone,
+    accounting, legal, insurance, profDev,
+    software, computer, website,
+    advertising, meals, travel, vehicle,
+    health, retirement) {
+
+    const sections = {
+      'office': homeOffice + rent + supplies + internetPhone,
+      'professional': accounting + legal + insurance + profDev,
+      'technology': software + computer + website,
+      'marketing': advertising + meals + travel + vehicle,
+      'health': health + retirement,
+    };
+
+    for (const [id, total] of Object.entries(sections)) {
+      const el = document.getElementById(id + '-total');
+      if (total > 0) {
+        el.textContent = fmt(total);
+        el.classList.add('has-value');
+      } else {
+        el.textContent = '';
+        el.classList.remove('has-value');
+      }
+    }
+  }
+
+  // Run on page load
+  setTimeout(calculate, 100);
+</script>
+
+</body>
+</html>
