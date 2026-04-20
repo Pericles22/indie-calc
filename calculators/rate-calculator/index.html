@@ -66,6 +66,11 @@
     text-decoration: none; border-radius: 0 0 6px 0;
   }
   .skip-link:focus { left: 0; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0);
+    white-space: nowrap; border: 0;
+  }
 
   /* Form */
   .calc-form { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
@@ -155,8 +160,24 @@
     .breakdown-table { font-size: 13px; }
   }
 
+  /* Cross-links to other calculators */
+  .cross-links { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .cross-links h3 { font-size: 15px; font-weight: 600; color: var(--medium); margin-bottom: 12px; }
+  .cross-link-card {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border: 1px solid var(--rule); border-radius: 8px;
+    text-decoration: none; color: var(--dark); margin-bottom: 8px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .cross-link-card:last-child { margin-bottom: 0; }
+  .cross-link-card:hover { border-color: var(--teal); background: var(--teal-bg); }
+  .cross-link-card .cl-text { flex: 1; }
+  .cross-link-card .cl-name { font-size: 14px; font-weight: 600; color: var(--teal); }
+  .cross-link-card .cl-desc { font-size: 12px; color: var(--hint); margin-top: 2px; }
+  .cross-link-card .cl-arrow { font-size: 16px; color: var(--light); margin-left: 12px; flex-shrink: 0; }
+
   @media print {
-    header, footer, .calc-form, .toast { display: none !important; }
+    header, footer, .calc-form, .toast, .cross-links { display: none !important; }
     body { background: white; color: black; }
     .container { max-width: 100%; padding: 0; }
     .hero-result { background: white !important; color: black !important; border: 2px solid black; }
@@ -320,6 +341,11 @@
       Your actual tax liability depends on deductions, credits, other income, and factors not captured here.
       <strong>Consult a qualified tax professional for your specific situation.</strong>
     </div>
+
+    <div class="cross-links" id="crossLinks">
+      <h3>Continue with your numbers</h3>
+      <div id="crossLinkCards"></div>
+    </div>
   </section>
 
   <div class="methodology">
@@ -441,12 +467,22 @@
   }
 
   /**
-   * Compute take-home pay for a given net profit (SE income).
-   * Mirrors the SE tax calculator logic including CTC.
+   * Compute the freelance-only take-home for a given net profit (SE income).
+   * Uses the marginal approach: freelance take-home = netProfit - (totalTax with freelancing - totalTax without freelancing).
+   * This correctly isolates the tax burden attributable to freelance income,
+   * so the user's target is what they keep from freelancing alone.
    */
   function computeTakeHome(netProfit, filingStatus, state, federal, otherIncome, numChildren, healthInsurance, retirementContrib) {
-    const result = computeFullResult(netProfit, filingStatus, state, federal, otherIncome, numChildren, healthInsurance, retirementContrib);
-    return result.takeHome;
+    const resultWith = computeFullResult(netProfit, filingStatus, state, federal, otherIncome, numChildren, healthInsurance, retirementContrib);
+    if (otherIncome <= 0) {
+      // No other income — freelance take-home is simply totalIncome - totalTax
+      return resultWith.takeHome;
+    }
+    // Compute tax on other income alone (no freelance income)
+    const resultWithout = computeFullResult(0, filingStatus, state, federal, otherIncome, numChildren, 0, 0);
+    // The marginal tax burden from adding freelance income
+    const freelanceTaxBurden = resultWith.totalTax - resultWithout.totalTax;
+    return netProfit - freelanceTaxBurden;
   }
 
   /**
@@ -653,8 +689,45 @@
     }
     comparisonBody.appendChild(cFrag);
 
+    // Cross-links to other calculators.
+    const clContainer = document.getElementById('crossLinkCards');
+    clContainer.replaceChildren();
+    const clIncome = Math.round(grossRevenue);
+    const clStatus = filingStatus;
+    const clState = stateKey;
+    const crossLinks = [
+      { name: 'Self-Employment Tax Calculator', desc: 'See the full tax breakdown at this income', href: '../self-employment-tax/?income=' + clIncome + '&status=' + clStatus + '&state=' + clState },
+      { name: 'Expense Estimator', desc: 'Lower your required rate with deductions', href: '../expense-estimator/?income=' + clIncome + '&status=' + clStatus + '&state=' + clState },
+    ];
+    const clFrag = document.createDocumentFragment();
+    for (const cl of crossLinks) {
+      const a = document.createElement('a');
+      a.className = 'cross-link-card';
+      a.href = cl.href;
+      a.innerHTML = '<div class="cl-text"><div class="cl-name">' + cl.name + '</div><div class="cl-desc">' + cl.desc + '</div></div><span class="cl-arrow" aria-hidden="true">&rarr;</span>';
+      clFrag.appendChild(a);
+    }
+    clContainer.appendChild(clFrag);
+
     resultsEl.classList.add('visible');
   }
+
+  // Read cross-link query params and pre-fill fields.
+  (function prefillFromQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('income')) document.getElementById('targetIncome').value = params.get('income');
+    if (params.get('takehome')) document.getElementById('targetIncome').value = params.get('takehome');
+    if (params.get('status')) document.getElementById('filingStatus').value = params.get('status');
+    if (params.get('state')) {
+      const stateVal = params.get('state');
+      if (STATES[stateVal]) document.getElementById('state').value = stateVal;
+    }
+    if (params.get('expenses')) document.getElementById('businessExpenses').value = params.get('expenses');
+    if (params.get('other')) document.getElementById('otherIncome').value = params.get('other');
+    if (params.get('children')) document.getElementById('numChildren').value = params.get('children');
+    if (params.get('health')) document.getElementById('healthInsurance').value = params.get('health');
+    if (params.get('retirement')) document.getElementById('retirementContrib').value = params.get('retirement');
+  })();
 
   // Run on page load
   setTimeout(calculate, 100);

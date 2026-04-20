@@ -263,9 +263,25 @@
     .quarter-grid { grid-template-columns: 1fr; }
   }
 
+  /* Cross-links to other calculators */
+  .cross-links { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .cross-links h3 { font-size: 15px; font-weight: 600; color: var(--medium); margin-bottom: 12px; }
+  .cross-link-card {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border: 1px solid var(--rule); border-radius: 8px;
+    text-decoration: none; color: var(--dark); margin-bottom: 8px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .cross-link-card:last-child { margin-bottom: 0; }
+  .cross-link-card:hover { border-color: var(--teal); background: var(--teal-bg); }
+  .cross-link-card .cl-text { flex: 1; }
+  .cross-link-card .cl-name { font-size: 14px; font-weight: 600; color: var(--teal); }
+  .cross-link-card .cl-desc { font-size: 12px; color: var(--hint); margin-top: 2px; }
+  .cross-link-card .cl-arrow { font-size: 16px; color: var(--light); margin-left: 12px; flex-shrink: 0; }
+
   @media print {
     header, footer, .calc-form, .lead-capture, .menu-wrapper, .toast,
-    .methodology p:last-child { display: none !important; }
+    .cross-links, .methodology p:last-child { display: none !important; }
     body { background: white; color: black; }
     .container { max-width: 100%; padding: 0; }
     .hero-result { background: white !important; color: black !important;
@@ -333,6 +349,11 @@
         <label for="priorYearTax">Prior Year Total Tax (from last year's return) -- optional</label>
         <div class="prefix"><input type="number" id="priorYearTax" placeholder="0" value="0"></div>
         <div class="field-help">Line 24 of your 2025 Form 1040. Used for safe harbor calculation. Leave at 0 if this is your first year.</div>
+      </div>
+      <div class="form-group">
+        <label for="priorYearAGI">Prior Year AGI -- optional</label>
+        <div class="prefix"><input type="number" id="priorYearAGI" placeholder="0" value="0"></div>
+        <div class="field-help">Line 11 of your 2025 Form 1040. If your prior year AGI exceeded $150,000 ($75,000 MFS), the safe harbor is 110% of prior year tax instead of 100%.</div>
       </div>
       <div class="form-group">
         <label for="withholding">W-2 Tax Already Withheld (2026) -- optional</label>
@@ -419,6 +440,11 @@
       Quarterly estimated taxes are typically required if you expect to owe $1,000 or more in tax when you file your return.
       State quarterly requirements vary. Your city or municipality may levy additional local income taxes not reflected here.
       <strong>Consult a qualified tax professional for your specific situation.</strong>
+    </div>
+
+    <div class="cross-links" id="crossLinks">
+      <h3>Continue with your numbers</h3>
+      <div id="crossLinkCards"></div>
     </div>
 
     <div style="text-align: center; margin-bottom: 24px;">
@@ -589,7 +615,7 @@
   let debounceTimer;
   function debounce(fn, ms) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fn(...args), ms); }; }
 
-  document.querySelectorAll('#netProfit, #otherIncome, #priorYearTax, #withholding').forEach(el => {
+  document.querySelectorAll('#netProfit, #otherIncome, #priorYearTax, #priorYearAGI, #withholding').forEach(el => {
     el.addEventListener('input', debounce(() => { calculate(); persistState(); }, 200));
   });
   document.querySelectorAll('#filingStatus, #state').forEach(el => {
@@ -636,7 +662,7 @@
   }
 
   /* ── URL state persistence ── */
-  const STATE_PARAMS_NUM = ['netProfit', 'otherIncome', 'priorYearTax', 'withholding'];
+  const STATE_PARAMS_NUM = ['netProfit', 'otherIncome', 'priorYearTax', 'priorYearAGI', 'withholding'];
   const STATE_PARAMS_SEL = ['filingStatus', 'state'];
   function persistState() {
     const params = new URLSearchParams();
@@ -661,6 +687,18 @@
   }
   hydrateFromHash();
 
+  // Read cross-link query params and pre-fill fields.
+  (function prefillFromQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('income')) document.getElementById('netProfit').value = params.get('income');
+    if (params.get('status')) document.getElementById('filingStatus').value = params.get('status');
+    if (params.get('state')) {
+      const stateVal = params.get('state');
+      if (STATES[stateVal]) document.getElementById('state').value = stateVal;
+    }
+    if (params.get('other')) document.getElementById('otherIncome').value = params.get('other');
+  })();
+
   /* ── Initial calculation on page load ── */
   setTimeout(() => { calculate(); }, 100);
 
@@ -683,6 +721,7 @@
     const stateKey = document.getElementById('state').value;
     const otherIncome = Math.max(0, parseFloat(document.getElementById('otherIncome').value) || 0);
     const priorYearTax = Math.max(0, parseFloat(document.getElementById('priorYearTax').value) || 0);
+    const priorYearAGI = Math.max(0, parseFloat(document.getElementById('priorYearAGI').value) || 0);
     const withholding = Math.max(0, parseFloat(document.getElementById('withholding').value) || 0);
 
     const federal = FEDERAL['2026'];
@@ -714,7 +753,11 @@
     const highIncomeThreshold = filingStatus === 'marriedSeparate'
       ? HIGH_INCOME_AGI_THRESHOLD_MFS
       : HIGH_INCOME_AGI_THRESHOLD;
-    const priorYearMultiplier = totalIncome > highIncomeThreshold
+    /* The 110% rule is based on PRIOR-year AGI, not current year income.
+       If prior year AGI is provided, use it. Otherwise fall back to current
+       year income as an approximation and add a note for the user. */
+    const agiForThreshold = priorYearAGI > 0 ? priorYearAGI : totalIncome;
+    const priorYearMultiplier = agiForThreshold > highIncomeThreshold
       ? SAFE_HARBOR_HIGH_INCOME_PCT
       : SAFE_HARBOR_PRIOR_YEAR_PCT;
     const priorYearSafeHarbor = priorYearTax * priorYearMultiplier;
@@ -835,8 +878,8 @@
     if (priorYearTax > 0 && priorYearSafeHarbor < currentYear90) {
       priorYearItem.classList.add('recommended');
     }
-    const priorLabel = totalIncome > highIncomeThreshold
-      ? '110% of 2025 Tax (AGI > ' + fmt(highIncomeThreshold) + ')'
+    const priorLabel = agiForThreshold > highIncomeThreshold
+      ? '110% of 2025 Tax (prior AGI > ' + fmt(highIncomeThreshold) + ')'
       : '100% of 2025 Tax';
     priorYearItem.innerHTML =
       '<div class="sh-value">' + (priorYearTax > 0 ? fmt(priorYearSafeHarbor) : 'N/A') + '</div>' +
@@ -848,9 +891,16 @@
 
     const shNote = document.getElementById('safeHarborNote');
     if (priorYearTax > 0) {
-      shNote.textContent = 'Pay at least the lesser of these two amounts each year (' +
+      let noteText = 'Pay at least the lesser of these two amounts each year (' +
         fmt(safeHarborPerQuarter) + '/quarter) to avoid underpayment penalties. ' +
         'The IRS uses the lower threshold to determine your safe harbor.';
+      if (priorYearAGI <= 0) {
+        noteText += ' Note: We are using your current-year income as an estimate for prior-year AGI. ' +
+          'If your 2025 AGI exceeded ' + fmt(highIncomeThreshold) +
+          (filingStatus === 'marriedSeparate' ? ' (married filing separately)' : '') +
+          ', enter it above to ensure the correct 100% vs 110% safe harbor rate applies.';
+      }
+      shNote.textContent = noteText;
     } else {
       shNote.textContent = 'Enter your prior year tax (line 24 of your 2025 Form 1040) to see ' +
         'the prior-year safe harbor option. Without it, aim for 90% of your current year estimate.';
@@ -953,6 +1003,26 @@
     body.appendChild(bFrag);
 
     document.getElementById('lastUpdated').textContent = 'Tax data last verified: April 2026. Sources: IRS Form 1040-ES, SSA, Tax Foundation, state revenue depts.';
+
+    // Cross-links to other calculators.
+    const clContainer = document.getElementById('crossLinkCards');
+    clContainer.replaceChildren();
+    const clIncome = Math.round(netProfit);
+    const clStatus = filingStatus;
+    const clState = stateKey;
+    const crossLinks = [
+      { name: 'Self-Employment Tax Calculator', desc: 'See your full tax breakdown', href: '../self-employment-tax/?income=' + clIncome + '&status=' + clStatus + '&state=' + clState },
+      { name: 'Expense Estimator', desc: 'Lower your quarterly payments with deductions', href: '../expense-estimator/?income=' + clIncome + '&status=' + clStatus + '&state=' + clState },
+    ];
+    const clFrag = document.createDocumentFragment();
+    for (const cl of crossLinks) {
+      const a = document.createElement('a');
+      a.className = 'cross-link-card';
+      a.href = cl.href;
+      a.innerHTML = '<div class="cl-text"><div class="cl-name">' + cl.name + '</div><div class="cl-desc">' + cl.desc + '</div></div><span class="cl-arrow" aria-hidden="true">&rarr;</span>';
+      clFrag.appendChild(a);
+    }
+    clContainer.appendChild(clFrag);
 
     resultsEl.classList.add('visible');
   }

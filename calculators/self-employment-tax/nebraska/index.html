@@ -249,9 +249,24 @@
     #bracketBreakdown .breakdown-table td + td { padding-left: 6px; }
   }
 
+  /* Cross-links to other calculators */
+  .cross-links { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .cross-links h3 { font-size: 15px; font-weight: 600; color: var(--medium); margin-bottom: 12px; }
+  .cross-link-card {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border: 1px solid var(--rule); border-radius: 8px;
+    text-decoration: none; color: var(--dark); margin-bottom: 8px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .cross-link-card:last-child { margin-bottom: 0; }
+  .cross-link-card:hover { border-color: var(--teal); background: var(--teal-bg); }
+  .cross-link-card .cl-text { flex: 1; }
+  .cross-link-card .cl-name { font-size: 14px; font-weight: 600; color: var(--teal); }
+  .cross-link-card .cl-desc { font-size: 12px; color: var(--hint); margin-top: 2px; }
+  .cross-link-card .cl-arrow { font-size: 16px; color: var(--light); margin-left: 12px; flex-shrink: 0; }
   @media print {
     header, footer, .calc-form, .lead-capture, .menu-wrapper, .toast,
-    #stateCompare, .methodology p:last-child { display: none !important; }
+    #stateCompare, .cross-links, .methodology p:last-child { display: none !important; }
     body { background: white; color: black; }
     .container { max-width: 100%; padding: 0; }
     .hero-result { background: white !important; color: black !important;
@@ -476,6 +491,11 @@
       <div id="stateLinks"></div>
     </div>
 
+    <div class="cross-links" id="crossLinks">
+      <h3>Continue with your numbers</h3>
+      <div id="crossLinkCards"></div>
+    </div>
+
     <div style="text-align: center; margin-bottom: 24px;">
       <div class="menu-wrapper">
         <button type="button" class="has-menu" id="errorCTA" aria-haspopup="true" aria-expanded="false" aria-controls="errorMenu" onclick="toggleEmailMenu(event, 'errorMenu')" style="font-size: 13px; color: var(--hint); background: none; border: 1px solid var(--rule); padding: 10px 16px; border-radius: 6px; cursor: pointer; font-family: var(--font); min-height: 44px;">See an error? Let us know<span class="caret" aria-hidden="true">&#9662;</span></button>
@@ -677,6 +697,20 @@
     if (any) { updateSSTBRow(); updateSpouseSeniorRow(); }
   }
   hydrateFromHash();
+  // Read cross-link query params and pre-fill fields.
+  (function prefillFromQueryParams() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get("income")) document.getElementById("netProfit").value = params.get("income");
+    if (params.get("status")) document.getElementById("filingStatus").value = params.get("status");
+    if (params.get("state")) {
+      var stateVal = params.get("state");
+      if (STATES[stateVal]) document.getElementById("state").value = stateVal;
+    }
+    if (params.get("other")) document.getElementById("otherIncome").value = params.get("other");
+    if (params.get("children")) document.getElementById("numChildren").value = params.get("children");
+    if (params.get("health")) document.getElementById("healthInsurance").value = params.get("health");
+    if (params.get("retirement")) document.getElementById("retirementContrib").value = params.get("retirement");
+  })();
 
   setTimeout(function() { shouldScroll = false; updateSSTBRow(); updateSpouseSeniorRow(); calculate(); }, 100);
 
@@ -859,6 +893,30 @@
     var sstbThreshold = federal.qbiThreshold[filingStatus] || federal.qbiThreshold.single;
     document.getElementById('sstbWarning').style.display = (includeQBI && !isSSTB && totalIncome > sstbThreshold) ? 'block' : 'none';
     document.getElementById('lastUpdated').textContent = 'Tax data last verified: April 2026.';
+    // Cross-links to other calculators with current values as query params.
+    var clContainer = document.getElementById('crossLinkCards');
+    clContainer.replaceChildren();
+    var clIncome = Math.round(netProfit);
+    var clStatus = filingStatus;
+    var clState = stateKey;
+    var clOther = Math.round(otherIncome);
+    var clTakeHome = Math.round(s.takeHome);
+    var crossLinksData = [
+      { name: 'Quarterly Tax Calculator', desc: 'See your quarterly payment schedule', href: '../../quarterly-tax/?income=' + clIncome + '&status=' + clStatus + '&state=' + clState + (clOther > 0 ? '&other=' + clOther : '') },
+      { name: 'Expense Estimator', desc: 'See how deductions could lower your tax bill', href: '../../expense-estimator/?income=' + clIncome + '&status=' + clStatus + '&state=' + clState },
+      { name: 'LLC vs S-Corp Comparison', desc: 'Could you save with an S-Corp?', href: '../../llc-vs-scorp/?income=' + clIncome + '&status=' + clStatus + '&state=' + clState },
+      { name: 'Rate Calculator', desc: 'What hourly rate do you need for this take-home?', href: '../../rate-calculator/?takehome=' + clTakeHome + '&status=' + clStatus + '&state=' + clState },
+    ];
+    var clFrag = document.createDocumentFragment();
+    for (var cli = 0; cli < crossLinksData.length; cli++) {
+      var cl = crossLinksData[cli];
+      var a = document.createElement('a');
+      a.className = 'cross-link-card';
+      a.href = cl.href;
+      a.innerHTML = '<div class="cl-text"><div class="cl-name">' + cl.name + '</div><div class="cl-desc">' + cl.desc + '</div></div><span class="cl-arrow" aria-hidden="true">&rarr;</span>';
+      clFrag.appendChild(a);
+    }
+    clContainer.appendChild(clFrag);
     resultsEl.classList.add('visible');
     if (shouldScroll) { resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); shouldScroll = false; }
   }

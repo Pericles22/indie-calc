@@ -66,6 +66,11 @@
     text-decoration: none; border-radius: 0 0 6px 0;
   }
   .skip-link:focus { left: 0; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0);
+    white-space: nowrap; border: 0;
+  }
 
   /* Form */
   .calc-form { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
@@ -157,7 +162,7 @@
   /* Before/After comparison */
   .comparison { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
   .comparison h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
-  .comparison-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; font-size: 14px; }
+  .comparison-grid { display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 0; font-size: 14px; }
   .comparison-grid .col-header { font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--medium); padding: 8px 12px; border-bottom: 1px solid var(--rule); }
   .comparison-grid .col-header.diff { color: var(--green); }
   .comparison-grid .cell { padding: 10px 12px; border-bottom: 1px solid #f0f0f5; }
@@ -203,12 +208,29 @@
     .breakdown-table { font-size: 13px; }
     .comparison-grid { grid-template-columns: 1fr; }
     .comparison-grid .col-header { display: none; }
+    .comparison-grid .cell.label { display: none; }
     .comparison-grid .cell { padding: 8px 12px; }
     .comparison-grid .cell::before { content: attr(data-label); display: block; font-size: 11px; color: var(--light); margin-bottom: 2px; }
   }
 
+  /* Cross-links to other calculators */
+  .cross-links { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .cross-links h3 { font-size: 15px; font-weight: 600; color: var(--medium); margin-bottom: 12px; }
+  .cross-link-card {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border: 1px solid var(--rule); border-radius: 8px;
+    text-decoration: none; color: var(--dark); margin-bottom: 8px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .cross-link-card:last-child { margin-bottom: 0; }
+  .cross-link-card:hover { border-color: var(--teal); background: var(--teal-bg); }
+  .cross-link-card .cl-text { flex: 1; }
+  .cross-link-card .cl-name { font-size: 14px; font-weight: 600; color: var(--teal); }
+  .cross-link-card .cl-desc { font-size: 12px; color: var(--hint); margin-top: 2px; }
+  .cross-link-card .cl-arrow { font-size: 16px; color: var(--light); margin-left: 12px; flex-shrink: 0; }
+
   @media print {
-    header, footer, .calc-form, .checklist { display: none !important; }
+    header, footer, .calc-form, .checklist, .cross-links { display: none !important; }
     body { background: white; color: black; }
     .container { max-width: 100%; padding: 0; }
     .hero-result { background: white !important; color: black !important; border: 2px solid black; }
@@ -407,7 +429,7 @@
         <div class="form-group">
           <label for="retirement">Retirement Contributions (SEP IRA / Solo 401k)</label>
           <div class="prefix"><input type="number" id="retirement" placeholder="0" value="0"></div>
-          <div class="field-help">Capped at 25% of net self-employment income or $70,000, whichever is less.</div>
+          <div class="field-help">Capped at ~18.6% of gross net SE income (equivalent to 25% of net SE income after the self-employment adjustment) or $70,000, whichever is less.</div>
         </div>
       </div>
     </div>
@@ -441,7 +463,7 @@
         </div>
         <div class="summary-item highlight">
           <div class="value" id="r-newTakeHome">--</div>
-          <div class="label">New Take-Home Pay</div>
+          <div class="label">After-Tax Income</div>
         </div>
       </div>
     </div>
@@ -483,6 +505,11 @@
       Equipment over $2,500 may need to be capitalized and depreciated rather than expensed in a single year (Section 179 and bonus depreciation rules apply).
       <strong>Consult a qualified CPA or tax professional for complex deductions, home office audits, and vehicle use substantiation.</strong>
     </div>
+
+    <div class="cross-links" id="crossLinks">
+      <h3>Continue with your numbers</h3>
+      <div id="crossLinkCards"></div>
+    </div>
   </section>
 
   <div class="methodology">
@@ -495,7 +522,7 @@
       <li><strong>Home office (simplified):</strong> $5 per square foot, maximum 300 sq ft = $1,500 maximum deduction.</li>
       <li><strong>Vehicle mileage:</strong> Standard mileage rate of $0.70/mile for 2026 (IRS Rev. Proc.).</li>
       <li><strong>Health insurance:</strong> 100% deductible above-the-line, but capped at net self-employment income.</li>
-      <li><strong>Retirement:</strong> SEP IRA contributions capped at 25% of net SE income or $70,000 (2026 Section 415 limit).</li>
+      <li><strong>Retirement:</strong> SEP IRA contributions capped at ~18.6% of gross net SE income (the 25% statutory rate applied after the self-employment adjustment) or $70,000 (2026 Section 415 limit).</li>
       <li><strong>Marginal tax savings:</strong> Each category's tax savings is estimated by multiplying the deductible amount by your combined marginal rate (federal + SE + state).</li>
     </ol>
     <div class="source">
@@ -522,7 +549,7 @@
   const MEAL_DEDUCTION_RATE = 0.50;
   const MILEAGE_RATE_2026 = 0.70;
   const RETIREMENT_MAX_2026 = 70000;
-  const RETIREMENT_NET_PERCENT = 0.25;
+  const RETIREMENT_NET_PERCENT = 0.18587;
 
   // Populate state dropdown
   const stateSelect = document.getElementById('state');
@@ -681,7 +708,7 @@
     const taxSavings = Math.max(0, taxWithout - taxWith);
 
     const takeHomeWithout = grossIncome - taxWithout;
-    const takeHomeWith = grossIncome - taxWith;
+    const takeHomeWith = grossIncome - totalDeductions - taxWith;
     const effectiveRateWithout = grossIncome > 0 ? taxWithout / grossIncome : 0;
     const effectiveRateWith = grossIncome > 0 ? taxWith / grossIncome : 0;
 
@@ -754,11 +781,11 @@
     const compGrid = document.getElementById('comparisonGrid');
     compGrid.replaceChildren();
 
-    const headers = ['Without Deductions', 'With Deductions', 'Savings'];
+    const headers = ['', 'Without Deductions', 'With Deductions', 'Savings'];
     const headerFrag = document.createDocumentFragment();
     headers.forEach((h, i) => {
       const div = document.createElement('div');
-      div.className = 'col-header' + (i === 2 ? ' diff' : '');
+      div.className = 'col-header' + (i === 3 ? ' diff' : '');
       div.textContent = h;
       headerFrag.appendChild(div);
     });
@@ -768,11 +795,16 @@
       { label: 'Gross Income', without: fmt(grossIncome), with: fmt(grossIncome), diff: '--' },
       { label: 'Total Tax', without: fmt(taxWithout), with: fmt(taxWith), diff: '-' + fmt(taxSavings) },
       { label: 'Effective Rate', without: pct(effectiveRateWithout), with: pct(effectiveRateWith), diff: '-' + pct(effectiveRateWithout - effectiveRateWith) },
-      { label: 'Take-Home Pay', without: fmt(takeHomeWithout), with: fmt(takeHomeWith), diff: '+' + fmt(takeHomeWith - takeHomeWithout) },
+      { label: 'After-Tax Income', without: fmt(takeHomeWithout), with: fmt(takeHomeWith), diff: '+' + fmt(takeHomeWith - takeHomeWithout) },
     ];
 
     const rowFrag = document.createDocumentFragment();
     for (const row of rows) {
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'cell label';
+      labelDiv.textContent = row.label;
+      rowFrag.appendChild(labelDiv);
+
       const cells = [
         { text: row.without, cls: 'cell value', label: row.label + ' (without)' },
         { text: row.with, cls: 'cell value', label: row.label + ' (with)' },
@@ -794,6 +826,26 @@
       software, computerEquipment, websiteHosting,
       advertising, mealsDeductible, travel, vehicleDeduction,
       healthInsurance, retirement);
+
+    // Cross-links to other calculators.
+    const clContainer = document.getElementById('crossLinkCards');
+    clContainer.replaceChildren();
+    const clNetIncome = Math.round(netProfit);
+    const clStatus = filingStatus;
+    const clState = stateKey;
+    const crossLinks = [
+      { name: 'Self-Employment Tax Calculator', desc: 'See your updated tax breakdown', href: '../self-employment-tax/?income=' + clNetIncome + '&status=' + clStatus + '&state=' + clState },
+      { name: 'Quarterly Tax Calculator', desc: 'See quarterly payments with deductions applied', href: '../quarterly-tax/?income=' + clNetIncome + '&status=' + clStatus + '&state=' + clState },
+    ];
+    const clFrag = document.createDocumentFragment();
+    for (const cl of crossLinks) {
+      const a = document.createElement('a');
+      a.className = 'cross-link-card';
+      a.href = cl.href;
+      a.innerHTML = '<div class="cl-text"><div class="cl-name">' + cl.name + '</div><div class="cl-desc">' + cl.desc + '</div></div><span class="cl-arrow" aria-hidden="true">&rarr;</span>';
+      clFrag.appendChild(a);
+    }
+    clContainer.appendChild(clFrag);
 
     resultsEl.classList.add('visible');
   }
@@ -823,6 +875,19 @@
       }
     }
   }
+
+  // Read cross-link query params and pre-fill fields.
+  (function prefillFromQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('income')) document.getElementById('grossIncome').value = params.get('income');
+    if (params.get('status')) document.getElementById('filingStatus').value = params.get('status');
+    if (params.get('state')) {
+      const stateVal = params.get('state');
+      if (STATES[stateVal]) document.getElementById('state').value = stateVal;
+    }
+    if (params.get('health')) document.getElementById('healthInsurance').value = params.get('health');
+    if (params.get('retirement')) document.getElementById('retirement').value = params.get('retirement');
+  })();
 
   // Run on page load
   setTimeout(calculate, 100);

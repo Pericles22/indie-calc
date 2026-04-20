@@ -1,0 +1,14 @@
+name = "tax-monitor"
+main = "index.js"
+compatibility_date = "2026-04-20"
+
+[triggers]
+crons = ["0 12 * * SUN"]  # Every Sunday at 12:00 UTC (7am CT)
+
+[[kv_namespaces]]
+binding = "HASHES"
+id = "6c4a7417ed4743b5a3145d999d46a55e"
+
+[vars]
+ALERT_EMAIL = "jordan.mulder92@gmail.com"
+FROM_EMAIL = "monitor@indie-calc.com"
