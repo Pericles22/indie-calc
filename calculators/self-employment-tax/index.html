@@ -23,6 +23,11 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.6; }
+  /* Prevent single-word orphans on the last line of headings and short body copy.
+     `balance` distributes lines evenly (best for short blocks like headings + CTA copy);
+     `pretty` falls back to avoiding orphans for longer prose. */
+  h2, h3, h4, .subtitle, .lead-capture p { text-wrap: balance; }
+  p { text-wrap: pretty; }
   .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
 
   header { background: var(--dark); color: white; padding: 16px 0; }
@@ -80,8 +85,13 @@
   .lead-capture { background: var(--teal-bg); border: 1px solid var(--teal); border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center; }
   .lead-capture h4 { font-size: 15px; font-weight: 600; color: var(--teal); margin-bottom: 8px; }
   .lead-capture p { font-size: 13px; color: var(--medium); margin-bottom: 16px; }
-  .lead-capture .btn-lead { background: var(--teal); color: white; border: none; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); text-decoration: none; display: inline-block; }
+  .lead-capture .btn-row { display: flex; gap: 8px; justify-content: center; align-items: stretch; flex-wrap: wrap; }
+  .lead-capture .btn-lead { background: var(--teal); color: white; border: 1px solid transparent; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; line-height: 1.4; box-sizing: border-box; }
   .lead-capture .btn-lead:hover { background: #245a4c; }
+  @media (max-width: 480px) {
+    .lead-capture .btn-row { flex-direction: column; }
+    .lead-capture .btn-lead { width: 100%; }
+  }
 
   .info-tip { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 4px; cursor: help; }
 
@@ -105,6 +115,11 @@
   .breakdown-table tr.total td { font-weight: 700; border-top: 2px solid var(--dark); border-bottom: none; padding-top: 12px; }
   .breakdown-table .rate { color: var(--light); font-size: 12px; }
 
+  /* Brackets table: 4 cols of numbers — right-align numeric columns and add inter-column gutters */
+  #bracketBreakdown .breakdown-table th + th,
+  #bracketBreakdown .breakdown-table td + td { text-align: right; padding-left: 12px; }
+  #bracketBreakdown .breakdown-table td:nth-child(n+2) { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
   .methodology { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
   .methodology h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
   .methodology p, .methodology li { font-size: 13px; color: var(--medium); line-height: 1.7; }
@@ -123,6 +138,17 @@
     .summary-grid { grid-template-columns: 1fr 1fr; }
     .result-summary { padding: 20px; }
     h2 { font-size: 22px; }
+    .breakdown { padding: 20px 16px; }
+    .breakdown-table { font-size: 13px; }
+    #bracketBreakdown .breakdown-table th,
+    #bracketBreakdown .breakdown-table td { font-size: 12px; }
+    #bracketBreakdown .breakdown-table th + th,
+    #bracketBreakdown .breakdown-table td + td { padding-left: 8px; }
+  }
+  @media (max-width: 380px) {
+    .breakdown { padding: 16px 12px; }
+    #bracketBreakdown .breakdown-table th + th,
+    #bracketBreakdown .breakdown-table td + td { padding-left: 6px; }
   }
 </style>
 </head>
@@ -251,8 +277,10 @@
     <div class="lead-capture">
       <h4>Want to keep this breakdown?</h4>
       <p>Get your personalized 2026 tax report + quarterly deadline calendar delivered to your inbox.</p>
-      <a href="#" class="btn-lead" id="emailCTA" onclick="triggerMailto(this); return false;">Email Me This Report &rarr;</a>
-      <button class="btn-lead" id="copyBtn" onclick="copyResults()" style="margin-left: 8px; background: var(--dark);">Copy to Clipboard</button>
+      <div class="btn-row">
+        <a href="mailto:?subject=My%202026%20Self-Employment%20Tax%20Estimate%20-%20IndieCalc" class="btn-lead" id="emailCTA">Email Me This Report &rarr;</a>
+        <button class="btn-lead" id="copyBtn" onclick="copyResults()" style="background: var(--dark);">Copy to Clipboard</button>
+      </div>
     </div>
 
     <div class="breakdown">
@@ -295,7 +323,7 @@
     </div>
 
     <div style="text-align: center; margin-bottom: 24px;">
-      <a href="#" onclick="triggerMailto(this); return false;" data-mailto="mailto:hello@indiecalc.com?subject=Data%20Error%20Report&body=I%20found%20an%20error%20on%20the%20Self-Employment%20Tax%20Calculator.%0A%0AState:%20%0ADetails:%20" style="font-size: 13px; color: var(--light); text-decoration: none; border: 1px solid var(--rule); padding: 8px 16px; border-radius: 6px; display: inline-block;">See an error? Let us know &rarr;</a>
+      <a href="mailto:hello@indiecalc.com?subject=Data%20Error%20Report&body=I%20found%20an%20error%20on%20the%20Self-Employment%20Tax%20Calculator.%0A%0AState:%20%0ADetails:%20" style="font-size: 13px; color: var(--light); text-decoration: none; border: 1px solid var(--rule); padding: 8px 16px; border-radius: 6px; display: inline-block;">See an error? Let us know &rarr;</a>
       <p style="font-size: 11px; color: var(--light); margin-top: 6px;" id="lastUpdated"></p>
     </div>
   </div>
@@ -344,18 +372,10 @@
     stateSelect.appendChild(option);
   }
 
-  // Trigger mailto via hidden iframe (avoids Chrome cancelling the navigation)
-  function triggerMailto(el) {
-    const url = el.dataset.mailto || el.href;
-    if (!url || url === '#') return;
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = url;
-    document.body.appendChild(iframe);
-    setTimeout(function() { document.body.removeChild(iframe); }, 3000);
-  }
-
-  // Update the email CTA data-mailto whenever results change
+  // Update the email CTA href whenever results change.
+  // Setting href directly (rather than intercepting click with JS) lets the
+  // browser handle the mailto: navigation natively from the user gesture,
+  // which is the most reliable cross-browser pattern.
   function updateEmailCTA(income, stateName, takeHome, totalTax, rate, quarterly) {
     const subject = encodeURIComponent('My 2026 Self-Employment Tax Estimate - IndieCalc');
     const body = encodeURIComponent(
@@ -370,7 +390,7 @@
       'Full breakdown: https://indiecalc.com/calculators/self-employment-tax/\n\n' +
       'Disclaimer: These are estimates for informational purposes only. Consult a tax professional.'
     );
-    document.getElementById('emailCTA').dataset.mailto = 'mailto:?subject=' + subject + '&body=' + body;
+    document.getElementById('emailCTA').href = 'mailto:?subject=' + subject + '&body=' + body;
   }
 
   // Strip leading zeros on blur
