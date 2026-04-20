@@ -119,6 +119,30 @@
     .email-menu { min-width: min(260px, 90vw); }
   }
 
+  /* "Compare Other States" groups — each category gets its own block with
+     a colored label on top and tags wrapping below it. */
+  #stateLinks { display: block; }
+  .state-group { margin-bottom: 14px; }
+  .state-group:last-child { margin-bottom: 0; }
+  .state-group-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .state-group-label::before {
+    content: ''; display: inline-block; width: 8px; height: 8px;
+    border-radius: 2px; background: currentColor;
+  }
+  .state-group-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .state-tag {
+    font-size: 11px; padding: 4px 10px; border-radius: 4px;
+    cursor: pointer; display: inline-block; transition: opacity 0.15s, transform 0.15s;
+    user-select: none;
+  }
+  .state-tag:hover { opacity: 0.85; transform: translateY(-1px); }
+  .state-tag.no-income { background: var(--teal-light); color: var(--teal); }
+  .state-tag.low { background: #f0f8e8; color: #6b8f3a; }
+  .state-tag.high { background: #fff0e8; color: #b85c3a; }
+
   /* Toast notifications (used for mailto fallback warnings + copy feedback) */
   .toast {
     position: fixed; bottom: 24px; left: 50%;
@@ -367,7 +391,7 @@
     <div class="state-compare" id="stateCompare" style="background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
       <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Compare Other States</h3>
       <p style="font-size: 13px; color: var(--medium); margin-bottom: 12px;">Thinking of relocating? See how your tax bill changes in other states. <a href="../../articles/state-freelance-tax-comparison/" style="color:var(--teal);">Full 50-state comparison &rarr;</a></p>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="stateLinks"></div>
+      <div id="stateLinks"></div>
     </div>
 
     <div style="text-align: center; margin-bottom: 24px;">
@@ -787,17 +811,17 @@
     }
     lowTax.sort((a,b) => a[2]-b[2]);
     highTax.sort((a,b) => b[2]-a[2]);
-    const tag = (key, label, bg, color) => `<span style="font-size:11px; background:${bg}; color:${color}; padding:3px 8px; border-radius:4px; cursor:pointer; display:inline-block;" onclick="document.getElementById('state').value='${key}';calculate();">${label}</span>`;
-    let html = '<div style="margin-bottom:6px;font-size:11px;font-weight:600;color:var(--teal);">No Income Tax</div>';
-    html += noTax.map(([k,n]) => tag(k, n, 'var(--teal-light)', 'var(--teal)')).join(' ');
-    if (lowTax.length > 0) {
-      html += '<div style="margin-top:10px;margin-bottom:6px;font-size:11px;font-weight:600;color:#6b8f3a;">Low Tax (<3.5%)</div>';
-      html += lowTax.slice(0,6).map(([k,n,r]) => tag(k, n+' '+pct(r), '#f0f8e8', '#6b8f3a')).join(' ');
-    }
-    if (highTax.length > 0) {
-      html += '<div style="margin-top:10px;margin-bottom:6px;font-size:11px;font-weight:600;color:#b85c3a;">High Tax (>6%)</div>';
-      html += highTax.slice(0,6).map(([k,n,r]) => tag(k, n+' '+pct(r), '#fff0e8', '#b85c3a')).join(' ');
-    }
+    const tag = (key, label, variant) =>
+      `<span class="state-tag ${variant}" onclick="document.getElementById('state').value='${key}';calculate();">${label}</span>`;
+    const group = (label, color, variant, items) => items.length === 0 ? '' : `
+      <div class="state-group">
+        <div class="state-group-label" style="color:${color};">${label}</div>
+        <div class="state-group-tags">${items.map(([k, n]) => tag(k, n, variant)).join('')}</div>
+      </div>`;
+    let html = '';
+    html += group('No Income Tax',   'var(--teal)', 'no-income', noTax.map(([k, n]) => [k, n]));
+    html += group('Low Tax (<3.5%)', '#6b8f3a',    'low',       lowTax.slice(0, 6).map(([k, n, r]) => [k, n + ' ' + pct(r)]));
+    html += group('High Tax (>6%)',  '#b85c3a',    'high',      highTax.slice(0, 6).map(([k, n, r]) => [k, n + ' ' + pct(r)]));
     compareDiv.innerHTML = html;
 
     // SSTB phase-out warning for high earners with QBI
