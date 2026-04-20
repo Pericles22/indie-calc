@@ -585,7 +585,7 @@
 
   // Initialize the static error-report menu URLs once.
   setMenuLinks('errorMenu', {
-    to: 'hello@indie-calc.com',
+    to: 'contact@indie-calc.com',
     subject: 'Data Error Report',
     body: 'I found an error on the Self-Employment Tax Calculator.\n\nState: \nDetails: ',
   });
@@ -619,8 +619,8 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeEmailMenus(); });
 
   function copyEmailAddress() {
-    navigator.clipboard.writeText('hello@indie-calc.com')
-      .then(() => showToast('Copied hello@indie-calc.com to clipboard', 'success'))
+    navigator.clipboard.writeText('contact@indie-calc.com')
+      .then(() => showToast('Copied contact@indie-calc.com to clipboard', 'success'))
       .catch(() => showToast('Couldn\u2019t copy \u2014 your browser blocked clipboard access', 'warning'));
   }
 
