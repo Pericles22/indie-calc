@@ -66,12 +66,18 @@ FEDERAL['2026'] = {
   additionalMedicareThreshold: { single: 200000, marriedJoint: 250000, marriedSeparate: 125000, headOfHousehold: 200000 },
   additionalMedicareRate: 0.009,
   qbiDeductionRate: 0.20,
-  qbiMinimumDeduction: 400, // OBBBA: guaranteed $400 minimum if QBI >= $2000 and materially participates
-  qbiPhaseInRange: { single: 75000, marriedJoint: 150000, marriedSeparate: 75000, headOfHousehold: 75000 }, // OBBBA expanded ranges
-  qbiThreshold: { single: 191950, marriedJoint: 383900, marriedSeparate: 191950, headOfHousehold: 191950 },
-  seniorDeduction: 6000, // OBBBA: additional deduction for taxpayers 65+, phases out at higher income
-  saltCap: 40400, // OBBBA: increased from $10,000
-  tipExemption: 25000, // OBBBA: "No Tax on Tips" — up to $25K in qualified tips exempt from income tax (not SE tax)
+  qbiMinimumDeduction: 400, // OBBBA §70105: guaranteed $400 minimum if QBI >= $1,000 from active business with material participation
+  qbiMinimumQBIThreshold: 1000, // OBBBA: minimum applies only when QBI >= $1,000
+  qbiPhaseInRange: { single: 75000, marriedJoint: 150000, marriedSeparate: 75000, headOfHousehold: 75000 }, // OBBBA expanded ranges from $50K/$100K
+  qbiThreshold: { single: 201775, marriedJoint: 403550, marriedSeparate: 201775, headOfHousehold: 201775 }, // 2026: tied to top of 24% bracket per §199A indexing
+  seniorDeduction: 6000, // OBBBA §70103: additional deduction per qualifying senior (65+); doubles for MFJ if both spouses qualify
+  // CTC refundable portion (Additional Child Tax Credit): $1,700/child for 2026
+  // Refundable amount = min(actcMax, max(0, earnedIncome - actcEarnedIncomeFloor) * actcEarnedIncomeRate)
+  actcMaxPerChild: 1700,
+  actcEarnedIncomeFloor: 2500,
+  actcEarnedIncomeRate: 0.15,
+  saltCap: 40400, // OBBBA §70120: increased from $10,000
+  tipExemption: 25000, // OBBBA §70201: "No Tax on Tips" — up to $25K in qualified tips exempt from income tax (not SE tax)
 };
 
 /**
@@ -84,36 +90,39 @@ const STATES = {
     name: 'California',
     abbreviation: 'CA',
     hasIncomeTax: true,
-    standardDeduction: { single: 5540, marriedJoint: 11080 },
+    standardDeduction: { single: 5722, marriedJoint: 11444 }, // 2026 inflation-adjusted (~3.2% bump from 2025)
     brackets: {
+      // 2026 brackets per FTB published schedule. The "13.3%" top bracket
+      // represents the 12.3% marginal rate plus the 1% Mental Health
+      // Services Tax surcharge on income above $1M.
       single: [
-        { min: 0, max: 10412, rate: 0.01 },
-        { min: 10412, max: 24684, rate: 0.02 },
-        { min: 24684, max: 38959, rate: 0.04 },
-        { min: 38959, max: 54081, rate: 0.06 },
-        { min: 54081, max: 68350, rate: 0.08 },
-        { min: 68350, max: 349137, rate: 0.093 },
-        { min: 349137, max: 418961, rate: 0.103 },
-        { min: 418961, max: 698271, rate: 0.113 },
-        { min: 698271, max: 1000000, rate: 0.123 },
+        { min: 0, max: 10756, rate: 0.01 },
+        { min: 10756, max: 25499, rate: 0.02 },
+        { min: 25499, max: 40245, rate: 0.04 },
+        { min: 40245, max: 55866, rate: 0.06 },
+        { min: 55866, max: 70606, rate: 0.08 },
+        { min: 70606, max: 360659, rate: 0.093 },
+        { min: 360659, max: 432787, rate: 0.103 },
+        { min: 432787, max: 721314, rate: 0.113 },
+        { min: 721314, max: 1000000, rate: 0.123 },
         { min: 1000000, max: Infinity, rate: 0.133 },
       ],
       marriedJoint: [
-        { min: 0, max: 20824, rate: 0.01 },
-        { min: 20824, max: 49368, rate: 0.02 },
-        { min: 49368, max: 77918, rate: 0.04 },
-        { min: 77918, max: 108162, rate: 0.06 },
-        { min: 108162, max: 136700, rate: 0.08 },
-        { min: 136700, max: 698274, rate: 0.093 },
-        { min: 698274, max: 837922, rate: 0.103 },
-        { min: 837922, max: 1396542, rate: 0.113 },
-        { min: 1396542, max: 2000000, rate: 0.123 },
-        { min: 2000000, max: Infinity, rate: 0.133 },
+        { min: 0, max: 21512, rate: 0.01 },
+        { min: 21512, max: 50998, rate: 0.02 },
+        { min: 50998, max: 80490, rate: 0.04 },
+        { min: 80490, max: 111732, rate: 0.06 },
+        { min: 111732, max: 141212, rate: 0.08 },
+        { min: 141212, max: 721318, rate: 0.093 },
+        { min: 721318, max: 865574, rate: 0.103 },
+        { min: 865574, max: 1000000, rate: 0.113 },
+        { min: 1000000, max: 1442628, rate: 0.123 },
+        { min: 1442628, max: Infinity, rate: 0.133 },
       ],
     },
-    sdiRate: 0.012,
-    sdiWageCap: 175000,
-    notes: 'California also charges SDI (State Disability Insurance) at 1.2% on the first $175,000 of wages. Mental Health Services Tax adds 1% above $1M.',
+    sdiRate: 0.013, // 2026: increased from 1.2% in 2025
+    sdiWageCap: Infinity, // SB 951 removed the wage cap effective Jan 1, 2024
+    notes: 'California charges SDI (State Disability Insurance) at 1.3% on ALL wages (no cap, per SB 951). The Mental Health Services Tax (1% above $1M) is rolled into the 13.3% top bracket.',
     sourceUrl: 'https://www.ftb.ca.gov/file/personal/tax-rates.html',
   },
   texas: {
@@ -250,7 +259,7 @@ const STATES = {
   kansas: { name: 'Kansas', abbreviation: 'KS', hasIncomeTax: true, standardDeduction: { single: 3605, marriedJoint: 8240 }, personalExemption: 9160, brackets: { single: [{ min: 0, max: 23000, rate: 0.052 },{ min: 23000, max: Infinity, rate: 0.0558 }], marriedJoint: [{ min: 0, max: 46000, rate: 0.052 },{ min: 46000, max: Infinity, rate: 0.0558 }] }, notes: 'Graduated rates 5.2%-5.58%. Large personal exemption. Source: Tax Foundation 2026.' },
   maine: { name: 'Maine', abbreviation: 'ME', hasIncomeTax: true, standardDeduction: { single: 8350, marriedJoint: 16700 }, personalExemption: 5300, brackets: { single: [{ min: 0, max: 27399, rate: 0.058 },{ min: 27399, max: 64849, rate: 0.0675 },{ min: 64849, max: Infinity, rate: 0.0715 }], marriedJoint: [{ min: 0, max: 54849, rate: 0.058 },{ min: 54849, max: 129749, rate: 0.0675 },{ min: 129749, max: Infinity, rate: 0.0715 }] }, notes: 'Graduated rates 5.8%-7.15%. Source: Tax Foundation 2026.' },
   maryland: { name: 'Maryland', abbreviation: 'MD', hasIncomeTax: true, standardDeduction: { single: 3350, marriedJoint: 6700 }, personalExemption: 3200, brackets: { single: [{ min: 0, max: 1000, rate: 0.02 },{ min: 1000, max: 2000, rate: 0.03 },{ min: 2000, max: 3000, rate: 0.04 },{ min: 3000, max: 100000, rate: 0.0475 },{ min: 100000, max: 125000, rate: 0.05 },{ min: 125000, max: 150000, rate: 0.0525 },{ min: 150000, max: 250000, rate: 0.055 },{ min: 250000, max: 500000, rate: 0.0575 },{ min: 500000, max: 1000000, rate: 0.0625 },{ min: 1000000, max: Infinity, rate: 0.065 }], marriedJoint: [{ min: 0, max: 1000, rate: 0.02 },{ min: 1000, max: 2000, rate: 0.03 },{ min: 2000, max: 3000, rate: 0.04 },{ min: 3000, max: 150000, rate: 0.0475 },{ min: 150000, max: 175000, rate: 0.05 },{ min: 175000, max: 225000, rate: 0.0525 },{ min: 225000, max: 300000, rate: 0.055 },{ min: 300000, max: 600000, rate: 0.0575 },{ min: 600000, max: 1200000, rate: 0.0625 },{ min: 1200000, max: Infinity, rate: 0.065 }] }, notes: 'Graduated rates 2%-6.5%. Counties also levy local income tax (1.75%-3.2%). Source: Tax Foundation 2026.' },
-  massachusetts: { name: 'Massachusetts', abbreviation: 'MA', hasIncomeTax: true, personalExemption: 4400, brackets: { single: [{ min: 0, max: 1083150, rate: 0.05 },{ min: 1083150, max: Infinity, rate: 0.09 }], marriedJoint: [{ min: 0, max: 1083150, rate: 0.05 },{ min: 1083150, max: Infinity, rate: 0.09 }] }, notes: 'Effectively flat at 5% for most taxpayers. 4% millionaire surtax above $1,083,150. No standard deduction. Source: Tax Foundation 2026.' },
+  massachusetts: { name: 'Massachusetts', abbreviation: 'MA', hasIncomeTax: true, personalExemption: 4400, brackets: { single: [{ min: 0, max: 1107750, rate: 0.05 },{ min: 1107750, max: Infinity, rate: 0.09 }], marriedJoint: [{ min: 0, max: 1107750, rate: 0.05 },{ min: 1107750, max: Infinity, rate: 0.09 }] }, notes: 'Effectively flat at 5% for most taxpayers. 4% millionaire surtax above $1,107,750 (2026 indexed). No standard deduction. Source: MA DOR / Tax Foundation 2026.' },
   minnesota: { name: 'Minnesota', abbreviation: 'MN', hasIncomeTax: true, standardDeduction: { single: 15300, marriedJoint: 30600 }, brackets: { single: [{ min: 0, max: 33310, rate: 0.0535 },{ min: 33310, max: 109430, rate: 0.068 },{ min: 109430, max: 203150, rate: 0.0785 },{ min: 203150, max: Infinity, rate: 0.0985 }], marriedJoint: [{ min: 0, max: 48700, rate: 0.0535 },{ min: 48700, max: 193480, rate: 0.068 },{ min: 193480, max: 337930, rate: 0.0785 },{ min: 337930, max: Infinity, rate: 0.0985 }] }, notes: 'Graduated rates 5.35%-9.85%. Source: Tax Foundation 2026.' },
   montana: { name: 'Montana', abbreviation: 'MT', hasIncomeTax: true, standardDeduction: { single: 16100, marriedJoint: 32200 }, brackets: { single: [{ min: 0, max: 47500, rate: 0.047 },{ min: 47500, max: Infinity, rate: 0.0565 }], marriedJoint: [{ min: 0, max: 95000, rate: 0.047 },{ min: 95000, max: Infinity, rate: 0.0565 }] }, notes: 'Graduated rates 4.7%-5.65%. Source: Tax Foundation 2026.' },
   nebraska: { name: 'Nebraska', abbreviation: 'NE', hasIncomeTax: true, standardDeduction: { single: 8850, marriedJoint: 17700 }, brackets: { single: [{ min: 0, max: 2400, rate: 0.0246 },{ min: 2400, max: 18000, rate: 0.0351 },{ min: 18000, max: Infinity, rate: 0.0455 }], marriedJoint: [{ min: 0, max: 4800, rate: 0.0246 },{ min: 4800, max: 36000, rate: 0.0351 },{ min: 36000, max: Infinity, rate: 0.0455 }] }, notes: 'Graduated rates 2.46%-4.55%. Source: Tax Foundation 2026.' },

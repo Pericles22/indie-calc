@@ -113,7 +113,7 @@
   <div class="article-body">
     <p>Most tax calculators on the internet are black boxes. You type in a number, a result appears, and you're expected to trust it. Some get the math wrong in ways that cost people money &mdash; applying SE tax to the wrong base, forgetting the half-SE deduction, or using last year's brackets.</p>
 
-    <p>IndieCalc takes the opposite approach. This page documents every step of our calculation, the exact sources we use, the assumptions we make, and the limitations we're upfront about. If you find an error, <a href="mailto:hello@indiecalc.com?subject=Data%20Error%20Report" style="color: var(--teal);">tell us</a>.</p>
+    <p>IndieCalc takes the opposite approach. This page documents every step of our calculation, the exact sources we use, the assumptions we make, and the limitations we're upfront about. If you find an error, <a href="mailto:hello@indie-calc.com?subject=Data%20Error%20Report" style="color: var(--teal);">tell us</a>.</p>
 
     <h3>The Calculation Pipeline</h3>
 
@@ -242,6 +242,7 @@
         <li>No account creation is required</li>
       </ul>
       <p>You can verify this yourself: open your browser's developer tools, switch to the Network tab, and run a calculation. You'll see zero outgoing requests. The entire calculation engine is in two files (<code>tax-data.js</code> and <code>calculator.js</code>) that load once when the page opens and run locally from then on.</p>
+      <p><strong>One exception:</strong> if you click "Open in Gmail" or "Open in Outlook.com" from the email-report dropdown, your tax estimate is included in the compose URL and sent to that service so it can pre-fill the message. The "Default mail app" and "Copy to clipboard" options stay entirely on your device.</p>
       <p>For the full details, see our <a href="../../privacy/" style="color: var(--teal);">privacy policy</a>.</p>
     </div>
 
@@ -251,7 +252,7 @@
 
     <p>IndieCalc started as a spreadsheet one of us built to understand our own freelance taxes. We kept improving it &mdash; adding states, accounting for the OBBBA changes, handling edge cases like the SS wage cap and Additional Medicare &mdash; until it outgrew the spreadsheet. We turned it into a website because every other self-employment tax calculator we found was either inaccurate, outdated, or trying to sell us something.</p>
 
-    <p>The goal is simple: give freelancers a tool that's accurate, transparent, private, and free. If we get the math wrong, <a href="mailto:hello@indiecalc.com?subject=Data%20Error%20Report" style="color: var(--teal);">let us know</a> and we'll fix it.</p>
+    <p>The goal is simple: give freelancers a tool that's accurate, transparent, private, and free. If we get the math wrong, <a href="mailto:hello@indie-calc.com?subject=Data%20Error%20Report" style="color: var(--teal);">let us know</a> and we'll fix it.</p>
 
     <div class="cta-box">
       <h4>Try the calculator</h4>

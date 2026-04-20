@@ -48,7 +48,13 @@
     border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;
   }
   .calc-card a:hover { background: #245a4c; }
+  .calc-card .disabled-cta {
+    display: inline-block; background: var(--rule); color: var(--medium); padding: 10px 20px;
+    border-radius: 6px; font-weight: 500; font-size: 14px; cursor: not-allowed;
+  }
   .badge { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  *:focus { outline: none; }
+  *:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 3px; }
 
   /* Footer */
   footer { background: var(--dark); color: rgba(255,255,255,0.5); padding: 32px 0; font-size: 13px; text-align: center; line-height: 1.8; }
@@ -88,7 +94,7 @@
       <h3>Quarterly Estimated Tax</h3>
       <p>Calculate your quarterly estimated tax payments to avoid IRS underpayment penalties. Includes safe harbor calculation.</p>
       <div class="states">Federal + state breakdowns</div>
-      <a href="#">Coming Soon</a>
+      <span class="disabled-cta" aria-disabled="true">Coming Soon</span>
     </div>
 
     <div class="calc-card">
@@ -96,7 +102,7 @@
       <h3>Freelance Rate Calculator</h3>
       <p>Figure out what hourly rate you need to charge to hit your income goals after taxes and expenses.</p>
       <div class="states">Adjusts for your state</div>
-      <a href="#">Coming Soon</a>
+      <span class="disabled-cta" aria-disabled="true">Coming Soon</span>
     </div>
 
     <div class="calc-card">
@@ -104,7 +110,7 @@
       <h3>LLC vs S-Corp Comparison</h3>
       <p>Compare your total tax liability as a sole proprietor, single-member LLC, and S-Corp. See which saves you the most.</p>
       <div class="states">State-specific analysis</div>
-      <a href="#">Coming Soon</a>
+      <span class="disabled-cta" aria-disabled="true">Coming Soon</span>
     </div>
 
     <div class="calc-card">
@@ -112,7 +118,7 @@
       <h3>Business Expense Deduction Estimator</h3>
       <p>Estimate your Schedule C deductions and see how they reduce your tax bill. Covers home office, vehicle, equipment, and more.</p>
       <div class="states">Federal deductions</div>
-      <a href="#">Coming Soon</a>
+      <span class="disabled-cta" aria-disabled="true">Coming Soon</span>
     </div>
 
   </div>
