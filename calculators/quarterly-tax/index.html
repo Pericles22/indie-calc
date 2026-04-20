@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quarterly Estimated Tax Calculator 2026 — Federal + State | IndieCalc</title>
+<meta name="description" content="Free quarterly estimated tax calculator for 2026. Calculate your 4 quarterly payments, safe harbor amounts, and underpayment penalty risk. Federal + all 50 states.">
+<link rel="canonical" href="https://indie-calc.com/calculators/quarterly-tax/">
+<meta property="og:title" content="Quarterly Estimated Tax Calculator 2026 — IndieCalc">
+<meta property="og:description" content="Calculate your quarterly estimated tax payments for 2026. Safe harbor rules, penalty estimation, federal + state breakdowns.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://indie-calc.com/calculators/quarterly-tax/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Quarterly Estimated Tax Calculator 2026 — IndieCalc">
+<meta name="twitter:description" content="Calculate your quarterly estimated tax payments for 2026. Safe harbor rules, penalty estimation, federal + state breakdowns.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --hint: #5e5e72;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --red: #dc3545;
+    --green: #28a745;
+    --orange: #e67e22;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *:focus { outline: none; }
+  *:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.6; }
+  h2, h3, h4, .subtitle { text-wrap: balance; }
+  p { text-wrap: pretty; }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .container { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  header .brand {
+    font-size: 20px; font-weight: 700; color: white; text-decoration: none;
+    padding: 6px 0; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header .brand span { color: var(--teal); }
+  header a.nav-link {
+    color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px;
+    padding: 12px 8px; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header a.nav-link:hover { color: white; }
+
+  main h1 { font-size: 28px; font-weight: 700; margin: 32px 0 8px; }
+  main h1 small { font-size: 16px; font-weight: 400; color: var(--medium); }
+  h2 { font-size: 22px; font-weight: 700; margin: 32px 0 8px; }
+  .subtitle { color: var(--medium); font-size: 15px; margin-bottom: 28px; }
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 9999;
+    background: var(--dark); color: white; padding: 12px 16px;
+    text-decoration: none; border-radius: 0 0 6px 0;
+  }
+  .skip-link:focus { left: 0; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0);
+    white-space: nowrap; border: 0;
+  }
+
+  /* Form */
+  .calc-form { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .form-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .form-group { flex: 1; min-width: 200px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--medium); margin-bottom: 4px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 6px;
+    font-size: 15px; font-family: var(--font); color: var(--dark);
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,106,90,0.1); }
+  .form-group .prefix { position: relative; }
+  .form-group .prefix::before { content: '$'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--light); font-size: 15px; }
+  .form-group .prefix input { padding-left: 24px; }
+  .form-group .field-help { font-size: 12px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
+
+  .btn { background: var(--teal); color: white; border: none; padding: 12px 32px; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: var(--font); }
+  .btn:hover { background: #245a4c; }
+
+  .info-tip { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 4px; cursor: help; }
+
+  /* Results */
+  .results { display: none; }
+  .results.visible { display: block; }
+
+  /* Hero result */
+  .hero-result { background: var(--teal); border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
+  .hero-result .hero-value { font-size: 48px; font-weight: 700; letter-spacing: -1px; }
+  .hero-result .hero-label { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+  .hero-result .hero-sub { font-size: 13px; opacity: 0.6; margin-top: 8px; }
+
+  .result-summary {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 24px; margin-bottom: 24px;
+  }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+  .summary-item { text-align: center; padding: 12px 8px; background: var(--bg); border-radius: 8px; }
+  .summary-item .value { font-size: 22px; font-weight: 700; color: var(--dark); }
+  .summary-item .label { font-size: 11px; color: var(--medium); margin-top: 2px; }
+  .summary-item.warning .value { color: var(--red); }
+
+  /* Quarter cards */
+  .quarter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .quarter-card {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 20px; text-align: center; position: relative;
+  }
+  .quarter-card.past { opacity: 0.7; border-color: var(--light); }
+  .quarter-card.past::after {
+    content: 'Past Due'; position: absolute; top: 10px; right: 10px;
+    font-size: 10px; font-weight: 600; color: var(--red); background: #fff0f0;
+    padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .quarter-card.current { border-color: var(--teal); border-width: 2px; }
+  .quarter-card.current::after {
+    content: 'Due Now'; position: absolute; top: 10px; right: 10px;
+    font-size: 10px; font-weight: 600; color: var(--teal); background: var(--teal-light);
+    padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .quarter-card .q-label { font-size: 13px; font-weight: 600; color: var(--medium); margin-bottom: 4px; }
+  .quarter-card .q-date { font-size: 12px; color: var(--hint); margin-bottom: 12px; }
+  .quarter-card .q-total { font-size: 24px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+  .quarter-card .q-breakdown { font-size: 12px; color: var(--hint); line-height: 1.6; }
+
+  /* Safe harbor box */
+  .safe-harbor-box {
+    background: var(--teal-bg); border: 1px solid var(--teal); border-radius: 12px;
+    padding: 24px; margin-bottom: 24px;
+  }
+  .safe-harbor-box h3 { font-size: 16px; font-weight: 600; color: var(--teal); margin-bottom: 12px; }
+  .safe-harbor-box .sh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+  .safe-harbor-box .sh-item { background: var(--white); padding: 16px; border-radius: 8px; text-align: center; }
+  .safe-harbor-box .sh-item .sh-value { font-size: 20px; font-weight: 700; color: var(--dark); }
+  .safe-harbor-box .sh-item .sh-label { font-size: 11px; color: var(--medium); margin-top: 4px; }
+  .safe-harbor-box .sh-item.recommended { border: 2px solid var(--teal); }
+  .safe-harbor-box .sh-item.recommended .sh-label { color: var(--teal); font-weight: 600; }
+  .safe-harbor-box .sh-note { font-size: 12px; color: var(--hint); line-height: 1.6; }
+
+  /* Penalty warning */
+  .penalty-box {
+    background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 12px;
+    padding: 24px; margin-bottom: 24px;
+  }
+  .penalty-box.no-penalty {
+    background: var(--teal-bg); border-color: var(--teal);
+  }
+  .penalty-box h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .penalty-box h3.warning-text { color: var(--orange); }
+  .penalty-box h3.safe-text { color: var(--teal); }
+  .penalty-box p { font-size: 13px; color: var(--medium); line-height: 1.6; }
+  .penalty-box .penalty-amount { font-size: 28px; font-weight: 700; color: var(--orange); margin: 8px 0; }
+
+  .breakdown { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .breakdown h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .breakdown-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .breakdown-table th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .breakdown-table td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; }
+  .breakdown-table td:last-child { text-align: right; font-weight: 500; }
+  .breakdown-table tr.total td { font-weight: 700; border-top: 2px solid var(--dark); border-bottom: none; padding-top: 12px; }
+  .breakdown-table .rate { color: var(--light); font-size: 12px; }
+
+  .methodology { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .methodology h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .methodology p, .methodology li { font-size: 13px; color: var(--medium); line-height: 1.7; }
+  .methodology ol { padding-left: 20px; }
+  .methodology li { margin-bottom: 4px; }
+  .methodology .source { font-size: 12px; color: var(--light); margin-top: 12px; }
+  .methodology .source a { color: var(--teal); text-decoration: none; }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 24px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  .empty-state {
+    background: var(--teal-bg); border: 1px dashed var(--teal);
+    border-radius: 12px; padding: 32px 24px; text-align: center;
+    color: var(--medium); margin-top: 24px;
+  }
+  .empty-state h3 { color: var(--teal); font-size: 16px; margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--dark); color: white; padding: 12px 20px;
+    border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 1.4;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    z-index: 1000; max-width: min(420px, 92vw); text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  .toast.warning { background: #b85c3a; }
+  .toast.success { background: var(--teal); }
+
+  /* Lead capture */
+  .lead-capture { background: var(--teal-bg); border: 1px solid var(--teal); border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center; }
+  .lead-capture h3 { font-size: 15px; font-weight: 600; color: var(--teal); margin-bottom: 8px; padding: 0; border: none; }
+  .lead-capture p { font-size: 13px; color: var(--medium); margin-bottom: 16px; }
+  .lead-capture .btn-row { display: flex; gap: 8px; justify-content: center; align-items: stretch; flex-wrap: wrap; }
+  .lead-capture .btn-lead { background: var(--teal); color: white; border: 1px solid transparent; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; line-height: 1.4; box-sizing: border-box; }
+  .lead-capture .btn-lead:hover { background: #245a4c; }
+  @media (max-width: 480px) {
+    .lead-capture .btn-row { flex-direction: column; }
+    .lead-capture .btn-lead { width: 100%; }
+  }
+
+  /* Email menu */
+  .menu-wrapper { position: relative; display: inline-block; text-align: left; }
+  .has-menu .caret { margin-left: 6px; font-size: 11px; opacity: 0.85; }
+  .email-menu {
+    display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    background: var(--white); border: 1px solid var(--rule); border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12); padding: 6px; min-width: 220px; z-index: 100;
+  }
+  .email-menu.open { display: block; }
+  .email-menu::before {
+    content: ''; position: absolute; top: -6px; left: 50%;
+    transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px;
+    background: var(--white); border: 1px solid var(--rule); border-bottom: none; border-right: none;
+  }
+  .email-menu a, .email-menu button {
+    display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box;
+    text-align: left; background: none; border: none; padding: 10px 12px;
+    font-size: 14px; font-family: var(--font); color: var(--dark); text-decoration: none;
+    border-radius: 4px; cursor: pointer; font-weight: 500;
+  }
+  .email-menu a:hover, .email-menu button:hover { background: var(--teal-light); color: var(--teal); }
+  .email-menu .icon { font-size: 16px; line-height: 1; width: 18px; text-align: center; }
+  @media (max-width: 480px) {
+    .email-menu { min-width: min(260px, 90vw); }
+  }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .form-row { flex-direction: column; }
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    .result-summary { padding: 20px; }
+    main h1 { font-size: 22px; }
+    h2 { font-size: 19px; }
+    .breakdown { padding: 20px 16px; }
+    .breakdown-table { font-size: 13px; }
+    .quarter-grid { grid-template-columns: 1fr 1fr; }
+    .safe-harbor-box .sh-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 380px) {
+    .breakdown { padding: 16px 12px; }
+    .quarter-grid { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    header, footer, .calc-form, .lead-capture, .menu-wrapper, .toast,
+    .methodology p:last-child { display: none !important; }
+    body { background: white; color: black; }
+    .container { max-width: 100%; padding: 0; }
+    .hero-result { background: white !important; color: black !important;
+      border: 2px solid black; }
+    .hero-result .hero-value { color: black; }
+    .breakdown, .result-summary, .methodology, .safe-harbor-box, .penalty-box,
+    .quarter-card { box-shadow: none; border: 1px solid #999; }
+    h2, h3 { page-break-after: avoid; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+  }
+
+  .form-group.has-error input, .form-group.has-error select {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+  }
+  .form-error { color: var(--red); font-size: 12px; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<header>
+  <div class="container">
+    <a href="../../" class="brand">Indie<span>Calc</span></a>
+    <a href="../../" class="nav-link">&larr; All Calculators</a>
+  </div>
+</header>
+
+<main id="main" class="container">
+  <h1>Quarterly Estimated Tax Calculator <small>Tax Year 2026</small></h1>
+  <p class="subtitle">Calculate your quarterly estimated tax payments and safe harbor amounts to avoid IRS underpayment penalties.</p>
+
+  <div class="calc-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="netProfit">Net Self-Employment Income</label>
+        <div class="prefix"><input type="number" id="netProfit" placeholder="100,000" value="100000"></div>
+        <div class="field-help">Your expected net SE income for the full 2026 tax year (after business expenses).</div>
+      </div>
+      <div class="form-group">
+        <label for="filingStatus">Filing Status</label>
+        <select id="filingStatus">
+          <option value="single">Single</option>
+          <option value="marriedJoint">Married Filing Jointly</option>
+          <option value="marriedSeparate">Married Filing Separately</option>
+          <option value="headOfHousehold">Head of Household</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="state">State</label>
+        <select id="state"></select>
+      </div>
+      <div class="form-group">
+        <label for="otherIncome">Other Income (W-2, etc.) -- optional</label>
+        <div class="prefix"><input type="number" id="otherIncome" placeholder="0" value="0"></div>
+        <div class="field-help">W-2 wages or other non-SE income. W-2 withholding is handled separately by your employer.</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="priorYearTax">Prior Year Total Tax (from last year's return) -- optional</label>
+        <div class="prefix"><input type="number" id="priorYearTax" placeholder="0" value="0"></div>
+        <div class="field-help">Line 24 of your 2025 Form 1040. Used for safe harbor calculation. Leave at 0 if this is your first year.</div>
+      </div>
+      <div class="form-group">
+        <label for="withholding">W-2 Tax Already Withheld (2026) -- optional</label>
+        <div class="prefix"><input type="number" id="withholding" placeholder="0" value="0"></div>
+        <div class="field-help">Federal tax withheld from W-2 paychecks so far in 2026. Reduces the amount you need to pay quarterly.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" id="emptyState" hidden>
+    <h3>Enter your self-employment income to see results</h3>
+    <p>This calculator estimates your quarterly estimated tax payments for 2026, including safe harbor amounts and penalty risk.</p>
+  </div>
+
+  <section class="results" id="results" role="region" aria-live="polite" aria-atomic="false" aria-label="Quarterly tax estimate results">
+    <div class="hero-result">
+      <div class="hero-label">Recommended Quarterly Payment</div>
+      <div class="hero-value" id="r-quarterlyPayment">--</div>
+      <div class="hero-sub" id="r-heroSub"></div>
+    </div>
+
+    <div class="result-summary">
+      <div class="summary-grid">
+        <div class="summary-item warning">
+          <div class="value" id="r-totalTax">--</div>
+          <div class="label">Total Estimated Tax</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-federalTax">--</div>
+          <div class="label">Federal Tax</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-stateTax">--</div>
+          <div class="label">State Tax</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-safeHarbor">--</div>
+          <div class="label">Safe Harbor Amount</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Quarterly Payment Schedule</h2>
+    <div class="quarter-grid" id="quarterGrid"></div>
+
+    <div class="safe-harbor-box" id="safeHarborBox">
+      <h3>Safe Harbor Calculation</h3>
+      <div class="sh-grid" id="safeHarborGrid"></div>
+      <div class="sh-note" id="safeHarborNote"></div>
+    </div>
+
+    <div class="penalty-box" id="penaltyBox">
+      <h3 id="penaltyTitle">Underpayment Penalty Risk</h3>
+      <p id="penaltyText"></p>
+    </div>
+
+    <div class="lead-capture">
+      <h3>Want to keep this breakdown?</h3>
+      <p>Get your personalized 2026 quarterly payment schedule delivered to your inbox.</p>
+      <div class="btn-row">
+        <div class="menu-wrapper">
+          <button type="button" class="btn-lead has-menu" id="emailCTA" aria-haspopup="true" aria-expanded="false" aria-controls="emailMenu" onclick="toggleEmailMenu(event, 'emailMenu')">Email Me This Schedule<span class="caret" aria-hidden="true">&#9662;</span></button>
+          <div class="email-menu" id="emailMenu" role="group" aria-labelledby="emailCTA">
+            <a href="#" target="_blank" rel="noopener" data-handler="gmail"><span class="icon" aria-hidden="true">&#9993;</span>Open in Gmail</a>
+            <a href="#" target="_blank" rel="noopener" data-handler="outlook"><span class="icon" aria-hidden="true">&#9993;</span>Open in Outlook.com</a>
+            <a href="#" data-handler="mailto"><span class="icon" aria-hidden="true">&#9993;</span>Default mail app</a>
+            <button type="button" onclick="copyResults(); closeEmailMenus();"><span class="icon" aria-hidden="true">&#128203;</span>Copy to clipboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <h3>Tax Breakdown</h3>
+      <table class="breakdown-table">
+        <thead><tr><th>Component</th><th>Amount</th></tr></thead>
+        <tbody id="breakdownBody"></tbody>
+      </table>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Important:</strong> This calculator provides estimates for informational purposes only. It is not tax, legal, or financial advice.
+      Your actual tax liability depends on deductions, credits, other income, and factors not captured here.
+      Quarterly estimated taxes are typically required if you expect to owe $1,000 or more in tax when you file your return.
+      State quarterly requirements vary. Your city or municipality may levy additional local income taxes not reflected here.
+      <strong>Consult a qualified tax professional for your specific situation.</strong>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 24px;">
+      <div class="menu-wrapper">
+        <button type="button" class="has-menu" id="errorCTA" aria-haspopup="true" aria-expanded="false" aria-controls="errorMenu" onclick="toggleEmailMenu(event, 'errorMenu')" style="font-size: 13px; color: var(--hint); background: none; border: 1px solid var(--rule); padding: 10px 16px; border-radius: 6px; cursor: pointer; font-family: var(--font); min-height: 44px;">See an error? Let us know<span class="caret" aria-hidden="true">&#9662;</span></button>
+        <div class="email-menu" id="errorMenu" role="group" aria-labelledby="errorCTA">
+          <a href="#" target="_blank" rel="noopener" data-handler="gmail"><span class="icon" aria-hidden="true">&#9993;</span>Open in Gmail</a>
+          <a href="#" target="_blank" rel="noopener" data-handler="outlook"><span class="icon" aria-hidden="true">&#9993;</span>Open in Outlook.com</a>
+          <a href="#" data-handler="mailto"><span class="icon" aria-hidden="true">&#9993;</span>Default mail app</a>
+          <button type="button" onclick="copyEmailAddress(); closeEmailMenus();"><span class="icon" aria-hidden="true">&#128203;</span>Copy email address</button>
+        </div>
+      </div>
+      <p style="font-size: 12px; color: var(--hint); margin-top: 6px;" id="lastUpdated"></p>
+    </div>
+  </section>
+
+  <div class="methodology">
+    <h2>How Quarterly Estimated Taxes Work</h2>
+    <ol>
+      <li><strong>Who must pay:</strong> If you expect to owe $1,000 or more in federal tax after subtracting withholding and credits, you generally must make quarterly estimated tax payments (IRS Form 1040-ES).</li>
+      <li><strong>Due dates:</strong> Q1: April 15, Q2: June 15, Q3: September 15, Q4: January 15 of the following year. If a due date falls on a weekend or holiday, the deadline shifts to the next business day. Most states follow the same schedule.</li>
+      <li><strong>Safe harbor rule (100% / 110%):</strong> To avoid underpayment penalties, you must pay at least the lesser of: (a) 90% of your current year tax liability, or (b) 100% of your prior year tax liability. If your prior year AGI exceeded $150,000 ($75,000 if married filing separately), the 100% threshold increases to 110%.</li>
+      <li><strong>Calculating quarterly amounts:</strong> Divide your total estimated tax liability (federal SE tax + federal income tax + state tax, minus any W-2 withholding) by 4 for equal quarterly payments. You can also use the annualized income installment method (Form 2210, Schedule AI) if income is uneven.</li>
+      <li><strong>State estimated taxes:</strong> Most states with income tax also require quarterly estimated payments, generally following the same schedule and safe harbor rules as federal. Some states have different thresholds.</li>
+      <li><strong>Underpayment penalty:</strong> The IRS charges an underpayment penalty (currently ~7% annual rate for 2026, compounded daily) on the shortfall for each quarter. The penalty applies separately to each quarter's underpayment from the due date to the payment date or April 15.</li>
+      <li><strong>W-2 withholding credit:</strong> Federal tax withheld from W-2 wages counts as estimated payments made evenly across all 4 quarters, even if the withholding occurred unevenly. This calculator subtracts your W-2 withholding before computing quarterly amounts.</li>
+    </ol>
+    <div class="source">
+      Primary sources: <a href="https://www.irs.gov/forms-pubs/about-form-1040-es" target="_blank" rel="noopener">IRS Form 1040-ES</a> &middot;
+      <a href="https://www.irs.gov/taxtopics/tc306" target="_blank" rel="noopener">IRS Topic 306 - Penalty for Underpayment</a> &middot;
+      <a href="https://www.irs.gov/forms-pubs/about-form-2210" target="_blank" rel="noopener">IRS Form 2210 - Underpayment of Estimated Tax</a> &middot;
+      <a href="https://taxfoundation.org/data/all/federal/2026-tax-brackets/" target="_blank" rel="noopener">Tax Foundation - 2026 Brackets</a>
+    </div>
+    <p style="margin-top: 12px; font-size: 13px;"><a href="../../articles/how-indiecalc-works/" style="color:var(--teal);">Read our full methodology, data sources, and privacy approach &rarr;</a></p>
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">Home</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+<script src="../../src/tax-data.js"></script>
+<script src="../../src/calculator.js"></script>
+<script>
+  /* ── Constants ── */
+  const UNDERPAYMENT_ANNUAL_RATE = 0.07;
+  const MINIMUM_TAX_THRESHOLD = 1000;
+  const HIGH_INCOME_AGI_THRESHOLD = 150000;
+  const HIGH_INCOME_AGI_THRESHOLD_MFS = 75000;
+  const SAFE_HARBOR_CURRENT_YEAR_PCT = 0.90;
+  const SAFE_HARBOR_PRIOR_YEAR_PCT = 1.00;
+  const SAFE_HARBOR_HIGH_INCOME_PCT = 1.10;
+  const QUARTERS_PER_YEAR = 4;
+
+  /* Quarterly due dates for 2026 tax year. */
+  const QUARTER_INFO = [
+    { label: 'Q1', due: 'April 15, 2026', date: new Date(2026, 3, 15) },
+    { label: 'Q2', due: 'June 15, 2026', date: new Date(2026, 5, 15) },
+    { label: 'Q3', due: 'September 15, 2026', date: new Date(2026, 8, 15) },
+    { label: 'Q4', due: 'January 15, 2027', date: new Date(2027, 0, 15) },
+  ];
+
+  /* ── Populate state dropdown ── */
+  const stateSelect = document.getElementById('state');
+  const stateEntries = Object.entries(STATES).sort((a, b) => a[1].name.localeCompare(b[1].name));
+  for (const [key, state] of stateEntries) {
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = state.name + (state.hasIncomeTax ? '' : ' (no income tax)');
+    stateSelect.appendChild(option);
+  }
+
+  /* ── Email menu helpers ── */
+  function setMenuLinks(menuId, opts) {
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+    const to = opts.to || '';
+    const enc = encodeURIComponent;
+    const gmailUrl   = 'https://mail.google.com/mail/?view=cm&fu=1&to=' + enc(to) + '&su=' + enc(opts.subject) + '&body=' + enc(opts.body);
+    const outlookUrl = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + enc(to) + '&subject=' + enc(opts.subject) + '&body=' + enc(opts.body);
+    const mailtoUrl  = 'mailto:' + to + '?subject=' + enc(opts.subject) + '&body=' + enc(opts.body);
+    menu.querySelector('[data-handler="gmail"]').href   = gmailUrl;
+    menu.querySelector('[data-handler="outlook"]').href = outlookUrl;
+    menu.querySelector('[data-handler="mailto"]').href  = mailtoUrl;
+  }
+
+  setMenuLinks('errorMenu', {
+    to: 'contact@indie-calc.com',
+    subject: 'Data Error Report - Quarterly Tax Calculator',
+    body: 'I found an error on the Quarterly Estimated Tax Calculator.\n\nState: \nDetails: ',
+  });
+
+  function toggleEmailMenu(e, menuId) {
+    e.stopPropagation();
+    const menu = document.getElementById(menuId);
+    const trigger = e.currentTarget;
+    const wasOpen = menu.classList.contains('open');
+    closeEmailMenus();
+    if (!wasOpen) {
+      menu.classList.add('open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+  }
+  function closeEmailMenus() {
+    document.querySelectorAll('.email-menu.open').forEach(m => {
+      m.classList.remove('open');
+      const wrapper = m.closest('.menu-wrapper');
+      const trigger = wrapper && wrapper.querySelector('.has-menu');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.menu-wrapper')) closeEmailMenus();
+    else if (e.target.closest('.email-menu a')) closeEmailMenus();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeEmailMenus(); });
+
+  function copyEmailAddress() {
+    navigator.clipboard.writeText('contact@indie-calc.com')
+      .then(() => showToast('Copied contact@indie-calc.com to clipboard', 'success'))
+      .catch(() => showToast('Couldn\u2019t copy \u2014 your browser blocked clipboard access', 'warning'));
+  }
+
+  /* ── Toast ── */
+  let toastTimer;
+  function showToast(message, variant) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast show' + (variant ? ' ' + variant : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 4000);
+  }
+
+  /* ── mailto failure detection ── */
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[data-handler="mailto"]');
+    if (!link) return;
+    let handlerOpened = false;
+    const onBlur = () => { handlerOpened = true; };
+    const onVis  = () => { if (document.hidden) handlerOpened = true; };
+    window.addEventListener('blur', onBlur, { once: true });
+    document.addEventListener('visibilitychange', onVis, { once: true });
+    setTimeout(() => {
+      window.removeEventListener('blur', onBlur);
+      document.removeEventListener('visibilitychange', onVis);
+      if (!handlerOpened && document.hasFocus()) {
+        showToast('No default mail app set on this device. Try Gmail or Outlook from the menu instead.', 'warning');
+      }
+    }, 1000);
+  });
+
+  /* ── Strip leading zeros on blur ── */
+  document.querySelectorAll('input[type="number"]').forEach(el => {
+    el.addEventListener('blur', () => {
+      if (el.value && el.value !== '') {
+        const num = parseFloat(el.value);
+        if (!isNaN(num)) el.value = num;
+      }
+    });
+  });
+
+  /* ── Auto-calculate (debounced, NO auto-scrolling) ── */
+  let debounceTimer;
+  function debounce(fn, ms) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fn(...args), ms); }; }
+
+  document.querySelectorAll('#netProfit, #otherIncome, #priorYearTax, #withholding').forEach(el => {
+    el.addEventListener('input', debounce(() => { calculate(); persistState(); }, 200));
+  });
+  document.querySelectorAll('#filingStatus, #state').forEach(el => {
+    el.addEventListener('change', () => { calculate(); persistState(); });
+  });
+
+  /* ── Formatting helpers ── */
+  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+  function pct(n) { return (n * 100).toFixed(1) + '%'; }
+
+  /* ── Copy results ── */
+  function copyResults() {
+    const quarterly = document.getElementById('r-quarterlyPayment').textContent;
+    const totalTax = document.getElementById('r-totalTax').textContent;
+    const federalTax = document.getElementById('r-federalTax').textContent;
+    const stateTax = document.getElementById('r-stateTax').textContent;
+    const stateEl = document.getElementById('state');
+    const stateName = stateEl.options[stateEl.selectedIndex].text;
+    const incomeNum = parseFloat(document.getElementById('netProfit').value);
+    const income = isNaN(incomeNum) ? '0' : Math.round(incomeNum).toLocaleString();
+
+    const lines = [
+      '2026 Quarterly Estimated Tax Schedule (IndieCalc)',
+      '\u2501'.repeat(45),
+      'SE Income: $' + income,
+      'State: ' + stateName,
+      '',
+      'Total Estimated Tax: ' + totalTax,
+      'Federal: ' + federalTax,
+      'State: ' + stateTax,
+      'Quarterly Payment: ' + quarterly,
+      '',
+      'Q1: April 15, 2026    ' + quarterly,
+      'Q2: June 15, 2026     ' + quarterly,
+      'Q3: Sept 15, 2026     ' + quarterly,
+      'Q4: Jan 15, 2027      ' + quarterly,
+      '\u2501'.repeat(45),
+      'indie-calc.com \u2014 estimates only, not tax advice',
+    ];
+
+    navigator.clipboard.writeText(lines.join('\n'))
+      .then(() => showToast('Schedule copied to clipboard \u2014 paste it into your email', 'success'))
+      .catch(() => showToast('Couldn\u2019t copy \u2014 your browser blocked clipboard access', 'warning'));
+  }
+
+  /* ── URL state persistence ── */
+  const STATE_PARAMS_NUM = ['netProfit', 'otherIncome', 'priorYearTax', 'withholding'];
+  const STATE_PARAMS_SEL = ['filingStatus', 'state'];
+  function persistState() {
+    const params = new URLSearchParams();
+    STATE_PARAMS_NUM.forEach(id => {
+      const v = document.getElementById(id).value;
+      if (v && v !== '0' && v !== '') params.set(id, v);
+    });
+    STATE_PARAMS_SEL.forEach(id => params.set(id, document.getElementById(id).value));
+    history.replaceState(null, '', '#' + params.toString());
+  }
+  function hydrateFromHash() {
+    if (!location.hash || location.hash.length < 2) return;
+    const params = new URLSearchParams(location.hash.slice(1));
+    let any = false;
+    for (const [k, v] of params) {
+      const el = document.getElementById(k);
+      if (!el) continue;
+      el.value = v;
+      any = true;
+    }
+    return any;
+  }
+  hydrateFromHash();
+
+  /* ── Initial calculation on page load ── */
+  setTimeout(() => { calculate(); }, 100);
+
+  /* ── Main calculation ── */
+  function calculate() {
+    const netProfitRaw = document.getElementById('netProfit').value;
+    const netProfitNum = parseFloat(netProfitRaw);
+    const netProfit = !isNaN(netProfitNum) && netProfitNum > 0 ? netProfitNum : 0;
+    const emptyState = document.getElementById('emptyState');
+    const resultsEl = document.getElementById('results');
+
+    if (netProfitRaw === '' || netProfit <= 0) {
+      resultsEl.classList.remove('visible');
+      emptyState.hidden = false;
+      return;
+    }
+    emptyState.hidden = true;
+
+    const filingStatus = document.getElementById('filingStatus').value;
+    const stateKey = document.getElementById('state').value;
+    const otherIncome = Math.max(0, parseFloat(document.getElementById('otherIncome').value) || 0);
+    const priorYearTax = Math.max(0, parseFloat(document.getElementById('priorYearTax').value) || 0);
+    const withholding = Math.max(0, parseFloat(document.getElementById('withholding').value) || 0);
+
+    const federal = FEDERAL['2026'];
+    const state = STATES[stateKey];
+    const totalIncome = netProfit + otherIncome;
+
+    /* Use the shared calculator engine for the tax computation. */
+    const result = calculateAll(
+      { netProfit, filingStatus, otherIncome },
+      federal,
+      state,
+    );
+
+    const totalFederalTax = result.summary.totalFederalTax;
+    const stateTaxAmt = result.summary.stateTax;
+    const totalTax = result.summary.totalTax;
+
+    /* Amounts remaining after W-2 withholding. */
+    const federalAfterWithholding = Math.max(0, totalFederalTax - withholding);
+    const totalAfterWithholding = federalAfterWithholding + stateTaxAmt;
+
+    /* Per-quarter amounts. */
+    const federalPerQuarter = federalAfterWithholding / QUARTERS_PER_YEAR;
+    const statePerQuarter = stateTaxAmt / QUARTERS_PER_YEAR;
+    const totalPerQuarter = totalAfterWithholding / QUARTERS_PER_YEAR;
+
+    /* ── Safe harbor calculation ── */
+    const currentYear90 = totalAfterWithholding * SAFE_HARBOR_CURRENT_YEAR_PCT;
+    const highIncomeThreshold = filingStatus === 'marriedSeparate'
+      ? HIGH_INCOME_AGI_THRESHOLD_MFS
+      : HIGH_INCOME_AGI_THRESHOLD;
+    const priorYearMultiplier = totalIncome > highIncomeThreshold
+      ? SAFE_HARBOR_HIGH_INCOME_PCT
+      : SAFE_HARBOR_PRIOR_YEAR_PCT;
+    const priorYearSafeHarbor = priorYearTax * priorYearMultiplier;
+
+    /* The recommended safe harbor is the LESSER of the two methods
+       (pay whichever is lower and you're still penalty-safe).
+       If no prior year tax provided, use the current year method. */
+    let safeHarborAnnual;
+    if (priorYearTax > 0) {
+      safeHarborAnnual = Math.min(currentYear90, priorYearSafeHarbor);
+    } else {
+      safeHarborAnnual = currentYear90;
+    }
+    const safeHarborPerQuarter = safeHarborAnnual / QUARTERS_PER_YEAR;
+
+    /* The recommended quarterly payment is the safe harbor amount
+       (it avoids penalties). If the actual tax is lower than safe harbor,
+       paying the actual amount is fine too. */
+    const recommendedPerQuarter = Math.max(totalPerQuarter, safeHarborPerQuarter);
+
+    /* ── Hero result ── */
+    document.getElementById('r-quarterlyPayment').textContent = fmt(recommendedPerQuarter);
+    document.getElementById('r-heroSub').textContent =
+      fmt(totalAfterWithholding) + ' total estimated tax' +
+      (withholding > 0 ? ' (after ' + fmt(withholding) + ' W-2 withholding)' : '') +
+      ' / 4 quarters';
+
+    /* ── Summary grid ── */
+    document.getElementById('r-totalTax').textContent = fmt(totalAfterWithholding);
+    document.getElementById('r-federalTax').textContent = fmt(federalAfterWithholding);
+    document.getElementById('r-stateTax').textContent = fmt(stateTaxAmt);
+    document.getElementById('r-safeHarbor').textContent = fmt(safeHarborAnnual);
+
+    /* ── Update email CTA ── */
+    setMenuLinks('emailMenu', {
+      to: '',
+      subject: 'My 2026 Quarterly Tax Estimate - IndieCalc',
+      body: 'My 2026 Quarterly Estimated Tax Schedule (IndieCalc)\n' +
+        '================================\n\n' +
+        'Income: $' + Math.round(netProfit).toLocaleString() + '\n' +
+        'State: ' + state.name + '\n' +
+        'Total Estimated Tax: ' + fmt(totalAfterWithholding) + '\n' +
+        'Quarterly Payment: ' + fmt(recommendedPerQuarter) + '\n\n' +
+        'Q1: April 15 - ' + fmt(recommendedPerQuarter) + '\n' +
+        'Q2: June 15  - ' + fmt(recommendedPerQuarter) + '\n' +
+        'Q3: Sept 15  - ' + fmt(recommendedPerQuarter) + '\n' +
+        'Q4: Jan 15   - ' + fmt(recommendedPerQuarter) + '\n\n' +
+        'Full breakdown: https://indie-calc.com/calculators/quarterly-tax/\n\n' +
+        'Disclaimer: These are estimates for informational purposes only. Consult a tax professional.',
+    });
+
+    /* ── Quarter cards ── */
+    const now = new Date();
+    const quarterGrid = document.getElementById('quarterGrid');
+    quarterGrid.replaceChildren();
+    const qFrag = document.createDocumentFragment();
+
+    for (let i = 0; i < QUARTERS_PER_YEAR; i++) {
+      const q = QUARTER_INFO[i];
+      const card = document.createElement('div');
+      card.className = 'quarter-card';
+
+      /* Determine if this quarter is past, current, or future.
+         "Current" = due date is within the next 30 days or today. */
+      const daysDiff = Math.ceil((q.date - now) / (1000 * 60 * 60 * 24));
+      if (daysDiff < 0) {
+        card.classList.add('past');
+      } else if (daysDiff <= 30) {
+        card.classList.add('current');
+      }
+
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'q-label';
+      labelDiv.textContent = q.label;
+      card.appendChild(labelDiv);
+
+      const dateDiv = document.createElement('div');
+      dateDiv.className = 'q-date';
+      dateDiv.textContent = 'Due: ' + q.due;
+      card.appendChild(dateDiv);
+
+      const totalDiv = document.createElement('div');
+      totalDiv.className = 'q-total';
+      totalDiv.textContent = fmt(recommendedPerQuarter);
+      card.appendChild(totalDiv);
+
+      const breakdownDiv = document.createElement('div');
+      breakdownDiv.className = 'q-breakdown';
+      breakdownDiv.textContent = 'Federal: ' + fmt(federalPerQuarter);
+      if (state.hasIncomeTax) {
+        breakdownDiv.textContent += ' + State: ' + fmt(statePerQuarter);
+      }
+      card.appendChild(breakdownDiv);
+
+      qFrag.appendChild(card);
+    }
+    quarterGrid.appendChild(qFrag);
+
+    /* ── Safe harbor box ── */
+    const shGrid = document.getElementById('safeHarborGrid');
+    shGrid.replaceChildren();
+    const shFrag = document.createDocumentFragment();
+
+    const currentYearItem = document.createElement('div');
+    currentYearItem.className = 'sh-item';
+    if (priorYearTax <= 0 || currentYear90 <= priorYearSafeHarbor) {
+      currentYearItem.classList.add('recommended');
+    }
+    currentYearItem.innerHTML =
+      '<div class="sh-value">' + fmt(currentYear90) + '</div>' +
+      '<div class="sh-label">90% of 2026 Estimated Tax' +
+      (priorYearTax <= 0 || currentYear90 <= priorYearSafeHarbor ? ' (recommended)' : '') +
+      '</div>';
+    shFrag.appendChild(currentYearItem);
+
+    const priorYearItem = document.createElement('div');
+    priorYearItem.className = 'sh-item';
+    if (priorYearTax > 0 && priorYearSafeHarbor < currentYear90) {
+      priorYearItem.classList.add('recommended');
+    }
+    const priorLabel = totalIncome > highIncomeThreshold
+      ? '110% of 2025 Tax (AGI > ' + fmt(highIncomeThreshold) + ')'
+      : '100% of 2025 Tax';
+    priorYearItem.innerHTML =
+      '<div class="sh-value">' + (priorYearTax > 0 ? fmt(priorYearSafeHarbor) : 'N/A') + '</div>' +
+      '<div class="sh-label">' + priorLabel +
+      (priorYearTax > 0 && priorYearSafeHarbor < currentYear90 ? ' (recommended)' : '') +
+      '</div>';
+    shFrag.appendChild(priorYearItem);
+    shGrid.appendChild(shFrag);
+
+    const shNote = document.getElementById('safeHarborNote');
+    if (priorYearTax > 0) {
+      shNote.textContent = 'Pay at least the lesser of these two amounts each year (' +
+        fmt(safeHarborPerQuarter) + '/quarter) to avoid underpayment penalties. ' +
+        'The IRS uses the lower threshold to determine your safe harbor.';
+    } else {
+      shNote.textContent = 'Enter your prior year tax (line 24 of your 2025 Form 1040) to see ' +
+        'the prior-year safe harbor option. Without it, aim for 90% of your current year estimate.';
+    }
+
+    /* ── Penalty estimation ── */
+    const penaltyBox = document.getElementById('penaltyBox');
+    const penaltyTitle = document.getElementById('penaltyTitle');
+    const penaltyText = document.getElementById('penaltyText');
+
+    /* Estimate penalty risk if they owe more than $1,000 and haven't
+       met safe harbor. Show the potential penalty using the IRS
+       underpayment rate on a per-quarter basis. */
+    if (totalAfterWithholding < MINIMUM_TAX_THRESHOLD) {
+      penaltyBox.className = 'penalty-box no-penalty';
+      penaltyTitle.className = 'safe-text';
+      penaltyTitle.textContent = 'No Estimated Payments Required';
+      penaltyText.textContent =
+        'Your estimated tax liability is under $' + MINIMUM_TAX_THRESHOLD.toLocaleString() +
+        ' after withholding. You generally don\'t need to make quarterly estimated payments. ' +
+        'You can pay any balance due when you file your return.';
+    } else if (priorYearTax > 0 && priorYearSafeHarbor <= withholding) {
+      penaltyBox.className = 'penalty-box no-penalty';
+      penaltyTitle.className = 'safe-text';
+      penaltyTitle.textContent = 'W-2 Withholding Covers Safe Harbor';
+      penaltyText.textContent =
+        'Your W-2 withholding (' + fmt(withholding) + ') already exceeds your prior-year safe harbor (' +
+        fmt(priorYearSafeHarbor) + '). You may still owe a balance at filing, but you should not face ' +
+        'underpayment penalties if your withholding is applied evenly across quarters.';
+    } else {
+      /* Calculate approximate penalty assuming zero quarterly payments made.
+         The IRS compounds daily, but we estimate with simple quarterly interest. */
+      const quarterlyRequired = safeHarborPerQuarter;
+      let estimatedPenalty = 0;
+      const quarterMonths = [9, 7, 4, 0]; /* months remaining until April 15 of next year */
+      for (let i = 0; i < QUARTERS_PER_YEAR; i++) {
+        /* Penalty = shortfall * rate * (months / 12) */
+        const shortfall = Math.max(0, quarterlyRequired);
+        estimatedPenalty += shortfall * UNDERPAYMENT_ANNUAL_RATE * (quarterMonths[i] / 12);
+      }
+
+      penaltyBox.className = 'penalty-box';
+      penaltyTitle.className = 'warning-text';
+      penaltyTitle.textContent = 'Potential Underpayment Penalty';
+      penaltyText.innerHTML =
+        'If you don\'t make quarterly payments, the IRS may charge an estimated penalty of approximately ' +
+        '<strong>' + fmt(estimatedPenalty) + '</strong> (at ' + pct(UNDERPAYMENT_ANNUAL_RATE) +
+        ' annual rate). Pay ' + fmt(recommendedPerQuarter) + ' per quarter to avoid penalties.' +
+        (priorYearTax <= 0
+          ? '<br><br>Tip: Enter your prior year tax above for a more precise safe harbor calculation.'
+          : '');
+    }
+
+    /* ── Breakdown table ── */
+    const body = document.getElementById('breakdownBody');
+    body.replaceChildren();
+    const bFrag = document.createDocumentFragment();
+
+    const rows = [
+      { label: 'Gross Self-Employment Income', value: fmt(netProfit) },
+    ];
+    if (otherIncome > 0) {
+      rows.push({ label: 'Other Income (W-2, etc.)', value: fmt(otherIncome) });
+    }
+    rows.push({ label: 'Self-Employment Tax (15.3%)', value: fmt(result.summary.selfEmploymentTax) });
+    rows.push({ label: 'Federal Income Tax', value: fmt(result.summary.federalIncomeTax) });
+    rows.push({ label: 'Total Federal Tax', value: fmt(totalFederalTax) });
+    if (withholding > 0) {
+      rows.push({ label: 'W-2 Withholding (already paid)', value: '-' + fmt(withholding), valueColor: 'var(--green)' });
+      rows.push({ label: 'Federal Tax Remaining', value: fmt(federalAfterWithholding) });
+    }
+    rows.push({ label: 'State Tax (' + state.name + ')', value: fmt(stateTaxAmt) });
+
+    for (const r of rows) {
+      const tr = document.createElement('tr');
+      const tdLabel = document.createElement('td');
+      tdLabel.textContent = r.label;
+      const tdValue = document.createElement('td');
+      tdValue.textContent = r.value;
+      if (r.valueColor) tdValue.style.color = r.valueColor;
+      tr.append(tdLabel, tdValue);
+      bFrag.appendChild(tr);
+    }
+
+    /* Total row */
+    const trTotal = document.createElement('tr');
+    trTotal.className = 'total';
+    const td1 = document.createElement('td'); td1.textContent = 'Total Estimated Tax Due';
+    const td2 = document.createElement('td'); td2.textContent = fmt(totalAfterWithholding);
+    trTotal.append(td1, td2);
+    bFrag.appendChild(trTotal);
+
+    const trQuarterly = document.createElement('tr');
+    trQuarterly.className = 'total';
+    const td3 = document.createElement('td'); td3.textContent = 'Per Quarter';
+    const td4 = document.createElement('td'); td4.textContent = fmt(recommendedPerQuarter); td4.style.color = 'var(--teal)';
+    trQuarterly.append(td3, td4);
+    bFrag.appendChild(trQuarterly);
+
+    body.appendChild(bFrag);
+
+    document.getElementById('lastUpdated').textContent = 'Tax data last verified: April 2026. Sources: IRS Form 1040-ES, SSA, Tax Foundation, state revenue depts.';
+
+    resultsEl.classList.add('visible');
+  }
+</script>
+
+</body>
+</html>

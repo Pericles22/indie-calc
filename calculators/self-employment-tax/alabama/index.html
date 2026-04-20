@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self-Employment Tax Calculator 2026 — Alabama | IndieCalc</title>
+<meta name="description" content="Free Alabama self-employment tax calculator for 2026. Calculate federal SE tax (15.3%), income tax, and Alabama state tax (graduated rates from 2% to 5%) on your freelance income. See take-home pay and quarterly estimated payments.">
+<link rel="canonical" href="https://indie-calc.com/calculators/self-employment-tax/alabama/">
+<meta property="og:title" content="Self-Employment Tax Calculator 2026 — Alabama | IndieCalc">
+<meta property="og:description" content="Calculate your federal SE tax, income tax, and Alabama state tax (graduated rates from 2% to 5%) on freelance income for 2026.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://indie-calc.com/calculators/self-employment-tax/alabama/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Self-Employment Tax Calculator 2026 — Alabama | IndieCalc">
+<meta name="twitter:description" content="Calculate your federal SE tax, income tax, and Alabama state tax (graduated rates from 2% to 5%) on freelance income for 2026.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --hint: #5e5e72;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --red: #dc3545;
+    --green: #28a745;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *:focus { outline: none; }
+  *:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.6; }
+  h2, h3, h4, .subtitle, .lead-capture p { text-wrap: balance; }
+  p { text-wrap: pretty; }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .container { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  header .brand {
+    font-size: 20px; font-weight: 700; color: white; text-decoration: none;
+    padding: 6px 0; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header .brand span { color: var(--teal); }
+  header a.nav-link {
+    color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px;
+    padding: 12px 8px; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  header a.nav-link:hover { color: white; }
+
+  main h1 { font-size: 28px; font-weight: 700; margin: 32px 0 8px; }
+  main h1 small { font-size: 16px; font-weight: 400; color: var(--medium); }
+  h2 { font-size: 22px; font-weight: 700; margin: 32px 0 8px; }
+  .subtitle { color: var(--medium); font-size: 15px; margin-bottom: 28px; }
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 9999;
+    background: var(--dark); color: white; padding: 12px 16px;
+    text-decoration: none; border-radius: 0 0 6px 0;
+  }
+  .skip-link:focus { left: 0; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0);
+    white-space: nowrap; border: 0;
+  }
+
+  .state-intro {
+    background: var(--teal-bg); border: 1px solid var(--teal); border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 24px; font-size: 14px; color: var(--medium); line-height: 1.7;
+  }
+  .state-intro strong { color: var(--dark); }
+
+  .calc-form { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .form-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .form-group { flex: 1; min-width: 200px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--medium); margin-bottom: 4px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 6px;
+    font-size: 15px; font-family: var(--font); color: var(--dark);
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,106,90,0.1); }
+  .form-group .prefix { position: relative; }
+  .form-group .prefix::before { content: '$'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--light); font-size: 15px; }
+  .form-group .prefix input { padding-left: 24px; }
+
+  .checkbox-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--teal); margin-top: 2px; flex-shrink: 0; }
+  .checkbox-row label { font-size: 13px; color: var(--medium); cursor: pointer; line-height: 1.5; }
+  .checkbox-row .tooltip { font-size: 12px; color: var(--hint); margin-left: 4px; display: block; width: 100%; padding-left: 26px; }
+
+  .btn { background: var(--teal); color: white; border: none; padding: 12px 32px; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: var(--font); }
+  .btn:hover { background: #245a4c; }
+
+  .results { display: none; }
+  .results.visible { display: block; }
+
+  .hero-result { background: var(--teal); border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
+  .hero-result .hero-value { font-size: 48px; font-weight: 700; letter-spacing: -1px; }
+  .hero-result .hero-label { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+  .hero-result .hero-sub { font-size: 13px; opacity: 0.6; margin-top: 8px; }
+
+  .result-summary {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 24px; margin-bottom: 24px;
+  }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+  .summary-item { text-align: center; padding: 12px 8px; background: var(--bg); border-radius: 8px; }
+  .summary-item .value { font-size: 22px; font-weight: 700; color: var(--dark); }
+  .summary-item .label { font-size: 11px; color: var(--medium); margin-top: 2px; }
+  .summary-item.warning .value { color: var(--red); }
+
+  .lead-capture { background: var(--teal-bg); border: 1px solid var(--teal); border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center; }
+  .lead-capture h3 { font-size: 15px; font-weight: 600; color: var(--teal); margin-bottom: 8px; padding: 0; border: none; }
+  .lead-capture p { font-size: 13px; color: var(--medium); margin-bottom: 16px; }
+  .lead-capture .btn-row { display: flex; gap: 8px; justify-content: center; align-items: stretch; flex-wrap: wrap; }
+  .lead-capture .btn-lead { background: var(--teal); color: white; border: 1px solid transparent; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; line-height: 1.4; box-sizing: border-box; }
+  .lead-capture .btn-lead:hover { background: #245a4c; }
+  @media (max-width: 480px) {
+    .lead-capture .btn-row { flex-direction: column; }
+    .lead-capture .btn-lead { width: 100%; }
+  }
+
+  .menu-wrapper { position: relative; display: inline-block; text-align: left; }
+  .has-menu .caret { margin-left: 6px; font-size: 11px; opacity: 0.85; }
+  .email-menu {
+    display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    background: var(--white); border: 1px solid var(--rule); border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12); padding: 6px; min-width: 220px; z-index: 100;
+  }
+  .email-menu.open { display: block; }
+  .email-menu::before {
+    content: ''; position: absolute; top: -6px; left: 50%;
+    transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px;
+    background: var(--white); border: 1px solid var(--rule); border-bottom: none; border-right: none;
+  }
+  .email-menu a, .email-menu button {
+    display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box;
+    text-align: left; background: none; border: none; padding: 10px 12px;
+    font-size: 14px; font-family: var(--font); color: var(--dark); text-decoration: none;
+    border-radius: 4px; cursor: pointer; font-weight: 500;
+  }
+  .email-menu a:hover, .email-menu button:hover { background: var(--teal-light); color: var(--teal); }
+  .email-menu .icon { font-size: 16px; line-height: 1; width: 18px; text-align: center; }
+  @media (max-width: 480px) {
+    .email-menu { min-width: min(260px, 90vw); }
+  }
+
+  #stateLinks { display: block; }
+  .state-group { margin-bottom: 14px; }
+  .state-group:last-child { margin-bottom: 0; }
+  .state-group-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .state-group-label::before {
+    content: ''; display: inline-block; width: 8px; height: 8px;
+    border-radius: 2px; background: currentColor;
+  }
+  .state-group-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .state-tag {
+    font-size: 11px; padding: 4px 10px; border-radius: 4px;
+    cursor: pointer; display: inline-block; transition: opacity 0.15s, transform 0.15s;
+    user-select: none; text-decoration: none;
+  }
+  .state-tag:hover { opacity: 0.85; transform: translateY(-1px); }
+  .state-tag.no-income { background: var(--teal-light); color: var(--teal); }
+  .state-tag.low { background: #f0f8e8; color: #6b8f3a; }
+  .state-tag.high { background: #fff0e8; color: #b85c3a; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--dark); color: white; padding: 12px 20px;
+    border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 1.4;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    z-index: 1000; max-width: min(420px, 92vw); text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  .toast.warning { background: #b85c3a; }
+  .toast.success { background: var(--teal); }
+
+  .info-tip { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 4px; cursor: help; }
+
+  .accordion-toggle { background: none; border: 1px solid var(--rule); border-radius: 6px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--teal); cursor: pointer; font-family: var(--font); width: 100%; text-align: left; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .accordion-toggle:hover { background: var(--teal-light); }
+  .accordion-toggle .arrow { transition: transform 0.2s; }
+  .accordion-toggle.open .arrow { transform: rotate(180deg); }
+  .accordion-body { display: none; border: 1px solid var(--rule); border-radius: 8px; padding: 20px; margin-bottom: 16px; background: var(--bg); }
+  .accordion-body.open { display: block; }
+  .accordion-body .form-group { margin-bottom: 12px; }
+  .accordion-body .form-group:last-child { margin-bottom: 0; }
+  .accordion-body .field-help { font-size: 12px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
+
+  .breakdown { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .breakdown h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .breakdown-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .breakdown-table th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .breakdown-table td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; }
+  .breakdown-table td:last-child { text-align: right; font-weight: 500; }
+  .breakdown-table tr.total td { font-weight: 700; border-top: 2px solid var(--dark); border-bottom: none; padding-top: 12px; }
+
+  #bracketBreakdown .breakdown-table th + th,
+  #bracketBreakdown .breakdown-table td + td { text-align: right; padding-left: 12px; }
+  #bracketBreakdown .breakdown-table td:nth-child(n+2) { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .methodology { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .methodology h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .methodology p, .methodology li { font-size: 13px; color: var(--medium); line-height: 1.7; }
+  .methodology ol { padding-left: 20px; }
+  .methodology li { margin-bottom: 4px; }
+  .methodology .source { font-size: 12px; color: var(--light); margin-top: 12px; }
+  .methodology .source a { color: var(--teal); text-decoration: none; }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 24px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  .back-links { margin-bottom: 24px; font-size: 13px; }
+  .back-links a { color: var(--teal); text-decoration: none; margin-right: 16px; }
+  .back-links a:hover { text-decoration: underline; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .form-row { flex-direction: column; }
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    .result-summary { padding: 20px; }
+    main h1 { font-size: 22px; }
+    h2 { font-size: 19px; }
+    .breakdown { padding: 20px 16px; }
+    .breakdown-table { font-size: 13px; }
+    #bracketBreakdown .breakdown-table th,
+    #bracketBreakdown .breakdown-table td { font-size: 12px; }
+    #bracketBreakdown .breakdown-table th + th,
+    #bracketBreakdown .breakdown-table td + td { padding-left: 8px; }
+  }
+  @media (max-width: 380px) {
+    .breakdown { padding: 16px 12px; }
+    #bracketBreakdown .breakdown-table th + th,
+    #bracketBreakdown .breakdown-table td + td { padding-left: 6px; }
+  }
+
+  @media print {
+    header, footer, .calc-form, .lead-capture, .menu-wrapper, .toast,
+    #stateCompare, .methodology p:last-child { display: none !important; }
+    body { background: white; color: black; }
+    .container { max-width: 100%; padding: 0; }
+    .hero-result { background: white !important; color: black !important;
+      border: 2px solid black; }
+    .hero-result .hero-value { color: black; }
+    .breakdown, .result-summary, .methodology { box-shadow: none; border: 1px solid #999; }
+    h2, h3 { page-break-after: avoid; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+  }
+
+  .form-group.has-error input, .form-group.has-error select {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+  }
+  .form-error { color: var(--red); font-size: 12px; margin-top: 4px; }
+
+  .empty-state {
+    background: var(--teal-bg); border: 1px dashed var(--teal);
+    border-radius: 12px; padding: 32px 24px; text-align: center;
+    color: var(--medium); margin-top: 24px;
+  }
+  .empty-state h3 { color: var(--teal); font-size: 16px; margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<header>
+  <div class="container">
+    <a href="../../../" class="brand">Indie<span>Calc</span></a>
+    <a href="../../../" class="nav-link">&larr; Home</a>
+  </div>
+</header>
+
+<main id="main" class="container">
+  <h1>Alabama Self-Employment Tax Calculator <small>Tax Year 2026</small></h1>
+  <p class="subtitle">Calculate your federal self-employment tax, income tax, and Alabama state tax on freelance income.</p>
+
+  <div class="state-intro">
+    <p>Alabama imposes graduated rates from 2% to 5% on individual income, which applies to your self-employment earnings on top of federal taxes. Alabama is one of the few states that allows a deduction for federal income taxes paid, which can significantly reduce your effective state tax rate.</p>
+    <p style="margin-top: 8px; font-size: 13px;">Use the calculator below to estimate your total tax burden as a self-employed Alabama resident for the 2026 tax year.</p>
+  </div>
+
+  <div class="back-links">
+    <a href="../">&larr; Main Calculator (all states)</a>
+    <a href="../../../articles/state-freelance-tax-comparison/">50-State Tax Comparison &rarr;</a>
+  </div>
+
+  <div class="calc-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="netProfit">Net Self-Employment Income</label>
+        <div class="prefix"><input type="number" id="netProfit" placeholder="100,000" value="100000"></div>
+      </div>
+      <div class="form-group">
+        <label for="filingStatus">Filing Status</label>
+        <select id="filingStatus">
+          <option value="single">Single</option>
+          <option value="marriedJoint">Married Filing Jointly</option>
+          <option value="marriedSeparate">Married Filing Separately</option>
+          <option value="headOfHousehold">Head of Household</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="state">State</label>
+        <select id="state"></select>
+      </div>
+      <div class="form-group">
+        <label for="otherIncome">Other Income (W-2, etc.) &mdash; optional</label>
+        <div class="prefix"><input type="number" id="otherIncome" placeholder="0" value="0"></div>
+      </div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="includeQBI" checked aria-describedby="qbi-help">
+      <label for="includeQBI">Include QBI deduction (20% of business income)</label>
+      <span class="tooltip" id="qbi-help">20% deduction on qualified business income. Phase-out begins above $201,775 (single) / $403,550 (joint) for 2026.</span>
+    </div>
+    <div class="checkbox-row" id="sstbRow" style="display: none;">
+      <input type="checkbox" id="isSSTB" aria-describedby="sstb-help">
+      <label for="isSSTB">My business is an SSTB (law, accounting, health, consulting, etc.)</label>
+      <span class="tooltip" id="sstb-help">Specified Service Trade or Business. Above the QBI threshold + phase-in range, SSTBs lose the QBI deduction entirely.</span>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="isSenior" aria-describedby="senior-help">
+      <label for="isSenior">I am 65 or older</label>
+      <span class="tooltip" id="senior-help">Additional $6,000 deduction (OBBBA). Phases out at 6% above $75K single / $150K joint AGI.</span>
+    </div>
+    <div class="checkbox-row" id="spouseSeniorRow" style="display: none;">
+      <input type="checkbox" id="spouseIsSenior" aria-describedby="spouse-senior-help">
+      <label for="spouseIsSenior">My spouse is also 65 or older</label>
+      <span class="tooltip" id="spouse-senior-help">Doubles the senior deduction to $12,000 when both spouses qualify (MFJ only).</span>
+    </div>
+    <p style="font-size: 12px; color: var(--hint); margin-bottom: 16px;">New to the 2026 tax changes? <a href="../../../articles/2026-obbba-freelancer-tax-changes/" style="color:var(--teal);">Read our OBBBA guide &rarr;</a></p>
+
+    <button class="accordion-toggle" id="advancedToggle" type="button" aria-expanded="false" aria-controls="advancedBody">
+      Add Credits &amp; Deductions (Dependents, Health Insurance, Retirement, etc.)
+      <span class="arrow" aria-hidden="true">&#9660;</span>
+    </button>
+    <div class="accordion-body" id="advancedBody" hidden>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="numChildren">Children Under 17</label>
+          <input type="number" id="numChildren" placeholder="0" value="0" min="0" max="20">
+          <div class="field-help">Child Tax Credit: $2,200 per child (OBBBA). Phases out above $200K (single) / $400K (joint).</div>
+        </div>
+        <div class="form-group">
+          <label for="healthInsurance">Self-Employed Health Insurance Premiums</label>
+          <div class="prefix"><input type="number" id="healthInsurance" placeholder="0" value="0"></div>
+          <div class="field-help">Above-the-line deduction. Cannot exceed net SE income.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="retirementContrib">Retirement Contributions (SEP IRA / Solo 401k)</label>
+          <div class="prefix"><input type="number" id="retirementContrib" placeholder="0" value="0"></div>
+          <div class="field-help">Above-the-line deduction. SEP IRA max: 25% of net SE income (up to $70,000).</div>
+        </div>
+        <div class="form-group">
+          <label for="homeOfficeSqft">Home Office (Square Feet)</label>
+          <input type="number" id="homeOfficeSqft" placeholder="0" value="0" min="0" max="300">
+          <div class="field-help">Simplified method: $5/sq ft, max 300 sq ft ($1,500).</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="max-width: 50%;">
+          <label for="studentLoanInterest">Student Loan Interest Paid</label>
+          <div class="prefix"><input type="number" id="studentLoanInterest" placeholder="0" value="0"></div>
+          <div class="field-help">Above-the-line deduction, max $2,500.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" id="emptyState" hidden>
+    <h3>Enter your self-employment income to see results</h3>
+    <p>This calculator estimates your federal self-employment tax, federal income tax, and state tax.</p>
+  </div>
+
+  <section class="results" id="results" role="region" aria-live="polite" aria-atomic="false" aria-label="Tax estimate results">
+    <div class="hero-result">
+      <div class="hero-label">Your Estimated Take-Home Pay</div>
+      <div class="hero-value" id="r-takeHome">&mdash;</div>
+      <div class="hero-sub" id="r-takeHomeSub"></div>
+    </div>
+
+    <div class="result-summary">
+      <div class="summary-grid">
+        <div class="summary-item warning">
+          <div class="value" id="r-totalTax">&mdash;</div>
+          <div class="label">Total Tax</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-effectiveRate">&mdash;</div>
+          <div class="label">Effective Rate</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-quarterly">&mdash;</div>
+          <div class="label">Quarterly Payment</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-monthly">&mdash;</div>
+          <div class="label">Monthly Set-Aside</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="r-hourly">&mdash;</div>
+          <div class="label">Effective Hourly<br>(30 hrs/wk)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lead-capture">
+      <h3>Want to keep this breakdown?</h3>
+      <p>Get your personalized 2026 tax report delivered to your inbox.</p>
+      <div class="btn-row">
+        <div class="menu-wrapper">
+          <button type="button" class="btn-lead has-menu" id="emailCTA" aria-haspopup="true" aria-expanded="false" aria-controls="emailMenu" onclick="toggleEmailMenu(event, 'emailMenu')">Email Me This Report<span class="caret" aria-hidden="true">&#9662;</span></button>
+          <div class="email-menu" id="emailMenu" role="group" aria-labelledby="emailCTA">
+            <a href="#" target="_blank" rel="noopener" data-handler="gmail"><span class="icon" aria-hidden="true">&#9993;</span>Open in Gmail</a>
+            <a href="#" target="_blank" rel="noopener" data-handler="outlook"><span class="icon" aria-hidden="true">&#9993;</span>Open in Outlook.com</a>
+            <a href="#" data-handler="mailto"><span class="icon" aria-hidden="true">&#9993;</span>Default mail app</a>
+            <button type="button" onclick="copyResults(); closeEmailMenus();"><span class="icon" aria-hidden="true">&#128203;</span>Copy to clipboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <h3>Tax Breakdown</h3>
+      <table class="breakdown-table">
+        <thead><tr><th>Component</th><th>Amount</th></tr></thead>
+        <tbody id="breakdownBody"></tbody>
+      </table>
+    </div>
+
+    <div class="breakdown" id="bracketBreakdown">
+      <h3>Federal Income Tax Brackets</h3>
+      <table class="breakdown-table">
+        <thead><tr><th>Bracket</th><th>Rate</th><th>Taxable</th><th>Tax</th></tr></thead>
+        <tbody id="bracketBody"></tbody>
+      </table>
+    </div>
+
+    <div class="disclaimer-box" id="sstbWarning" style="display:none;">
+      <strong>SSTB Notice:</strong> Your income exceeds the 2026 QBI threshold. Check the SSTB box above if your business is a Specified Service Trade or Business.
+      <a href="../../../articles/2026-obbba-freelancer-tax-changes/" style="display:block; margin-top:8px; color:var(--teal); font-size:12px;">Read more about QBI phase-outs &rarr;</a>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Important:</strong> This calculator provides estimates for informational purposes only. It is not tax, legal, or financial advice.
+      Your actual tax liability depends on deductions, credits, other income, and factors not captured here.
+      <strong>Consult a qualified tax professional for your specific situation.</strong>
+    </div>
+
+    <div class="state-compare" id="stateCompare" style="background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Compare Other States</h3>
+      <p style="font-size: 13px; color: var(--medium); margin-bottom: 12px;">Thinking of relocating? See how your tax bill changes. <a href="../../../articles/state-freelance-tax-comparison/" style="color:var(--teal);">Full 50-state comparison &rarr;</a></p>
+      <div id="stateLinks"></div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 24px;">
+      <div class="menu-wrapper">
+        <button type="button" class="has-menu" id="errorCTA" aria-haspopup="true" aria-expanded="false" aria-controls="errorMenu" onclick="toggleEmailMenu(event, 'errorMenu')" style="font-size: 13px; color: var(--hint); background: none; border: 1px solid var(--rule); padding: 10px 16px; border-radius: 6px; cursor: pointer; font-family: var(--font); min-height: 44px;">See an error? Let us know<span class="caret" aria-hidden="true">&#9662;</span></button>
+        <div class="email-menu" id="errorMenu" role="group" aria-labelledby="errorCTA">
+          <a href="#" target="_blank" rel="noopener" data-handler="gmail"><span class="icon" aria-hidden="true">&#9993;</span>Open in Gmail</a>
+          <a href="#" target="_blank" rel="noopener" data-handler="outlook"><span class="icon" aria-hidden="true">&#9993;</span>Open in Outlook.com</a>
+          <a href="#" data-handler="mailto"><span class="icon" aria-hidden="true">&#9993;</span>Default mail app</a>
+          <button type="button" onclick="copyEmailAddress(); closeEmailMenus();"><span class="icon" aria-hidden="true">&#128203;</span>Copy email address</button>
+        </div>
+      </div>
+      <p style="font-size: 12px; color: var(--hint); margin-top: 6px;" id="lastUpdated"></p>
+    </div>
+  </section>
+
+  <div class="methodology">
+    <h2>How This Calculator Works</h2>
+    <ol>
+      <li><strong>Self-employment tax:</strong> Net income × 92.35% × 15.3% (12.4% Social Security + 2.9% Medicare). Social Security capped at $184,500 for 2026.</li>
+      <li><strong>Half-SE deduction:</strong> 50% of SE tax deducted before income tax.</li>
+      <li><strong>QBI deduction:</strong> Up to 20% of qualified business income (OBBBA permanent).</li>
+      <li><strong>Federal income tax:</strong> 2026 progressive brackets after standard deduction and above-the-line deductions.</li>
+      <li><strong>State tax (Alabama):</strong> Applied to total income using Alabama’s 2026 rates.</li>
+      <li><strong>Quarterly payments:</strong> Total tax ÷ 4. Due: April 15, June 15, September 15, January 15.</li>
+    </ol>
+    <div class="source">
+      Sources: <a href="https://taxfoundation.org/data/all/federal/2026-tax-brackets/" target="_blank" rel="noopener">Tax Foundation 2026 Federal</a> &middot;
+      <a href="https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/" target="_blank" rel="noopener">Tax Foundation 2026 State</a> &middot;
+      <a href="https://www.irs.gov/businesses/small-businesses-self-employed/self-employed-individuals-tax-center" target="_blank" rel="noopener">IRS SE Tax Center</a>
+    </div>
+    <p style="margin-top: 12px; font-size: 13px;"><a href="../../../articles/how-indiecalc-works/" style="color:var(--teal);">Read our full methodology &rarr;</a></p>
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../../">Home</a> &middot; <a href="../../../privacy/">Privacy</a> &middot; <a href="../../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+<script src="../../../src/tax-data.js"></script>
+<script src="../../../src/calculator.js"></script>
+<script>
+  // Populate state dropdown and pre-select this state
+  var stateSelect = document.getElementById('state');
+  var stateEntries = Object.entries(STATES).sort(function(a, b) { return a[1].name.localeCompare(b[1].name); });
+  for (var i = 0; i < stateEntries.length; i++) {
+    var option = document.createElement('option');
+    option.value = stateEntries[i][0];
+    option.textContent = stateEntries[i][1].name + (stateEntries[i][1].hasIncomeTax ? '' : ' (no income tax)');
+    stateSelect.appendChild(option);
+  }
+  stateSelect.value = 'alabama';
+
+  function setMenuLinks(menuId, opts) {
+    var menu = document.getElementById(menuId);
+    if (!menu) return;
+    var to = opts.to || '';
+    var enc = encodeURIComponent;
+    menu.querySelector('[data-handler="gmail"]').href = 'https://mail.google.com/mail/?view=cm&fu=1&to=' + enc(to) + '&su=' + enc(opts.subject) + '&body=' + enc(opts.body);
+    menu.querySelector('[data-handler="outlook"]').href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + enc(to) + '&subject=' + enc(opts.subject) + '&body=' + enc(opts.body);
+    menu.querySelector('[data-handler="mailto"]').href = 'mailto:' + to + '?subject=' + enc(opts.subject) + '&body=' + enc(opts.body);
+  }
+
+  function updateEmailCTA(income, stateName, takeHome, totalTax, rate, quarterly) {
+    setMenuLinks('emailMenu', {
+      to: '',
+      subject: 'My 2026 Self-Employment Tax Estimate (' + stateName + ') - IndieCalc',
+      body: 'My 2026 Tax Estimate (IndieCalc)\n================================\n\nIncome: $' + income + '\nState: ' + stateName + '\nTake-Home Pay: ' + takeHome + '\nTotal Tax: ' + totalTax + '\nEffective Rate: ' + rate + '\nQuarterly Payment: ' + quarterly + '\n\nFull breakdown: https://indie-calc.com/calculators/self-employment-tax/alabama/\n\nDisclaimer: Estimates only. Consult a tax professional.',
+    });
+  }
+
+  setMenuLinks('errorMenu', {
+    to: 'contact@indie-calc.com',
+    subject: 'Data Error Report \u2014 Alabama',
+    body: 'I found an error on the Alabama Self-Employment Tax Calculator.\n\nDetails: ',
+  });
+
+  function toggleEmailMenu(e, menuId) {
+    e.stopPropagation();
+    var menu = document.getElementById(menuId);
+    var trigger = e.currentTarget;
+    var wasOpen = menu.classList.contains('open');
+    closeEmailMenus();
+    if (!wasOpen) { menu.classList.add('open'); trigger.setAttribute('aria-expanded', 'true'); }
+  }
+  function closeEmailMenus() {
+    document.querySelectorAll('.email-menu.open').forEach(function(m) {
+      m.classList.remove('open');
+      var wrapper = m.closest('.menu-wrapper');
+      var trigger = wrapper && wrapper.querySelector('.has-menu');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.menu-wrapper')) closeEmailMenus();
+    else if (e.target.closest('.email-menu a')) closeEmailMenus();
+  });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeEmailMenus(); });
+
+  function copyEmailAddress() {
+    navigator.clipboard.writeText('contact@indie-calc.com')
+      .then(function() { showToast('Copied to clipboard', 'success'); })
+      .catch(function() { showToast('Could not copy', 'warning'); });
+  }
+
+  var toastTimer;
+  function showToast(message, variant) {
+    var toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast show' + (variant ? ' ' + variant : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { toast.classList.remove('show'); }, 4000);
+  }
+
+  document.querySelectorAll('input[type="number"]').forEach(function(el) {
+    el.addEventListener('blur', function() {
+      if (el.value && el.value !== '') { var num = parseFloat(el.value); if (!isNaN(num)) el.value = num; }
+    });
+  });
+
+  function toggleAdvanced() {
+    var toggle = document.getElementById('advancedToggle');
+    var body = document.getElementById('advancedBody');
+    var isOpen = !toggle.classList.contains('open');
+    toggle.classList.toggle('open', isOpen);
+    body.classList.toggle('open', isOpen);
+    body.toggleAttribute('hidden', !isOpen);
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+  document.getElementById('advancedToggle').addEventListener('click', toggleAdvanced);
+
+  function updateSSTBRow() {
+    document.getElementById('sstbRow').style.display = document.getElementById('includeQBI').checked ? '' : 'none';
+    if (!document.getElementById('includeQBI').checked) document.getElementById('isSSTB').checked = false;
+  }
+  function updateSpouseSeniorRow() {
+    var show = document.getElementById('filingStatus').value === 'marriedJoint' && document.getElementById('isSenior').checked;
+    document.getElementById('spouseSeniorRow').style.display = show ? '' : 'none';
+    if (!show) document.getElementById('spouseIsSenior').checked = false;
+  }
+  document.getElementById('includeQBI').addEventListener('change', updateSSTBRow);
+  document.getElementById('filingStatus').addEventListener('change', updateSpouseSeniorRow);
+  document.getElementById('isSenior').addEventListener('change', updateSpouseSeniorRow);
+
+  var shouldScroll = false;
+  var debounceTimer;
+  function debounce(fn, ms) { return function() { clearTimeout(debounceTimer); debounceTimer = setTimeout(fn, ms); }; }
+
+  document.querySelectorAll('#netProfit, #otherIncome, #numChildren, #healthInsurance, #retirementContrib, #homeOfficeSqft, #studentLoanInterest').forEach(function(el) {
+    el.addEventListener('input', debounce(function() { shouldScroll = false; calculate(); persistState(); }, 200));
+  });
+  document.querySelectorAll('#filingStatus, #state, #includeQBI, #isSSTB, #isSenior, #spouseIsSenior').forEach(function(el) {
+    el.addEventListener('change', function() { shouldScroll = false; calculate(); persistState(); });
+  });
+
+  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+  function pct(n) { return (n * 100).toFixed(1) + '%'; }
+
+  function copyResults() {
+    var takeHome = document.getElementById('r-takeHome').textContent;
+    var totalTax = document.getElementById('r-totalTax').textContent;
+    var rate = document.getElementById('r-effectiveRate').textContent;
+    var quarterly = document.getElementById('r-quarterly').textContent;
+    var monthly = document.getElementById('r-monthly').textContent;
+    var stateEl = document.getElementById('state');
+    var stateName = stateEl.options[stateEl.selectedIndex].text;
+    var incomeNum = parseFloat(document.getElementById('netProfit').value);
+    var income = isNaN(incomeNum) ? '0' : Math.round(incomeNum).toLocaleString();
+    var text = '2026 Self-Employment Tax Estimate (IndieCalc)\nIncome: $' + income + '\nState: ' + stateName + '\nTake-Home: ' + takeHome + '\nTotal Tax: ' + totalTax + '\nEffective Rate: ' + rate + '\nQuarterly: ' + quarterly + '\nMonthly: ' + monthly + '\n\nindie-calc.com';
+    navigator.clipboard.writeText(text)
+      .then(function() { showToast('Copied to clipboard', 'success'); })
+      .catch(function() { showToast('Could not copy', 'warning'); });
+  }
+
+  var STATE_PARAMS_NUM = ['netProfit', 'otherIncome', 'numChildren', 'healthInsurance', 'retirementContrib', 'homeOfficeSqft', 'studentLoanInterest'];
+  var STATE_PARAMS_SEL = ['filingStatus', 'state'];
+  var STATE_PARAMS_CHK = ['includeQBI', 'isSSTB', 'isSenior', 'spouseIsSenior'];
+  function persistState() {
+    var params = new URLSearchParams();
+    STATE_PARAMS_NUM.forEach(function(id) { var v = document.getElementById(id).value; if (v && v !== '0' && v !== '') params.set(id, v); });
+    STATE_PARAMS_SEL.forEach(function(id) { params.set(id, document.getElementById(id).value); });
+    STATE_PARAMS_CHK.forEach(function(id) { if (document.getElementById(id).checked) params.set(id, '1'); });
+    history.replaceState(null, '', '#' + params.toString());
+  }
+  function hydrateFromHash() {
+    if (!location.hash || location.hash.length < 2) return;
+    var params = new URLSearchParams(location.hash.slice(1));
+    var any = false;
+    for (var entry of params) {
+      var el = document.getElementById(entry[0]);
+      if (!el) continue;
+      if (el.type === 'checkbox') el.checked = (entry[1] === '1');
+      else el.value = entry[1];
+      any = true;
+    }
+    if (any) { updateSSTBRow(); updateSpouseSeniorRow(); }
+  }
+  hydrateFromHash();
+
+  setTimeout(function() { shouldScroll = false; updateSSTBRow(); updateSpouseSeniorRow(); calculate(); }, 100);
+
+  function calculate() {
+    var netProfitRaw = document.getElementById('netProfit').value;
+    var netProfitNum = parseFloat(netProfitRaw);
+    var netProfit = !isNaN(netProfitNum) && netProfitNum > 0 ? netProfitNum : 0;
+    var emptyStateEl = document.getElementById('emptyState');
+    var resultsEl = document.getElementById('results');
+
+    if (netProfitRaw === '' || netProfit <= 0) { resultsEl.classList.remove('visible'); emptyStateEl.hidden = false; return; }
+    emptyStateEl.hidden = true;
+
+    var filingStatus = document.getElementById('filingStatus').value;
+    var stateKey = document.getElementById('state').value;
+    var otherIncome = Math.max(0, parseFloat(document.getElementById('otherIncome').value) || 0);
+    var includeQBI = document.getElementById('includeQBI').checked;
+    var isSSTB = document.getElementById('isSSTB').checked;
+    var isSenior = document.getElementById('isSenior').checked;
+    var spouseIsSenior = document.getElementById('spouseIsSenior').checked;
+    var numChildren = parseInt(document.getElementById('numChildren').value) || 0;
+    var healthInsuranceRaw = Math.max(0, parseFloat(document.getElementById('healthInsurance').value) || 0);
+    var healthInsurance = Math.min(healthInsuranceRaw, netProfit);
+    var retirementContribRaw = Math.max(0, parseFloat(document.getElementById('retirementContrib').value) || 0);
+    var retirementCap = Math.min(Math.max(0, netProfit) * 0.18587, 70000);
+    var retirementContrib = Math.min(retirementContribRaw, retirementCap);
+    var homeOfficeSqft = Math.min(Math.max(0, parseInt(document.getElementById('homeOfficeSqft').value) || 0), 300);
+    var studentLoanInterest = Math.min(Math.max(0, parseFloat(document.getElementById('studentLoanInterest').value) || 0), 2500);
+    var homeOfficeDeduction = homeOfficeSqft * 5;
+    var otherAboveLine = homeOfficeDeduction + studentLoanInterest;
+
+    var federal = FEDERAL['2026'];
+    var state = STATES[stateKey];
+    var fedCopy = includeQBI ? federal : Object.assign({}, federal, { qbiDeductionRate: 0 });
+
+    var result = calculateAll(
+      { netProfit: netProfit, filingStatus: filingStatus, otherIncome: otherIncome, isSenior: isSenior, spouseIsSenior: spouseIsSenior, isSSTB: isSSTB, healthInsurance: healthInsurance, retirementContrib: retirementContrib, otherAboveLine: otherAboveLine },
+      fedCopy, state
+    );
+
+    var ctcThreshold = (filingStatus === 'marriedJoint') ? 400000 : 200000;
+    var totalIncome = netProfit + otherIncome;
+    var ctcPerChild = 2200;
+    if (totalIncome > ctcThreshold) { ctcPerChild = Math.max(0, 2200 - Math.ceil((totalIncome - ctcThreshold) / 1000) * 50); }
+    var totalCTC = numChildren * ctcPerChild;
+
+    var s = Object.assign({}, result.summary);
+    var ctcAgainstTax = Math.min(s.federalIncomeTax, totalCTC);
+    s.federalIncomeTax = Math.max(0, s.federalIncomeTax - ctcAgainstTax);
+    var ctcRemainder = totalCTC - ctcAgainstTax;
+    var actcCap = numChildren * federal.actcMaxPerChild;
+    var actcEarnedLimit = Math.max(0, (totalIncome - federal.actcEarnedIncomeFloor) * federal.actcEarnedIncomeRate);
+    var actcRefundable = Math.min(ctcRemainder, actcCap, actcEarnedLimit);
+
+    s.totalFederalTax = s.selfEmploymentTax + s.federalIncomeTax - actcRefundable;
+    s.totalTax = s.totalFederalTax + s.stateTax;
+    s.takeHome = totalIncome - s.totalTax;
+    var roundedTax = Math.round(s.totalTax);
+    var roundedIncome = Math.round(totalIncome);
+    s.effectiveRate = roundedIncome > 0 ? roundedTax / roundedIncome : 0;
+    s.quarterlyPayment = s.totalTax / 4;
+    s.monthlySetAside = s.totalTax / 12;
+
+    document.getElementById('r-takeHome').textContent = fmt(s.takeHome);
+    document.getElementById('r-takeHomeSub').textContent = 'On ' + fmt(totalIncome) + ' total income \u2022 ' + pct(Math.max(0, 1 - s.effectiveRate)) + ' kept';
+    document.getElementById('r-totalTax').textContent = fmt(s.totalTax);
+    document.getElementById('r-effectiveRate').textContent = pct(s.effectiveRate);
+    document.getElementById('r-quarterly').textContent = fmt(s.quarterlyPayment);
+    document.getElementById('r-monthly').textContent = fmt(s.monthlySetAside);
+    document.getElementById('r-hourly').textContent = fmt(s.takeHome / (30 * 48));
+
+    var stateEl = document.getElementById('state');
+    updateEmailCTA(Math.round(netProfit).toLocaleString(), stateEl.options[stateEl.selectedIndex].text, fmt(s.takeHome), fmt(s.totalTax), pct(s.effectiveRate), fmt(s.quarterlyPayment));
+
+    // Breakdown table
+    var ssCapped = result.selfEmploymentTax.taxableBase > federal.ssWageBase;
+    var rows = [];
+    rows.push({ label: 'Gross Self-Employment Income', value: fmt(netProfit) });
+    if (otherIncome > 0) rows.push({ label: 'Other Income (W-2, etc.)', value: fmt(otherIncome) });
+    rows.push({ label: 'Self-Employment Tax (15.3%)', value: fmt(s.selfEmploymentTax) });
+    rows.push({ label: '\u00A0\u00A0\u00A0Social Security (12.4%)', value: fmt(result.selfEmploymentTax.socialSecurity), tipText: ssCapped ? 'capped' : null, tip: ssCapped ? 'Capped at ' + fmt(federal.ssWageBase) : null });
+    rows.push({ label: '\u00A0\u00A0\u00A0Medicare (2.9%)', value: fmt(result.selfEmploymentTax.medicare) });
+    if (result.selfEmploymentTax.additionalMedicare > 0) rows.push({ label: '\u00A0\u00A0\u00A0Additional Medicare (0.9%)', value: fmt(result.selfEmploymentTax.additionalMedicare) });
+    rows.push({ label: 'Half-SE Deduction', value: '(' + fmt(result.selfEmploymentTax.deductibleHalf) + ')' });
+    if (result.federalIncomeTax.qbiDeduction > 0) rows.push({ label: 'QBI Deduction', value: '(' + fmt(result.federalIncomeTax.qbiDeduction) + ')', tipText: 'OBBBA', tip: 'Qualified Business Income deduction' });
+    if (result.federalIncomeTax.seniorDeduction > 0) rows.push({ label: 'Senior Deduction (65+)', value: '(' + fmt(result.federalIncomeTax.seniorDeduction) + ')', tipText: 'OBBBA', tip: 'OBBBA senior deduction' });
+    if (healthInsurance > 0) rows.push({ label: 'Health Insurance', value: '(' + fmt(healthInsurance) + ')' });
+    if (retirementContrib > 0) rows.push({ label: 'Retirement Contributions', value: '(' + fmt(retirementContrib) + ')' });
+    if (homeOfficeDeduction > 0) rows.push({ label: 'Home Office', value: '(' + fmt(homeOfficeDeduction) + ')' });
+    if (studentLoanInterest > 0) rows.push({ label: 'Student Loan Interest', value: '(' + fmt(studentLoanInterest) + ')' });
+    rows.push({ label: 'Standard Deduction', value: '(' + fmt(result.federalIncomeTax.standardDeduction) + ')' });
+    rows.push({ label: 'Federal Taxable Income', value: fmt(result.federalIncomeTax.taxableIncome) });
+    rows.push({ label: 'Federal Income Tax', value: fmt(s.federalIncomeTax) });
+    if (totalCTC > 0) rows.push({ label: 'Child Tax Credit', value: '-' + fmt(ctcAgainstTax), valueColor: 'var(--green)' });
+    if (actcRefundable > 0) rows.push({ label: 'Additional Child Tax Credit (refundable)', value: '-' + fmt(actcRefundable), valueColor: 'var(--green)' });
+    rows.push({ label: 'State Tax (' + state.name + ')', value: fmt(s.stateTax), tipText: state.hasIncomeTax ? 'est.' : null, tip: state.hasIncomeTax ? 'Applied to total income' : null });
+
+    var body = document.getElementById('breakdownBody');
+    body.replaceChildren();
+    var frag = document.createDocumentFragment();
+    for (var ri = 0; ri < rows.length; ri++) {
+      var r = rows[ri];
+      var tr = document.createElement('tr');
+      var tdLabel = document.createElement('td');
+      tdLabel.textContent = r.label;
+      if (r.tipText) { var tip = document.createElement('span'); tip.className = 'info-tip'; tip.textContent = r.tipText; tip.title = r.tip || ''; tdLabel.append(' ', tip); }
+      var tdValue = document.createElement('td');
+      tdValue.textContent = r.value;
+      if (r.valueColor) tdValue.style.color = r.valueColor;
+      tr.append(tdLabel, tdValue);
+      frag.appendChild(tr);
+    }
+    var trTotal = document.createElement('tr'); trTotal.className = 'total';
+    var td1 = document.createElement('td'); td1.textContent = 'Total Tax';
+    var td2 = document.createElement('td'); td2.textContent = fmt(s.totalTax);
+    trTotal.append(td1, td2); frag.appendChild(trTotal);
+    var trTH = document.createElement('tr'); trTH.className = 'total';
+    var td3 = document.createElement('td'); td3.textContent = 'Take-Home Pay';
+    var td4 = document.createElement('td'); td4.textContent = fmt(s.takeHome); td4.style.color = 'var(--teal)';
+    trTH.append(td3, td4); frag.appendChild(trTH);
+    body.appendChild(frag);
+
+    // Brackets
+    var bracketBody = document.getElementById('bracketBody');
+    bracketBody.replaceChildren();
+    if (result.federalIncomeTax.breakdown.length === 0) {
+      var tr2 = document.createElement('tr'); var td = document.createElement('td'); td.colSpan = 4;
+      td.style.cssText = 'text-align:center;color:var(--hint);padding:20px 0;font-size:13px;';
+      td.textContent = 'Your deductions exceed your income. No federal income tax applies.';
+      tr2.appendChild(td); bracketBody.appendChild(tr2);
+    } else {
+      var bf = document.createDocumentFragment();
+      for (var bi = 0; bi < result.federalIncomeTax.breakdown.length; bi++) {
+        var b = result.federalIncomeTax.breakdown[bi];
+        var tr3 = document.createElement('tr');
+        [b.bracket, pct(b.rate), fmt(b.taxable), fmt(b.tax)].forEach(function(c) { var td = document.createElement('td'); td.textContent = c; tr3.appendChild(td); });
+        bf.appendChild(tr3);
+      }
+      bracketBody.appendChild(bf);
+    }
+
+    // State comparison
+    var compareDiv = document.getElementById('stateLinks');
+    compareDiv.replaceChildren();
+    var noTax = [], lowTax = [], highTax = [];
+    for (var si = 0; si < stateEntries.length; si++) {
+      var ek = stateEntries[si][0], est = stateEntries[si][1];
+      if (ek === stateKey) continue;
+      if (!est.hasIncomeTax) { noTax.push([ek, est.name]); }
+      else {
+        var cr = calculateAll({ netProfit: netProfit, filingStatus: filingStatus, otherIncome: otherIncome, isSenior: isSenior, spouseIsSenior: spouseIsSenior, isSSTB: isSSTB, healthInsurance: healthInsurance, retirementContrib: retirementContrib, otherAboveLine: otherAboveLine }, fedCopy, est);
+        if (cr.summary.stateEffectiveRate < 0.035) lowTax.push([ek, est.name, cr.summary.stateEffectiveRate]);
+        else if (cr.summary.stateEffectiveRate > 0.06) highTax.push([ek, est.name, cr.summary.stateEffectiveRate]);
+      }
+    }
+    lowTax.sort(function(a, b) { return a[2] - b[2]; });
+    highTax.sort(function(a, b) { return b[2] - a[2]; });
+
+    function buildGroup(label, color, variant, items) {
+      if (items.length === 0) return null;
+      var g = document.createElement('div'); g.className = 'state-group';
+      var l = document.createElement('div'); l.className = 'state-group-label'; l.style.color = color; l.textContent = label; g.appendChild(l);
+      var t = document.createElement('div'); t.className = 'state-group-tags';
+      items.forEach(function(item) {
+        var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'state-tag ' + variant;
+        btn.textContent = item[1]; btn.setAttribute('data-state', item[0]);
+        btn.addEventListener('click', function() { document.getElementById('state').value = this.getAttribute('data-state'); shouldScroll = false; calculate(); persistState(); });
+        t.appendChild(btn);
+      });
+      g.appendChild(t); return g;
+    }
+
+    var cf = document.createDocumentFragment();
+    [buildGroup('No Income Tax', 'var(--teal)', 'no-income', noTax),
+     buildGroup('Low Tax (<3.5%)', '#6b8f3a', 'low', lowTax.slice(0,6).map(function(x){ return [x[0], x[1]+' '+pct(x[2])]; })),
+     buildGroup('High Tax (>6%)', '#b85c3a', 'high', highTax.slice(0,6).map(function(x){ return [x[0], x[1]+' '+pct(x[2])]; }))
+    ].forEach(function(g) { if (g) cf.appendChild(g); });
+    compareDiv.appendChild(cf);
+
+    var sstbThreshold = federal.qbiThreshold[filingStatus] || federal.qbiThreshold.single;
+    document.getElementById('sstbWarning').style.display = (includeQBI && !isSSTB && totalIncome > sstbThreshold) ? 'block' : 'none';
+    document.getElementById('lastUpdated').textContent = 'Tax data last verified: April 2026.';
+    resultsEl.classList.add('visible');
+    if (shouldScroll) { resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); shouldScroll = false; }
+  }
+</script>
+
+</body>
+</html>
