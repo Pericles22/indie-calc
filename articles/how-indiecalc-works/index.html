@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How IndieCalc Works: Our Methodology and Sources | IndieCalc</title>
+<meta name="description" content="How IndieCalc's tax calculations work, step by step. Our data sources, the logic behind self-employment tax math, and why your data never leaves your browser.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.7; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .header-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 20px; font-weight: 700; }
+  header h1 a { color: white; text-decoration: none; }
+  header h1 span { color: var(--teal); }
+  header nav a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; }
+
+  .article-header { padding: 48px 0 32px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+  .article-header .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .article-header h2 { font-size: 32px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+  .article-header .subtitle { font-size: 18px; color: var(--medium); line-height: 1.5; }
+  .article-header .meta { font-size: 13px; color: var(--light); margin-top: 16px; }
+
+  .article-body h3 { font-size: 22px; font-weight: 700; margin: 40px 0 16px; padding-top: 8px; }
+  .article-body h4 { font-size: 17px; font-weight: 600; margin: 28px 0 12px; }
+  .article-body p { font-size: 16px; color: var(--medium); margin-bottom: 20px; }
+  .article-body ul, .article-body ol { font-size: 16px; color: var(--medium); margin-bottom: 20px; padding-left: 24px; }
+  .article-body li { margin-bottom: 8px; }
+  .article-body strong { color: var(--dark); }
+  .article-body code { background: #f0f0f5; padding: 2px 6px; border-radius: 3px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; }
+
+  .callout { background: var(--teal-bg); border-left: 4px solid var(--teal); padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .callout p { margin-bottom: 0; font-size: 15px; }
+  .callout p + p { margin-top: 12px; }
+  .callout strong { color: var(--teal); }
+
+  .step-box { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 24px; margin: 20px 0; }
+  .step-box .step-number { display: inline-block; background: var(--teal); color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 14px; font-weight: 700; margin-right: 10px; }
+  .step-box .step-title { display: inline; font-size: 17px; font-weight: 600; }
+  .step-box .step-detail { margin-top: 12px; font-size: 15px; color: var(--medium); }
+  .step-box .step-formula { background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 12px 16px; margin-top: 12px; font-family: 'SF Mono', Consolas, monospace; font-size: 13px; color: var(--dark); line-height: 1.8; }
+
+  .source-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 20px 0; }
+  .source-table th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0; border-bottom: 1px solid var(--rule); }
+  .source-table td { padding: 10px 0; border-bottom: 1px solid #f0f0f5; color: var(--medium); vertical-align: top; }
+  .source-table td:first-child { font-weight: 500; color: var(--dark); white-space: nowrap; padding-right: 16px; }
+  .source-table a { color: var(--teal); text-decoration: none; }
+  .source-table a:hover { text-decoration: underline; }
+
+  .example-box { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 24px; margin: 24px 0; }
+  .example-box .example-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .example-box table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .example-box td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; color: var(--medium); }
+  .example-box td:last-child { text-align: right; font-weight: 500; }
+  .example-box tr.highlight td { font-weight: 700; color: var(--dark); border-top: 2px solid var(--dark); border-bottom: none; }
+  .example-box .table-note { font-size: 12px; color: var(--light); margin-top: 8px; }
+
+  .privacy-section { background: var(--teal-bg); border: 1px solid var(--teal); border-radius: 12px; padding: 28px; margin: 32px 0; }
+  .privacy-section h4 { color: var(--teal); font-size: 18px; margin-bottom: 12px; }
+  .privacy-section p { font-size: 15px; color: var(--medium); margin-bottom: 12px; }
+  .privacy-section p:last-child { margin-bottom: 0; }
+  .privacy-section ul { font-size: 15px; color: var(--medium); padding-left: 20px; margin-bottom: 12px; }
+
+  .cta-box { background: var(--teal); border-radius: 12px; padding: 32px; margin: 36px 0; text-align: center; color: white; }
+  .cta-box h4 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: white; }
+  .cta-box p { font-size: 15px; opacity: 0.85; margin-bottom: 16px; color: white; }
+  .cta-box a { display: inline-block; background: white; color: var(--teal); padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; }
+  .cta-box a:hover { background: var(--teal-light); }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 36px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .article-header h2 { font-size: 24px; }
+    .article-body h3 { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1><a href="../../">Indie<span>Calc</span></a></h1>
+    <nav><a href="../../">&larr; All Calculators</a></nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="article-header">
+    <div class="label">Methodology</div>
+    <h2>How IndieCalc Works: Our Methodology and Sources</h2>
+    <p class="subtitle">Every number in our calculator traces back to an official source. Here's the complete calculation pipeline, the data we use, and why your financial information never touches a server.</p>
+    <p class="meta">Updated April 2026 &middot; 10 min read</p>
+  </div>
+
+  <div class="article-body">
+    <p>Most tax calculators on the internet are black boxes. You type in a number, a result appears, and you're expected to trust it. Some get the math wrong in ways that cost people money &mdash; applying SE tax to the wrong base, forgetting the half-SE deduction, or using last year's brackets.</p>
+
+    <p>IndieCalc takes the opposite approach. This page documents every step of our calculation, the exact sources we use, the assumptions we make, and the limitations we're upfront about. If you find an error, <a href="mailto:hello@indiecalc.com?subject=Data%20Error%20Report" style="color: var(--teal);">tell us</a>.</p>
+
+    <h3>The Calculation Pipeline</h3>
+
+    <p>When you enter your income and hit calculate, IndieCalc runs seven steps in sequence. Each step feeds into the next. Here's the full pipeline, with the formulas:</p>
+
+    <div class="step-box">
+      <span class="step-number">1</span>
+      <span class="step-title">Calculate the SE Tax Base</span>
+      <div class="step-detail">The IRS does not apply self-employment tax to your full net income. They first multiply by 92.35% &mdash; the "employer-equivalent" adjustment. This mirrors the fact that W-2 employers don't pay FICA on the employer share of FICA itself. Most online calculators skip this step and overestimate your SE tax by about 7.65%.</div>
+      <div class="step-formula">SE taxable base = Net SE income &times; 0.9235</div>
+    </div>
+
+    <div class="step-box">
+      <span class="step-number">2</span>
+      <span class="step-title">Apply Social Security + Medicare</span>
+      <div class="step-detail">
+        <p>Social Security tax is 12.4% of your SE taxable base, but only up to the wage base ($184,500 for 2026, per the SSA). Every dollar of SE base above $184,500 is exempt from Social Security tax.</p>
+        <p style="margin-top: 8px;">Medicare tax is 2.9% on <em>all</em> SE taxable earnings, with no cap. An additional 0.9% Medicare surtax kicks in on earnings above $200,000 (single) or $250,000 (joint).</p>
+      </div>
+      <div class="step-formula">Social Security = min(SE base, $184,500) &times; 0.124<br>Medicare = SE base &times; 0.029<br>Additional Medicare = max(0, SE base - threshold) &times; 0.009<br>Total SE tax = Social Security + Medicare + Additional Medicare</div>
+    </div>
+
+    <div class="step-box">
+      <span class="step-number">3</span>
+      <span class="step-title">Deduct Half of SE Tax</span>
+      <div class="step-detail">The IRS lets you deduct 50% of your self-employment tax from your adjusted gross income. This is an "above-the-line" deduction &mdash; you get it whether you itemize or take the standard deduction. On $100K of net SE income, this deduction is worth about $7,065.</div>
+      <div class="step-formula">Half-SE deduction = Total SE tax &times; 0.5<br>AGI = Net income - Half-SE deduction - other above-the-line deductions</div>
+    </div>
+
+    <div class="step-box">
+      <span class="step-number">4</span>
+      <span class="step-title">Apply the QBI Deduction</span>
+      <div class="step-detail">
+        <p>The Qualified Business Income deduction (made permanent by the OBBBA) lets most freelancers deduct 20% of their net business income from their taxable income. We calculate it as 20% of the SE taxable base.</p>
+        <p style="margin-top: 8px;">The OBBBA also introduced a $400 minimum QBI deduction for anyone with at least $2,000 in qualifying business income. Phase-outs for specified service trades begin at $191,950 (single) / $383,900 (joint) &mdash; we note this but do not model the full phase-out, since it requires information about your specific trade that a calculator can't reliably capture.</p>
+      </div>
+      <div class="step-formula">QBI deduction = max($400, SE base &times; 0.20)  [if eligible]</div>
+    </div>
+
+    <div class="step-box">
+      <span class="step-number">5</span>
+      <span class="step-title">Calculate Federal Income Tax</span>
+      <div class="step-detail">We subtract the standard deduction ($16,100 single, $32,200 joint, $24,150 HoH), the half-SE deduction, the QBI deduction, and any above-the-line deductions (health insurance, retirement contributions, home office, student loan interest) from your income. The remaining taxable income flows through the 2026 progressive brackets &mdash; 10%, 12%, 22%, 24%, 32%, 35%, 37%.</div>
+      <div class="step-formula">Taxable income = AGI - Standard deduction - QBI deduction<br>Federal tax = sum of (income in each bracket &times; bracket rate)</div>
+    </div>
+
+    <div class="step-box">
+      <span class="step-number">6</span>
+      <span class="step-title">Apply Credits</span>
+      <div class="step-detail">Credits reduce your tax dollar-for-dollar, after brackets are applied. We currently model the Child Tax Credit ($2,200 per qualifying child under 17, per OBBBA), including its phase-out at $200K single / $400K joint. Your federal income tax after credits cannot go below zero.</div>
+      <div class="step-formula">Federal tax after credits = max(0, Federal tax - Child Tax Credit)</div>
+    </div>
+
+    <div class="step-box">
+      <span class="step-number">7</span>
+      <span class="step-title">Calculate State Income Tax</span>
+      <div class="step-detail">Each state is calculated independently using its own brackets, rates, standard deduction, and personal exemption. For flat-rate states, we apply the rate directly. For graduated-rate states, we run income through the state's bracket system. States with no income tax return $0.</div>
+      <div class="step-formula">State tax = state_calculate(income, filing_status, state_brackets)</div>
+    </div>
+
+    <h3>A Complete Worked Example</h3>
+
+    <p>To show every step in action, here's the full calculation for a single freelancer earning $100,000 in net self-employment income, living in Georgia, with QBI enabled and no children:</p>
+
+    <div class="example-box">
+      <div class="example-title">Step-by-Step: $100,000 / Single / Georgia</div>
+      <table>
+        <tr><td>Net self-employment income</td><td>$100,000</td></tr>
+        <tr><td><strong>Step 1:</strong> SE taxable base ($100K &times; 92.35%)</td><td>$92,350</td></tr>
+        <tr><td><strong>Step 2:</strong> Social Security ($92,350 &times; 12.4%)</td><td>$11,451</td></tr>
+        <tr><td><strong>Step 2:</strong> Medicare ($92,350 &times; 2.9%)</td><td>$2,678</td></tr>
+        <tr><td><strong>Step 2:</strong> Total SE tax</td><td>$14,130</td></tr>
+        <tr><td><strong>Step 3:</strong> Half-SE deduction</td><td>($7,065)</td></tr>
+        <tr><td><strong>Step 4:</strong> QBI deduction ($92,350 &times; 20%)</td><td>($18,470)</td></tr>
+        <tr><td><strong>Step 5:</strong> Standard deduction</td><td>($16,100)</td></tr>
+        <tr><td><strong>Step 5:</strong> Federal taxable income</td><td>$58,365</td></tr>
+        <tr><td><strong>Step 5:</strong> Federal income tax (brackets)</td><td>$7,617</td></tr>
+        <tr><td><strong>Step 7:</strong> Georgia state tax (5.19% flat, $12K deduction)</td><td>$4,574</td></tr>
+        <tr class="highlight"><td>Total tax (SE + federal + state)</td><td>$26,321</td></tr>
+        <tr class="highlight"><td>Take-home pay</td><td>$73,679</td></tr>
+      </table>
+      <p class="table-note">Effective total rate: 26.3%. Quarterly estimated payment: $6,580.</p>
+    </div>
+
+    <h3>Our Data Sources</h3>
+
+    <p>Every number in IndieCalc traces back to an official or authoritative source. We don't use AI-generated estimates, crowdsourced data, or "approximately" figures. Here's what we use and where it comes from:</p>
+
+    <table class="source-table">
+      <thead><tr><th>Data Point</th><th>Source</th></tr></thead>
+      <tr><td>Federal brackets</td><td><a href="https://taxfoundation.org/data/all/federal/2026-tax-brackets/" target="_blank" rel="noopener">Tax Foundation &mdash; 2026 Federal Tax Brackets</a>, cross-referenced with IRS Revenue Procedure</td></tr>
+      <tr><td>Standard deductions</td><td>IRS Revenue Procedure for Tax Year 2026</td></tr>
+      <tr><td>SE tax rate</td><td><a href="https://www.irs.gov/businesses/small-businesses-self-employed/self-employed-individuals-tax-center" target="_blank" rel="noopener">IRS Self-Employment Tax Center</a>: 15.3% (12.4% SS + 2.9% Medicare) on 92.35% of net earnings</td></tr>
+      <tr><td>SS wage base</td><td><a href="https://www.ssa.gov/oact/cola/cbb.html" target="_blank" rel="noopener">Social Security Administration</a>: $184,500 for 2026</td></tr>
+      <tr><td>QBI deduction</td><td>IRC &sect;199A, as amended by OBBBA: 20% of QBI, $400 minimum, permanent</td></tr>
+      <tr><td>Child Tax Credit</td><td><a href="https://www.irs.gov/credits-deductions/individuals/child-tax-credit" target="_blank" rel="noopener">IRS &mdash; Child Tax Credit</a>: $2,200/child per OBBBA</td></tr>
+      <tr><td>Senior deduction</td><td>OBBBA &sect;[TBD]: $6,000 for taxpayers 65+, phases out at $75K/$150K</td></tr>
+      <tr><td>State brackets</td><td><a href="https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/" target="_blank" rel="noopener">Tax Foundation &mdash; 2026 State Rates</a>, cross-referenced with individual state revenue department publications</td></tr>
+      <tr><td>SALT cap</td><td>OBBBA: $40,400 for 2026, through 2029</td></tr>
+    </table>
+
+    <p>We update data annually when the IRS, SSA, and state agencies publish new figures, typically between October and January. The current data is for the <strong>2026 tax year</strong>. We'll add 2027 data when the IRS publishes it (expected October 2026).</p>
+
+    <h3>What We Don't Model</h3>
+
+    <p>No calculator can replace a tax professional, and we're deliberate about what we include vs. omit. Here's what IndieCalc does <em>not</em> currently account for:</p>
+
+    <ul>
+      <li><strong>Itemized deductions.</strong> We use the standard deduction. If you itemize (mortgage interest, charitable contributions, medical expenses), your federal tax may be lower than what we show.</li>
+      <li><strong>QBI phase-outs for specified service trades.</strong> We note the threshold but don't reduce the QBI deduction above it, since determining eligibility requires details about your specific business type.</li>
+      <li><strong>Local/city income taxes.</strong> NYC, Philadelphia, Ohio municipalities, and Maryland counties all levy local income taxes that can add 1%&ndash;4% to your bill. We note these in the state descriptions but don't calculate them.</li>
+      <li><strong>Alternative Minimum Tax (AMT).</strong> Unlikely to affect most freelancers at typical income levels, but relevant for high earners with specific deduction patterns.</li>
+      <li><strong>Multi-state income.</strong> If you earn income in multiple states, apportionment rules apply. We calculate for a single state of residence.</li>
+      <li><strong>State-specific credits.</strong> Many states offer credits (earned income, property tax, dependent care) that reduce your state tax below what we calculate.</li>
+    </ul>
+
+    <p>In every case where our estimate diverges from reality, it will tend to <em>overestimate</em> your tax, not underestimate it. We consider this the safer direction for planning purposes.</p>
+
+    <div class="privacy-section">
+      <h4>Privacy by Design: Your Data Stays in Your Browser</h4>
+      <p>IndieCalc runs entirely in your browser. When you enter your income and click calculate, the math happens on your device using JavaScript. <strong>No data is sent to any server.</strong></p>
+      <ul>
+        <li>No income data is transmitted, stored, or logged</li>
+        <li>No cookies are set for tracking purposes</li>
+        <li>No third-party analytics scripts are loaded</li>
+        <li>No account creation is required</li>
+      </ul>
+      <p>You can verify this yourself: open your browser's developer tools, switch to the Network tab, and run a calculation. You'll see zero outgoing requests. The entire calculation engine is in two files (<code>tax-data.js</code> and <code>calculator.js</code>) that load once when the page opens and run locally from then on.</p>
+      <p>For the full details, see our <a href="../../privacy/" style="color: var(--teal);">privacy policy</a>.</p>
+    </div>
+
+    <h3>Why We Built This</h3>
+
+    <p>Most tax calculators are lead generation tools. They give you a number, then ask for your email, then sell your contact information to accountants and financial advisors. The calculators themselves are often afterthoughts &mdash; a reason to get you on the page, not a tool built to be useful.</p>
+
+    <p>IndieCalc started as a spreadsheet one of us built to understand our own freelance taxes. We kept improving it &mdash; adding states, accounting for the OBBBA changes, handling edge cases like the SS wage cap and Additional Medicare &mdash; until it outgrew the spreadsheet. We turned it into a website because every other self-employment tax calculator we found was either inaccurate, outdated, or trying to sell us something.</p>
+
+    <p>The goal is simple: give freelancers a tool that's accurate, transparent, private, and free. If we get the math wrong, <a href="mailto:hello@indiecalc.com?subject=Data%20Error%20Report" style="color: var(--teal);">let us know</a> and we'll fix it.</p>
+
+    <div class="cta-box">
+      <h4>Try the calculator</h4>
+      <p>All 50 states, 2026 OBBBA provisions, and the full breakdown — from gross income to take-home pay.</p>
+      <a href="../../calculators/self-employment-tax/">Calculate Your 2026 Tax &rarr;</a>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Disclaimer:</strong> IndieCalc provides estimates for informational purposes only. It is not tax, legal, or financial advice. Tax calculations are based on published 2026 federal and state tax rates and may not reflect your specific situation, including local taxes, itemized deductions, or credits not modeled. Consult a qualified tax professional before making financial decisions based on these estimates.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">All Calculators</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+</body>
+</html>

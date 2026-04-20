@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Freelancer's Guide to the 2026 OBBBA Tax Changes | IndieCalc</title>
+<meta name="description" content="How the One Big Beautiful Bill Act changes taxes for freelancers in 2026. Permanent QBI deduction, $2,200 child credit, $40,400 SALT cap, senior deduction, and more — with worked examples.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.7; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .header-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 20px; font-weight: 700; }
+  header h1 a { color: white; text-decoration: none; }
+  header h1 span { color: var(--teal); }
+  header nav a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; }
+
+  .article-header { padding: 48px 0 32px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+  .article-header .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .article-header h2 { font-size: 32px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+  .article-header .subtitle { font-size: 18px; color: var(--medium); line-height: 1.5; }
+  .article-header .meta { font-size: 13px; color: var(--light); margin-top: 16px; }
+
+  .article-body h3 { font-size: 22px; font-weight: 700; margin: 40px 0 16px; padding-top: 8px; }
+  .article-body h4 { font-size: 17px; font-weight: 600; margin: 28px 0 12px; }
+  .article-body p { font-size: 16px; color: var(--medium); margin-bottom: 20px; }
+  .article-body ul, .article-body ol { font-size: 16px; color: var(--medium); margin-bottom: 20px; padding-left: 24px; }
+  .article-body li { margin-bottom: 8px; }
+  .article-body strong { color: var(--dark); }
+
+  .callout { background: var(--teal-bg); border-left: 4px solid var(--teal); padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .callout p { margin-bottom: 0; font-size: 15px; }
+  .callout p + p { margin-top: 12px; }
+  .callout strong { color: var(--teal); }
+
+  .warning { background: #fff8f0; border-left: 4px solid #e8a84c; padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .warning p { margin-bottom: 0; font-size: 15px; color: #7a5a2a; }
+  .warning strong { color: #7a5a2a; }
+
+  .example-box { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 24px; margin: 24px 0; }
+  .example-box .example-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .example-box table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .example-box th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .example-box td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; color: var(--medium); }
+  .example-box td:last-child { text-align: right; font-weight: 500; }
+  .example-box tr.highlight td { font-weight: 700; color: var(--dark); }
+
+  .cta-box { background: var(--teal); border-radius: 12px; padding: 32px; margin: 36px 0; text-align: center; color: white; }
+  .cta-box h4 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: white; }
+  .cta-box p { font-size: 15px; opacity: 0.85; margin-bottom: 16px; color: white; }
+  .cta-box a { display: inline-block; background: white; color: var(--teal); padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; }
+  .cta-box a:hover { background: var(--teal-light); }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 36px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .article-header h2 { font-size: 24px; }
+    .article-body h3 { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1><a href="../../">Indie<span>Calc</span></a></h1>
+    <nav><a href="../../">&larr; All Calculators</a></nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="article-header">
+    <div class="label">2026 Tax Guide</div>
+    <h2>The Freelancer's Guide to the 2026 OBBBA Tax Changes</h2>
+    <p class="subtitle">The One Big Beautiful Bill Act rewrote the rules for independent workers. Here's what actually changed, what it means in dollars, and what the headlines are getting wrong.</p>
+    <p class="meta">Updated April 2026 &middot; 12 min read</p>
+  </div>
+
+  <div class="article-body">
+    <p>If you're self-employed, 2026 is the first tax year where the One Big Beautiful Bill Act (OBBBA) provisions fully apply. The legislation touches almost every line of a freelancer's return: the QBI deduction, the child tax credit, the SALT cap, the 1099 reporting threshold, and a brand-new deduction for senior taxpayers.</p>
+
+    <p>Most coverage of the OBBBA focuses on W-2 employees. But the provisions hit freelancers differently &mdash; sometimes better, sometimes worse &mdash; because self-employment income flows through different parts of the tax code. This guide walks through every change that matters for Schedule C filers, with the math worked out at real income levels.</p>
+
+    <h3>1. The QBI Deduction Is Now Permanent</h3>
+
+    <p>The 20% Qualified Business Income deduction was introduced by the 2017 TCJA with a built-in expiration date. The OBBBA made it permanent, which means freelancers can plan around it indefinitely rather than wondering whether Congress will renew it every few years.</p>
+
+    <p>But permanence isn't the only change. The OBBBA also introduced a <strong>guaranteed minimum QBI deduction of $400</strong> for anyone with at least $2,000 in qualifying business income who materially participates in the work. This is a floor, not a ceiling &mdash; if 20% of your income is more than $400, you still take the full 20%.</p>
+
+    <h4>What this means in practice</h4>
+
+    <p>For a single freelancer earning $100,000 in net self-employment income, the QBI deduction is worth approximately $18,470 off your taxable income (20% of your net income after the half-SE-tax adjustment). At the 22% marginal bracket, that's roughly <strong>$4,063 in federal income tax savings</strong>.</p>
+
+    <div class="example-box">
+      <div class="example-title">Worked Example: QBI at $100,000 Net Income (Single)</div>
+      <table>
+        <tr><td>Net self-employment income</td><td>$100,000</td></tr>
+        <tr><td>SE tax base (100K &times; 92.35%)</td><td>$92,350</td></tr>
+        <tr><td>Self-employment tax (92,350 &times; 15.3%)</td><td>$14,130</td></tr>
+        <tr><td>Half-SE deduction</td><td>($7,065)</td></tr>
+        <tr><td>QBI deduction (92,350 &times; 20%)</td><td>($18,470)</td></tr>
+        <tr class="highlight"><td>Federal taxable income (after $16,100 standard deduction)</td><td>$58,365</td></tr>
+      </table>
+    </div>
+
+    <p>Without the QBI deduction, that same freelancer's taxable income would be $76,835 &mdash; pushing more income into the 22% bracket and adding roughly $4,000 to the tax bill. The permanence of this deduction is the single biggest win for freelancers in the OBBBA.</p>
+
+    <div class="warning">
+      <p><strong>The phase-out trap for consultants.</strong> If you're in a "specified service trade or business" &mdash; law, accounting, consulting, health, financial services &mdash; the QBI deduction begins phasing out at $191,950 (single) or $383,900 (married filing jointly). Above those thresholds, your deduction shrinks and eventually disappears. The OBBBA did not change these phase-out thresholds, and they're not indexed aggressively for inflation, so more freelancers will bump into them each year.</p>
+    </div>
+
+    <h3>2. Child Tax Credit: $2,200 Per Child</h3>
+
+    <p>The OBBBA increased the child tax credit from $2,000 to <strong>$2,200 per qualifying child under 17</strong>. For freelancers, this is a direct dollar-for-dollar reduction of your federal income tax &mdash; not a deduction, a credit. The distinction matters: a $2,200 credit saves you $2,200, regardless of your tax bracket.</p>
+
+    <h4>The math for a family</h4>
+
+    <p>A married freelancer filing jointly with two kids under 17 gets $4,400 subtracted directly from their federal income tax. On $120,000 of joint income, that credit alone can cut the federal income tax portion of their bill by roughly 40%.</p>
+
+    <p>Phase-outs still apply: the credit decreases by $50 for every $1,000 of income above $200,000 (single) or $400,000 (joint). For a single freelancer earning $220,000, each child's credit drops from $2,200 to $1,200. At $244,000, it's gone entirely.</p>
+
+    <h3>3. The $40,400 SALT Cap</h3>
+
+    <p>This is the change that will matter most to freelancers in high-tax states like New York, California, and New Jersey &mdash; but only if you itemize your deductions.</p>
+
+    <p>The old SALT cap of $10,000 had been in place since 2018. The OBBBA raised it to <strong>$40,400 for the 2026 tax year</strong>, with the new cap set to last through 2029. If you're a freelancer in a state with a top rate above 6% and your income is high enough that you're paying more than $16,100 in state and local taxes, itemizing instead of taking the standard deduction may now save you money.</p>
+
+    <div class="callout">
+      <p><strong>When does this actually help freelancers?</strong> Most freelancers earning under $150,000 will find the standard deduction ($16,100 single / $32,200 joint) still beats itemizing, even with the higher SALT cap. The $40,400 cap mainly benefits high-earning freelancers in high-tax states who also have significant mortgage interest or charitable contributions. Run the numbers before assuming the new cap helps you.</p>
+    </div>
+
+    <h3>4. The Senior Deduction: $6,000 for Taxpayers 65+</h3>
+
+    <p>The OBBBA created an entirely new <strong>above-the-line deduction of $6,000</strong> for taxpayers aged 65 and older. This is on top of the standard deduction &mdash; it's not a replacement for the existing additional standard deduction for seniors.</p>
+
+    <p>For older freelancers and contractors, this is meaningful. A 67-year-old freelancer earning $80,000 gets an extra $6,000 knocked off their taxable income before brackets are applied. At the 22% marginal rate, that's <strong>$1,320 in savings</strong>.</p>
+
+    <p>There is a phase-out: the deduction decreases by 6 cents for every dollar above $75,000 (single) or $150,000 (joint). That means it fully disappears at $175,000 (single) or $250,000 (joint). A single freelancer earning $100,000 would see the deduction reduced to $4,500.</p>
+
+    <div class="example-box">
+      <div class="example-title">Senior Deduction Phase-Out Schedule (Single Filers)</div>
+      <table>
+        <thead><tr><th>Income</th><th>Deduction</th><th>Tax Savings (est.)</th></tr></thead>
+        <tr><td>$60,000</td><td>$6,000</td><td>$720&ndash;$1,320</td></tr>
+        <tr><td>$75,000</td><td>$6,000</td><td>$1,320</td></tr>
+        <tr><td>$100,000</td><td>$4,500</td><td>$990</td></tr>
+        <tr><td>$125,000</td><td>$3,000</td><td>$720</td></tr>
+        <tr><td>$150,000</td><td>$1,500</td><td>$360</td></tr>
+        <tr><td>$175,000+</td><td>$0</td><td>$0</td></tr>
+      </table>
+    </div>
+
+    <h3>5. The 1099 Reporting Threshold: $2,000</h3>
+
+    <p>Starting in 2026, the threshold for clients to issue a Form 1099-NEC or 1099-MISC has increased from $600 to <strong>$2,000</strong>. If a client pays you less than $2,000 in a calendar year, they're no longer required to file a 1099 reporting that payment to the IRS.</p>
+
+    <p>This is a paperwork reduction for your clients, not a tax break for you. That distinction is critical and gets misreported constantly.</p>
+
+    <div class="warning">
+      <p><strong>You still owe tax on every dollar.</strong> The reporting threshold only governs whether your <em>client</em> has to file a form. Your obligation to report all income on Schedule C is unchanged. If you earned $1,500 from a client and didn't receive a 1099, you still report that $1,500. The IRS hasn't stopped matching bank deposits against tax returns.</p>
+    </div>
+
+    <p>Where this does help freelancers is on the <em>paying</em> side. If you hire subcontractors for small jobs &mdash; a graphic designer for $800, a copywriter for $1,200 &mdash; you no longer need to collect W-9s and file 1099s for those payments. That's a real administrative burden removed.</p>
+
+    <h3>6. "No Tax on Tips" &mdash; Narrower Than It Sounds</h3>
+
+    <p>The OBBBA allows eligible self-employed workers in traditionally tipped industries to deduct up to <strong>$25,000 in tip income from their taxable income</strong>. This applies to rideshare drivers, hairstylists, bartenders, delivery workers, and similar occupations where tips are customary.</p>
+
+    <p>Two important limitations:</p>
+
+    <ul>
+      <li><strong>Income tax only.</strong> The exemption applies to federal income tax, not self-employment tax. You still owe the full 15.3% SE tax on tip income. On $25,000 in tips, you're still paying roughly $3,532 in SE tax even if your income tax on that amount drops to zero.</li>
+      <li><strong>Industry-specific.</strong> This is not a general freelancer provision. A software consultant's "tips" on Venmo don't qualify. The deduction targets occupations where tipping is a longstanding, customary practice.</li>
+    </ul>
+
+    <h3>7. Social Security Wage Base: $184,500</h3>
+
+    <p>The Social Security Administration set the 2026 wage base at <strong>$184,500</strong>, up from $176,100 in 2025. For freelancers, "wage base" means the portion of your SE-adjusted net income subject to the 12.4% Social Security tax.</p>
+
+    <p>This increase is automatic (indexed to average wage growth) and not part of the OBBBA, but it matters for your 2026 planning. If your net SE income exceeds $184,500, the Social Security portion of your SE tax caps out at approximately <strong>$22,878</strong> (that's $184,500 &times; 12.4%). Every dollar above that is only subject to the 2.9% Medicare tax (plus 0.9% additional Medicare if you're above $200,000 single / $250,000 joint).</p>
+
+    <div class="example-box">
+      <div class="example-title">SE Tax at Different Income Levels (Single, 2026)</div>
+      <table>
+        <thead><tr><th>Net SE Income</th><th>SE Tax</th><th>Effective SE Rate</th></tr></thead>
+        <tr><td>$50,000</td><td>$7,065</td><td>14.1%</td></tr>
+        <tr><td>$100,000</td><td>$14,130</td><td>14.1%</td></tr>
+        <tr><td>$150,000</td><td>$21,194</td><td>14.1%</td></tr>
+        <tr><td>$200,000</td><td>$26,228</td><td>13.1%</td></tr>
+        <tr><td>$300,000</td><td>$31,234</td><td>10.4%</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--light); margin-top: 8px;">SE tax = (income &times; 92.35%) &times; 15.3%, with Social Security capped at $184,500 taxable base. Additional Medicare (0.9%) applies above $200K.</p>
+    </div>
+
+    <h3>Putting It All Together</h3>
+
+    <p>Here's the combined impact of the OBBBA changes on a single freelancer at three income levels. The "2025 Law" column reflects what you would have paid if the TCJA provisions had expired as originally scheduled (no QBI, $10K SALT cap, $2,000 CTC).</p>
+
+    <div class="example-box">
+      <div class="example-title">Total Federal Tax: 2026 OBBBA vs. Pre-OBBBA Law (Single, No Children, No State)</div>
+      <table>
+        <thead><tr><th>Net Income</th><th>Without OBBBA</th><th>With OBBBA</th><th>Savings</th></tr></thead>
+        <tr><td>$60,000</td><td>~$15,800</td><td>~$13,900</td><td>~$1,900</td></tr>
+        <tr><td>$100,000</td><td>~$29,500</td><td>~$25,200</td><td>~$4,300</td></tr>
+        <tr><td>$200,000</td><td>~$62,400</td><td>~$55,100</td><td>~$7,300</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--light); margin-top: 8px;">Estimates assume standard deduction, QBI eligible, no other deductions. Actual amounts depend on filing status, state, and other factors.</p>
+    </div>
+
+    <p>The largest single driver of savings at every income level is the permanent QBI deduction. For freelancers with children, the increased child tax credit stacks on top. For those over 65 earning under $175,000, the senior deduction adds another layer.</p>
+
+    <div class="cta-box">
+      <h4>See your exact numbers</h4>
+      <p>Our self-employment tax calculator applies all 2026 OBBBA provisions &mdash; QBI, senior deduction, child credits, and the $184,500 SS cap &mdash; to your specific income and state.</p>
+      <a href="../../calculators/self-employment-tax/">Calculate Your 2026 Tax &rarr;</a>
+    </div>
+
+    <h3>What to Do Now</h3>
+
+    <ol>
+      <li><strong>Update your quarterly estimates.</strong> If you've been using 2025 numbers, recalculate. The combination of QBI permanence and the new SS wage base changes your quarterly payment. Next due date: June 15, 2026.</li>
+      <li><strong>Check your QBI eligibility.</strong> If you're in a specified service trade above the $191,950 single threshold, your QBI deduction is shrinking. Consider whether retirement contributions (SEP IRA, Solo 401k) can bring your taxable income below the phase-out.</li>
+      <li><strong>Re-evaluate the standard deduction vs. itemizing.</strong> The $40,400 SALT cap is 4x higher than before. If you're in a high-tax state with a mortgage, the math on itemizing may have flipped.</li>
+      <li><strong>Don't confuse the 1099 threshold with a tax break.</strong> You still report all income. The only change is whether your client sends you (and the IRS) a form.</li>
+    </ol>
+
+    <div class="disclaimer-box">
+      <strong>Disclaimer:</strong> This article is for informational purposes only and does not constitute tax, legal, or financial advice. Tax laws are complex and individual circumstances vary. The examples above use simplified calculations and may not reflect your specific situation. Consult a qualified tax professional before making decisions based on this information.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">All Calculators</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+</body>
+</html>

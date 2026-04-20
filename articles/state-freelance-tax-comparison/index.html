@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Your State Matters: A Freelancer's Guide to State Income Tax | IndieCalc</title>
+<meta name="description" content="Compare freelance tax burdens across all 50 states. See how state income tax rates, deductions, and local surcharges affect your take-home pay — with worked examples at $75K, $100K, and $150K.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.7; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .header-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 20px; font-weight: 700; }
+  header h1 a { color: white; text-decoration: none; }
+  header h1 span { color: var(--teal); }
+  header nav a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; }
+
+  .article-header { padding: 48px 0 32px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+  .article-header .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .article-header h2 { font-size: 32px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+  .article-header .subtitle { font-size: 18px; color: var(--medium); line-height: 1.5; }
+  .article-header .meta { font-size: 13px; color: var(--light); margin-top: 16px; }
+
+  .article-body h3 { font-size: 22px; font-weight: 700; margin: 40px 0 16px; padding-top: 8px; }
+  .article-body h4 { font-size: 17px; font-weight: 600; margin: 28px 0 12px; }
+  .article-body p { font-size: 16px; color: var(--medium); margin-bottom: 20px; }
+  .article-body ul, .article-body ol { font-size: 16px; color: var(--medium); margin-bottom: 20px; padding-left: 24px; }
+  .article-body li { margin-bottom: 8px; }
+  .article-body strong { color: var(--dark); }
+
+  .callout { background: var(--teal-bg); border-left: 4px solid var(--teal); padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .callout p { margin-bottom: 0; font-size: 15px; }
+  .callout p + p { margin-top: 12px; }
+  .callout strong { color: var(--teal); }
+
+  .warning { background: #fff8f0; border-left: 4px solid #e8a84c; padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .warning p { margin-bottom: 0; font-size: 15px; color: #7a5a2a; }
+  .warning p + p { margin-top: 12px; }
+  .warning strong { color: #7a5a2a; }
+
+  .example-box { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 24px; margin: 24px 0; }
+  .example-box .example-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .example-box table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .example-box th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .example-box td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; color: var(--medium); }
+  .example-box td:last-child { text-align: right; font-weight: 500; }
+  .example-box tr.highlight td { font-weight: 700; color: var(--dark); }
+  .example-box .table-note { font-size: 12px; color: var(--light); margin-top: 8px; }
+
+  .state-tier { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 20px 24px; margin: 16px 0; }
+  .state-tier .tier-label { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .state-tier .tier-label.no-tax { color: var(--teal); }
+  .state-tier .tier-label.low-tax { color: #6b8f3a; }
+  .state-tier .tier-label.mid-tax { color: #b88a2a; }
+  .state-tier .tier-label.high-tax { color: #b85c3a; }
+  .state-tier .tier-states { font-size: 14px; color: var(--medium); }
+  .state-tier .tier-detail { font-size: 13px; color: var(--light); margin-top: 6px; }
+
+  .cta-box { background: var(--teal); border-radius: 12px; padding: 32px; margin: 36px 0; text-align: center; color: white; }
+  .cta-box h4 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: white; }
+  .cta-box p { font-size: 15px; opacity: 0.85; margin-bottom: 16px; color: white; }
+  .cta-box a { display: inline-block; background: white; color: var(--teal); padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; }
+  .cta-box a:hover { background: var(--teal-light); }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 36px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .article-header h2 { font-size: 24px; }
+    .article-body h3 { font-size: 19px; }
+    .example-box { padding: 16px; overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1><a href="../../">Indie<span>Calc</span></a></h1>
+    <nav><a href="../../">&larr; All Calculators</a></nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="article-header">
+    <div class="label">State Tax Guide</div>
+    <h2>Why Your State Matters: A Freelancer's Guide to State Income Tax</h2>
+    <p class="subtitle">The gap between the cheapest and most expensive states for a $100,000 freelancer is over $8,000 a year. Here's where every state falls and what the rates alone don't tell you.</p>
+    <p class="meta">Updated April 2026 &middot; 14 min read</p>
+  </div>
+
+  <div class="article-body">
+    <p>Federal taxes are the same whether you freelance from a beach house in Florida or a walkup in Manhattan. State taxes are not. For a self-employed person earning $100,000, the difference between working in Texas (no state income tax) and California (effective rate around 5.5% after deductions) is roughly <strong>$5,500 in take-home pay every year</strong>. At $200,000, the gap widens to over $13,000.</p>
+
+    <p>This guide covers all 50 states, but goes deeper than just listing rates. We'll walk through the structural differences that make two states with similar headline rates produce very different tax bills, and address the hidden costs that rate comparisons miss entirely.</p>
+
+    <h3>The Landscape: Four Tiers of State Tax</h3>
+
+    <p>States fall into roughly four tiers for freelancers. The dividing lines aren't arbitrary &mdash; they reflect real breakpoints in annual cost.</p>
+
+    <div class="state-tier">
+      <div class="tier-label no-tax">Tier 1: No State Income Tax</div>
+      <div class="tier-states"><strong>Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, Wyoming</strong></div>
+      <div class="tier-detail">Nine states levy no tax on earned income. At $100K net SE income, that's $0 in state tax. New Hampshire and Tennessee recently joined this group &mdash; NH phased out its Interest &amp; Dividends Tax in 2025, and Tennessee's Hall Tax ended in 2021.</div>
+    </div>
+
+    <div class="state-tier">
+      <div class="tier-label low-tax">Tier 2: Low Tax (Effective Rate Under 3.5%)</div>
+      <div class="tier-states"><strong>North Dakota, Pennsylvania, Arizona, Indiana, Nebraska, North Carolina, Colorado, Kentucky, Louisiana, Ohio</strong></div>
+      <div class="tier-detail">Flat-rate states in the 2.5%&ndash;4% range, or graduated states with low top rates. Most have generous standard deductions or personal exemptions that push the effective rate well below the nominal rate. At $100K, expect $1,500&ndash;$3,200 in state tax.</div>
+    </div>
+
+    <div class="state-tier">
+      <div class="tier-label mid-tax">Tier 3: Moderate Tax (3.5%&ndash;6%)</div>
+      <div class="tier-states"><strong>Georgia, Idaho, Illinois, Iowa, Michigan, Missouri, Montana, Oklahoma, Utah, Virginia, Wisconsin</strong> and others</div>
+      <div class="tier-detail">The biggest group. Effective rates land between 3.5% and 6% on a $100K freelance income. Many are flat-rate states (Illinois at 4.95%, Michigan at 4.25%) where what you see is close to what you pay.</div>
+    </div>
+
+    <div class="state-tier">
+      <div class="tier-label high-tax">Tier 4: High Tax (Effective Rate Above 6%)</div>
+      <div class="tier-states"><strong>California, New York, New Jersey, Oregon, Minnesota, Hawaii, Connecticut, Vermont, DC</strong></div>
+      <div class="tier-detail">Top marginal rates above 6.5%, often reaching 9%+ at higher incomes. California's top rate is 13.3%, Oregon's is 9.9%, and Hawaii's reaches 11%. At $100K, expect $4,500&ndash;$6,500+. At $200K, the gap vs. no-tax states exceeds $12,000/year.</div>
+    </div>
+
+    <h3>The Numbers: Side-by-Side at Three Income Levels</h3>
+
+    <p>Below is the estimated state income tax for a single freelancer at three common income levels, across a representative set of states. These figures use each state's 2026 brackets and standard deduction (where applicable), applied to net self-employment income.</p>
+
+    <div class="example-box">
+      <div class="example-title">Estimated State Tax by Income Level (Single Filer, 2026)</div>
+      <table>
+        <thead><tr><th>State</th><th>$75,000</th><th>$100,000</th><th>$150,000</th></tr></thead>
+        <tr><td>Texas / Florida</td><td>$0</td><td>$0</td><td>$0</td></tr>
+        <tr><td>North Carolina (3.99%)</td><td>$2,486</td><td>$3,484</td><td>$5,479</td></tr>
+        <tr><td>Pennsylvania (3.07%)</td><td>$2,303</td><td>$3,070</td><td>$4,605</td></tr>
+        <tr><td>Colorado (4.40%)</td><td>$2,596</td><td>$3,692</td><td>$5,884</td></tr>
+        <tr><td>Illinois (4.95%)</td><td>$3,583</td><td>$4,821</td><td>$7,296</td></tr>
+        <tr><td>Georgia (5.19%)</td><td>$3,275</td><td>$4,574</td><td>$7,172</td></tr>
+        <tr><td>New York</td><td>$3,814</td><td>$5,347</td><td>$8,375</td></tr>
+        <tr><td>California</td><td>$3,432</td><td>$5,470</td><td>$10,094</td></tr>
+        <tr><td>Oregon (9.9%)</td><td>$5,447</td><td>$7,692</td><td>$12,432</td></tr>
+        <tr class="highlight"><td>Spread (Highest vs. $0)</td><td>$5,447</td><td>$7,692</td><td>$12,432</td></tr>
+      </table>
+      <p class="table-note">Estimates use 2026 state brackets and standard deductions from state revenue department publications. Does not include local/city taxes (NYC, Portland, Ohio municipalities). Actual liability may vary based on itemized deductions and state-specific adjustments.</p>
+    </div>
+
+    <p>Two things stand out in this table. First, the spread between the cheapest and most expensive states is not trivial &mdash; at $150K, it's over $12,000. That's a used car, a year of retirement contributions, or a month of take-home pay. Second, the gap <em>accelerates</em> with income. At $75K the spread is $5,400; at $150K it's $12,400. Graduated-rate states like California and Oregon don't just tax more &mdash; they tax <em>progressively</em> more.</p>
+
+    <h3>What the Rates Don't Tell You</h3>
+
+    <h4>1. Local income taxes can double the pain</h4>
+
+    <p>Several states allow cities and counties to levy their own income taxes on top of the state rate. This isn't a minor surcharge &mdash; in some cases it's substantial:</p>
+
+    <ul>
+      <li><strong>New York City:</strong> 3.078%&ndash;3.876% on top of New York State's rates. A NYC freelancer earning $100K pays roughly $3,000 more than the same freelancer in Buffalo.</li>
+      <li><strong>Ohio municipalities:</strong> Most Ohio cities levy 1%&ndash;2.5% local income tax. Columbus is 2.5%. Combined with the state's 2.75% flat rate, that's effectively a 5.25% total &mdash; higher than many "Tier 3" states.</li>
+      <li><strong>Maryland counties:</strong> 1.75%&ndash;3.2% local tax depending on county. Howard County charges 3.2%, turning Maryland's moderate state rate into an effective burden above 9%.</li>
+      <li><strong>Pennsylvania:</strong> Philadelphia levies a 3.75% wage tax, and many other municipalities charge 1%&ndash;3%. PA's flat 3.07% state rate can mislead freelancers who move to Pittsburgh (3% local) assuming it's low-tax.</li>
+    </ul>
+
+    <div class="warning">
+      <p><strong>California's hidden surcharge.</strong> California charges State Disability Insurance (SDI) at 1.2% on the first $175,000 of wages. While SDI technically applies to W-2 wages, self-employed Californians who opt into the SDI program (or are in certain industries) should factor this in. California also adds a 1% Mental Health Services Tax on income above $1 million.</p>
+    </div>
+
+    <h4>2. The half-SE deduction gap</h4>
+
+    <p>The IRS allows you to deduct 50% of your self-employment tax from your federal adjusted gross income. This is an important adjustment &mdash; on $100K of net SE income, that's about a $7,065 deduction.</p>
+
+    <p>Most states follow suit and let you take this deduction on your state return. But "most" isn't "all." A handful of states don't conform to this federal adjustment, which means they tax you on income that you've already paid to the government as SE tax. If you're evaluating a move, check whether your target state allows the half-SE deduction &mdash; it's worth $300&ndash;$700 in states that don't.</p>
+
+    <h4>3. QBI conformity varies</h4>
+
+    <p>The QBI deduction is a federal provision. Not all states follow it. Some states that otherwise conform to the federal tax code specifically "decouple" from the QBI deduction, meaning you don't get it on your state return. In a state with a 6% rate, losing a $18,000 QBI deduction costs you about $1,080 in state tax that you wouldn't owe in a conforming state.</p>
+
+    <h4>4. No-tax states aren't free</h4>
+
+    <p>States without income taxes fund themselves through other mechanisms, and some of those hit freelancers indirectly:</p>
+
+    <ul>
+      <li><strong>Washington:</strong> No income tax on earnings, but the state levies a 7% capital gains tax on long-term gains exceeding $278,000. If you sell a business or investment portfolio, Washington isn't as "free" as it appears.</li>
+      <li><strong>Texas and Florida:</strong> Higher property taxes and sales taxes. Texas's effective property tax rate (about 1.7%) is among the highest in the country. This doesn't show up on your Schedule C, but it affects your total cost of living.</li>
+      <li><strong>Nevada:</strong> No income tax but a Commerce Tax on businesses with Nevada gross revenue over $4 million. Irrelevant for most freelancers, but worth noting if you're scaling.</li>
+    </ul>
+
+    <h3>The Relocation Calculus</h3>
+
+    <p>The internet is full of "move to Florida and save $10K" advice. The math is often correct. The advice is often incomplete. Here are the factors that make the difference between a smart move and a regrettable one:</p>
+
+    <h4>When moving makes financial sense</h4>
+
+    <ul>
+      <li><strong>Your work is fully remote</strong> and your clients don't require physical presence in a specific state.</li>
+      <li><strong>The tax savings exceed the cost-of-living difference.</strong> Moving from Portland, Oregon (no sales tax, moderate COL) to Miami (high rent, high insurance, 7.5% sales tax) may not net you savings despite Oregon's 9.9% income tax rate.</li>
+      <li><strong>You can cleanly establish domicile.</strong> States like New York and California are aggressive about auditing people who claim to have moved but still maintain ties. If you keep a home, driver's license, or vote in your old state, you may still owe taxes there.</li>
+    </ul>
+
+    <h4>When it doesn't</h4>
+
+    <ul>
+      <li><strong>You're below $75K.</strong> The absolute dollar savings at lower income levels rarely justify the disruption of a cross-state move.</li>
+      <li><strong>Your industry is location-dependent.</strong> A freelance videographer in LA or a consultant whose clients are all on Wall Street may lose more revenue than they save in taxes.</li>
+      <li><strong>You're comparing nominal rates without accounting for deductions.</strong> A state with a 5% rate and a $16,000 standard deduction (like Montana) produces a lower effective rate than a state with a 4.5% rate and no standard deduction (like Utah's credit-based system).</li>
+    </ul>
+
+    <div class="cta-box">
+      <h4>Compare your state tax instantly</h4>
+      <p>Our calculator covers all 50 states with 2026 brackets. Enter your income once and click through states to see how your take-home pay changes.</p>
+      <a href="../../calculators/self-employment-tax/">Compare States &rarr;</a>
+    </div>
+
+    <h3>The 2026 SALT Cap Change</h3>
+
+    <p>The OBBBA raised the federal SALT deduction cap from $10,000 to $40,400. For freelancers in high-tax states who itemize deductions, this is a meaningful change: it allows you to deduct more of your state and local taxes from your federal return, partially offsetting the state tax burden.</p>
+
+    <p>However, this only helps if you <em>itemize</em> federal deductions, and most single freelancers earning under $150K will find the standard deduction ($16,100) is still the better deal. The SALT cap increase primarily benefits high-income freelancers in expensive states who also have significant mortgage interest or charitable contributions.</p>
+
+    <p>For a deeper dive on the OBBBA changes, see our <a href="../2026-obbba-freelancer-tax-changes/" style="color: var(--teal);">guide to the 2026 OBBBA tax changes for freelancers</a>.</p>
+
+    <h3>Bottom Line</h3>
+
+    <p>Your state is the single largest variable in your tax bill that you can actually control. Federal rates are fixed, deductions are formulaic, and SE tax follows a rigid formula. But where you live is a choice &mdash; and for remote freelancers, it's an increasingly unconstrained one.</p>
+
+    <p>The right approach isn't to chase the lowest rate. It's to understand what you're actually paying, compare it against realistic alternatives, and make a decision with the full picture. A $6,000 annual tax savings doesn't help if your rent goes up by $8,000 or your nearest client is a flight away instead of a train ride.</p>
+
+    <p>Start with the numbers. Then factor in everything else.</p>
+
+    <div class="disclaimer-box">
+      <strong>Disclaimer:</strong> This article is for informational purposes only and does not constitute tax, legal, or financial advice. State tax laws change frequently, and individual circumstances vary. The estimates above use simplified calculations based on published 2026 rates and may not reflect local surcharges, credits, or deductions specific to your situation. Moving between states has tax implications beyond income tax. Consult a qualified tax professional before making relocation decisions.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">All Calculators</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+</body>
+</html>

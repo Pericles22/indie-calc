@@ -251,6 +251,7 @@
       <h4>Want to keep this breakdown?</h4>
       <p>Get your personalized 2026 tax report + quarterly deadline calendar delivered to your inbox.</p>
       <a href="#" class="btn-lead" id="emailCTA" onclick="handleEmailCTA(event)">Email Me This Report &rarr;</a>
+      <button class="btn-lead" id="copyBtn" onclick="copyResults()" style="margin-left: 8px; background: var(--dark);">Copy to Clipboard</button>
     </div>
 
     <div class="breakdown">
@@ -267,6 +268,14 @@
         <thead><tr><th>Bracket</th><th>Rate</th><th>Taxable</th><th>Tax</th></tr></thead>
         <tbody id="bracketBody"></tbody>
       </table>
+    </div>
+
+    <div class="disclaimer-box" id="sstbWarning" style="display:none; background:#fff8f0; border-color:#f0d8b8;">
+      <strong>QBI Phase-Out Notice:</strong> At your income level, the 20% QBI deduction may be reduced or eliminated if your business is a
+      Specified Service Trade or Business (SSTB) &mdash; including law, accounting, health care, consulting, athletics, financial services, and performing arts.
+      The phase-out begins at $191,950 (single) / $383,900 (joint) and is fully eliminated $100K above those thresholds.
+      The calculator above applies the full 20% deduction regardless of business type.
+      <strong>Consult a tax professional if you operate an SSTB.</strong>
     </div>
 
     <div class="disclaimer-box">
@@ -392,6 +401,35 @@
 
   function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
   function pct(n) { return (n * 100).toFixed(1) + '%'; }
+
+  function copyResults() {
+    const takeHome = document.getElementById('r-takeHome').textContent;
+    const totalTax = document.getElementById('r-totalTax').textContent;
+    const rate = document.getElementById('r-effectiveRate').textContent;
+    const quarterly = document.getElementById('r-quarterly').textContent;
+    const monthly = document.getElementById('r-monthly').textContent;
+    const stateEl = document.getElementById('state');
+    const stateName = stateEl.options[stateEl.selectedIndex].text;
+    const income = parseInt(document.getElementById('netProfit').value).toLocaleString();
+
+    const text = '2026 Self-Employment Tax Estimate (IndieCalc)\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+      'Income: $' + income + '\n' +
+      'State: ' + stateName + '\n' +
+      'Take-Home Pay: ' + takeHome + '\n' +
+      'Total Tax: ' + totalTax + '\n' +
+      'Effective Rate: ' + rate + '\n' +
+      'Quarterly Payment: ' + quarterly + '\n' +
+      'Monthly Set-Aside: ' + monthly + '\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+      'indiecalc.com — estimates only, not tax advice';
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000);
+    });
+  }
 
   // Run on page load (no scroll — let user see the form first)
   setTimeout(() => { shouldScroll = false; calculate(); }, 100);
@@ -582,6 +620,11 @@
       html += highTax.slice(0,6).map(([k,n,r]) => tag(k, n+' '+pct(r), '#fff0e8', '#b85c3a')).join(' ');
     }
     compareDiv.innerHTML = html;
+
+    // SSTB phase-out warning for high earners with QBI
+    const sstbThreshold = (filingStatus === 'marriedJoint' || filingStatus === 'marriedSeparate') ? 383900 : 191950;
+    const sstbWarning = document.getElementById('sstbWarning');
+    sstbWarning.style.display = (includeQBI && totalIncome > sstbThreshold) ? 'block' : 'none';
 
     // Last updated
     document.getElementById('lastUpdated').textContent = 'Tax data last verified: April 2026. Sources: Tax Foundation, IRS, SSA.';
