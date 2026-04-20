@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IndieCalc — Free Tax Calculators for Freelancers & Self-Employed</title>
+<meta name="description" content="Free self-employment tax calculators for freelancers, contractors, and small business owners. Calculate your take-home pay, quarterly estimated taxes, and compare LLC vs S-Corp by state.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.6; }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header { background: var(--dark); color: white; padding: 20px 0; }
+  header h1 { font-size: 24px; font-weight: 700; }
+  header h1 span { color: var(--teal); }
+  header p { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  /* Hero */
+  .hero { background: var(--teal); color: white; padding: 60px 0; text-align: center; }
+  .hero h2 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+  .hero p { font-size: 18px; opacity: 0.85; max-width: 600px; margin: 0 auto 32px; }
+
+  /* Calculator Grid */
+  .calc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; padding: 48px 0; }
+  .calc-card {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 28px; transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .calc-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .calc-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--dark); }
+  .calc-card p { font-size: 14px; color: var(--medium); margin-bottom: 16px; }
+  .calc-card .states { font-size: 12px; color: var(--light); margin-bottom: 16px; }
+  .calc-card a {
+    display: inline-block; background: var(--teal); color: white; padding: 10px 20px;
+    border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;
+  }
+  .calc-card a:hover { background: #245a4c; }
+  .badge { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Footer */
+  footer { background: var(--dark); color: rgba(255,255,255,0.5); padding: 32px 0; font-size: 13px; text-align: center; line-height: 1.8; }
+  footer a { color: var(--teal); text-decoration: none; }
+  .disclaimer { max-width: 700px; margin: 24px auto 0; font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>Indie<span>Calc</span></h1>
+    <p>Free tax calculators for freelancers &amp; self-employed professionals</p>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h2>Know exactly what you owe.</h2>
+    <p>Interactive tax calculators built specifically for freelancers, independent contractors, and small business owners. State-specific. Always free.</p>
+  </div>
+</section>
+
+<section class="container">
+  <div class="calc-grid">
+
+    <div class="calc-card">
+      <div class="badge">Most Popular</div>
+      <h3>Self-Employment Tax Calculator</h3>
+      <p>Calculate your federal SE tax (15.3%), income tax, and state tax on freelance income. See your take-home pay and quarterly estimated payments.</p>
+      <div class="states">Available for all 50 states</div>
+      <a href="./calculators/self-employment-tax/">Calculate &rarr;</a>
+    </div>
+
+    <div class="calc-card">
+      <div class="badge">New</div>
+      <h3>Freelancer Take-Home Pay</h3>
+      <p>Enter your gross revenue and see exactly what you keep after federal taxes, state taxes, and self-employment tax.</p>
+      <div class="states">Available for all 50 states</div>
+      <a href="./calculators/take-home-pay/">Calculate &rarr;</a>
+    </div>
+
+    <div class="calc-card">
+      <h3>Quarterly Estimated Tax</h3>
+      <p>Calculate your quarterly estimated tax payments to avoid IRS underpayment penalties. Includes safe harbor calculation.</p>
+      <div class="states">Federal + state breakdowns</div>
+      <a href="./calculators/quarterly-tax/">Calculate &rarr;</a>
+    </div>
+
+    <div class="calc-card">
+      <h3>Freelance Rate Calculator</h3>
+      <p>Figure out what hourly rate you need to charge to hit your income goals after taxes and expenses.</p>
+      <div class="states">Adjusts for your state</div>
+      <a href="./calculators/rate-calculator/">Calculate &rarr;</a>
+    </div>
+
+    <div class="calc-card">
+      <div class="badge">Coming Soon</div>
+      <h3>LLC vs S-Corp Comparison</h3>
+      <p>Compare your total tax liability as a sole proprietor, single-member LLC, and S-Corp. See which saves you the most.</p>
+      <div class="states">State-specific analysis</div>
+      <a href="#">Coming Soon</a>
+    </div>
+
+    <div class="calc-card">
+      <div class="badge">Coming Soon</div>
+      <h3>Business Expense Deduction Estimator</h3>
+      <p>Estimate your Schedule C deductions and see how they reduce your tax bill. Covers home office, vehicle, equipment, and more.</p>
+      <div class="states">Federal deductions</div>
+      <a href="#">Coming Soon</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc</p>
+    <p><a href="./privacy/">Privacy</a> &middot; <a href="./terms/">Terms</a> &middot; <a href="./methodology/">Methodology &amp; Sources</a></p>
+    <div class="disclaimer">
+      IndieCalc provides estimates for informational purposes only. It is not tax, legal, or financial advice.
+      Tax calculations are based on published 2026 federal and state tax rates and may not reflect your specific situation.
+      Consult a qualified tax professional before making financial decisions.
+      IndieCalc is not affiliated with the IRS or any state tax authority.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
