@@ -251,7 +251,7 @@
     <div class="lead-capture">
       <h4>Want to keep this breakdown?</h4>
       <p>Get your personalized 2026 tax report + quarterly deadline calendar delivered to your inbox.</p>
-      <a href="#" class="btn-lead" id="emailCTA" onclick="handleEmailCTA(event)">Email Me This Report &rarr;</a>
+      <a href="mailto:" class="btn-lead" id="emailCTA">Email Me This Report &rarr;</a>
       <button class="btn-lead" id="copyBtn" onclick="copyResults()" style="margin-left: 8px; background: var(--dark);">Copy to Clipboard</button>
     </div>
 
@@ -344,21 +344,13 @@
     stateSelect.appendChild(option);
   }
 
-  // Email CTA handler
-  function handleEmailCTA(e) {
-    e.preventDefault();
-    const takeHome = document.getElementById('r-takeHome').textContent;
-    const totalTax = document.getElementById('r-totalTax').textContent;
-    const rate = document.getElementById('r-effectiveRate').textContent;
-    const quarterly = document.getElementById('r-quarterly').textContent;
-    const stateSelect = document.getElementById('state');
-    const stateName = stateSelect.options[stateSelect.selectedIndex].text;
-    const income = document.getElementById('netProfit').value;
+  // Update the email CTA href whenever results change
+  function updateEmailCTA(income, stateName, takeHome, totalTax, rate, quarterly) {
     const subject = encodeURIComponent('My 2026 Self-Employment Tax Estimate — IndieCalc');
     const body = encodeURIComponent(
       'My 2026 Tax Estimate (IndieCalc)\n' +
       '================================\n\n' +
-      'Income: $' + parseInt(income).toLocaleString() + '\n' +
+      'Income: $' + income + '\n' +
       'State: ' + stateName + '\n' +
       'Take-Home Pay: ' + takeHome + '\n' +
       'Total Tax: ' + totalTax + '\n' +
@@ -367,9 +359,7 @@
       'Full breakdown: https://indiecalc.com/calculators/self-employment-tax/\n\n' +
       'Disclaimer: These are estimates for informational purposes only. Consult a tax professional.'
     );
-    const a = document.createElement('a');
-    a.href = 'mailto:?subject=' + subject + '&body=' + body;
-    a.click();
+    document.getElementById('emailCTA').href = 'mailto:?subject=' + subject + '&body=' + body;
   }
 
   // Strip leading zeros on blur
@@ -511,6 +501,14 @@
     document.getElementById('r-quarterly').textContent = fmt(s.quarterlyPayment);
     document.getElementById('r-monthly').textContent = fmt(s.monthlySetAside);
     document.getElementById('r-hourly').textContent = fmt(effectiveHourly);
+
+    // Update email CTA with current results
+    const stateEl = document.getElementById('state');
+    updateEmailCTA(
+      parseInt(document.getElementById('netProfit').value).toLocaleString(),
+      stateEl.options[stateEl.selectedIndex].text,
+      fmt(s.takeHome), fmt(s.totalTax), pct(s.effectiveRate), fmt(s.quarterlyPayment)
+    );
 
     // Breakdown table
     const body = document.getElementById('breakdownBody');
