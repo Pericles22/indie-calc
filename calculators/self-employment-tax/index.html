@@ -93,6 +93,47 @@
     .lead-capture .btn-lead { width: 100%; }
   }
 
+  /* Email-method chooser popover (works for users without a mailto handler) */
+  .menu-wrapper { position: relative; display: inline-block; text-align: left; }
+  .has-menu .caret { margin-left: 6px; font-size: 11px; opacity: 0.85; }
+  .email-menu {
+    display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    background: var(--white); border: 1px solid var(--rule); border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12); padding: 6px; min-width: 220px; z-index: 100;
+  }
+  .email-menu.open { display: block; }
+  .email-menu::before {
+    content: ''; position: absolute; top: -6px; left: 50%;
+    transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px;
+    background: var(--white); border: 1px solid var(--rule); border-bottom: none; border-right: none;
+  }
+  .email-menu a, .email-menu button {
+    display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box;
+    text-align: left; background: none; border: none; padding: 10px 12px;
+    font-size: 14px; font-family: var(--font); color: var(--dark); text-decoration: none;
+    border-radius: 4px; cursor: pointer; font-weight: 500;
+  }
+  .email-menu a:hover, .email-menu button:hover { background: var(--teal-light); color: var(--teal); }
+  .email-menu .icon { font-size: 16px; line-height: 1; width: 18px; text-align: center; }
+  @media (max-width: 480px) {
+    .email-menu { min-width: min(260px, 90vw); }
+  }
+
+  /* Toast notifications (used for mailto fallback warnings + copy feedback) */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--dark); color: white; padding: 12px 20px;
+    border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 1.4;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    z-index: 1000; max-width: min(420px, 92vw); text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  .toast.warning { background: #b85c3a; }
+  .toast.success { background: var(--teal); }
+
   .info-tip { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 4px; cursor: help; }
 
   /* Advanced accordion */
@@ -278,8 +319,15 @@
       <h4>Want to keep this breakdown?</h4>
       <p>Get your personalized 2026 tax report + quarterly deadline calendar delivered to your inbox.</p>
       <div class="btn-row">
-        <a href="mailto:?subject=My%202026%20Self-Employment%20Tax%20Estimate%20-%20IndieCalc" class="btn-lead" id="emailCTA">Email Me This Report &rarr;</a>
-        <button class="btn-lead" id="copyBtn" onclick="copyResults()" style="background: var(--dark);">Copy to Clipboard</button>
+        <div class="menu-wrapper">
+          <button type="button" class="btn-lead has-menu" id="emailCTA" aria-haspopup="true" aria-expanded="false" onclick="toggleEmailMenu(event, 'emailMenu')">Email Me This Report<span class="caret">&#9662;</span></button>
+          <div class="email-menu" id="emailMenu" role="menu">
+            <a href="#" target="_blank" rel="noopener" data-handler="gmail" role="menuitem"><span class="icon">&#9993;</span>Open in Gmail</a>
+            <a href="#" target="_blank" rel="noopener" data-handler="outlook" role="menuitem"><span class="icon">&#9993;</span>Open in Outlook.com</a>
+            <a href="#" data-handler="mailto" role="menuitem"><span class="icon">&#9993;</span>Default mail app</a>
+            <button type="button" onclick="copyResults(); closeEmailMenus();" role="menuitem"><span class="icon">&#128203;</span>Copy to clipboard</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -323,7 +371,15 @@
     </div>
 
     <div style="text-align: center; margin-bottom: 24px;">
-      <a href="mailto:hello@indiecalc.com?subject=Data%20Error%20Report&body=I%20found%20an%20error%20on%20the%20Self-Employment%20Tax%20Calculator.%0A%0AState:%20%0ADetails:%20" style="font-size: 13px; color: var(--light); text-decoration: none; border: 1px solid var(--rule); padding: 8px 16px; border-radius: 6px; display: inline-block;">See an error? Let us know &rarr;</a>
+      <div class="menu-wrapper">
+        <button type="button" class="has-menu" id="errorCTA" aria-haspopup="true" aria-expanded="false" onclick="toggleEmailMenu(event, 'errorMenu')" style="font-size: 13px; color: var(--light); background: none; border: 1px solid var(--rule); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-family: var(--font);">See an error? Let us know<span class="caret">&#9662;</span></button>
+        <div class="email-menu" id="errorMenu" role="menu">
+          <a href="#" target="_blank" rel="noopener" data-handler="gmail" role="menuitem"><span class="icon">&#9993;</span>Open in Gmail</a>
+          <a href="#" target="_blank" rel="noopener" data-handler="outlook" role="menuitem"><span class="icon">&#9993;</span>Open in Outlook.com</a>
+          <a href="#" data-handler="mailto" role="menuitem"><span class="icon">&#9993;</span>Default mail app</a>
+          <button type="button" onclick="copyEmailAddress(); closeEmailMenus();" role="menuitem"><span class="icon">&#128203;</span>Copy email address</button>
+        </div>
+      </div>
       <p style="font-size: 11px; color: var(--light); margin-top: 6px;" id="lastUpdated"></p>
     </div>
   </div>
@@ -352,6 +408,8 @@
   </div>
 </div>
 
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
 <footer>
   <div class="container">
     <p>&copy; 2026 IndieCalc &middot; <a href="../../">All Calculators</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
@@ -372,14 +430,25 @@
     stateSelect.appendChild(option);
   }
 
-  // Update the email CTA href whenever results change.
-  // Setting href directly (rather than intercepting click with JS) lets the
-  // browser handle the mailto: navigation natively from the user gesture,
-  // which is the most reliable cross-browser pattern.
-  function updateEmailCTA(income, stateName, takeHome, totalTax, rate, quarterly) {
-    const subject = encodeURIComponent('My 2026 Self-Employment Tax Estimate - IndieCalc');
-    const body = encodeURIComponent(
-      'My 2026 Tax Estimate (IndieCalc)\n' +
+  // Build compose URLs for Gmail (web), Outlook.com (web), and mailto:.
+  // Gmail/Outlook web links work for everyone signed into those services and
+  // do NOT require a registered mailto handler — solving the silent-failure
+  // problem on machines with no default mail client.
+  function setMenuLinks(menuId, opts) {
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+    const to = opts.to || '';
+    const enc = encodeURIComponent;
+    const gmailUrl   = 'https://mail.google.com/mail/?view=cm&fu=1&to=' + enc(to) + '&su=' + enc(opts.subject) + '&body=' + enc(opts.body);
+    const outlookUrl = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + enc(to) + '&subject=' + enc(opts.subject) + '&body=' + enc(opts.body);
+    const mailtoUrl  = 'mailto:' + to + '?subject=' + enc(opts.subject) + '&body=' + enc(opts.body);
+    menu.querySelector('[data-handler="gmail"]').href   = gmailUrl;
+    menu.querySelector('[data-handler="outlook"]').href = outlookUrl;
+    menu.querySelector('[data-handler="mailto"]').href  = mailtoUrl;
+  }
+
+  function buildReportBody(income, stateName, takeHome, totalTax, rate, quarterly) {
+    return 'My 2026 Tax Estimate (IndieCalc)\n' +
       '================================\n\n' +
       'Income: $' + income + '\n' +
       'State: ' + stateName + '\n' +
@@ -388,10 +457,88 @@
       'Effective Rate: ' + rate + '\n' +
       'Quarterly Payment: ' + quarterly + '\n\n' +
       'Full breakdown: https://indiecalc.com/calculators/self-employment-tax/\n\n' +
-      'Disclaimer: These are estimates for informational purposes only. Consult a tax professional.'
-    );
-    document.getElementById('emailCTA').href = 'mailto:?subject=' + subject + '&body=' + body;
+      'Disclaimer: These are estimates for informational purposes only. Consult a tax professional.';
   }
+
+  // Update the email CTA menu links whenever results change.
+  function updateEmailCTA(income, stateName, takeHome, totalTax, rate, quarterly) {
+    setMenuLinks('emailMenu', {
+      to: '',
+      subject: 'My 2026 Self-Employment Tax Estimate - IndieCalc',
+      body: buildReportBody(income, stateName, takeHome, totalTax, rate, quarterly),
+    });
+  }
+
+  // Initialize the static error-report menu URLs once.
+  setMenuLinks('errorMenu', {
+    to: 'hello@indiecalc.com',
+    subject: 'Data Error Report',
+    body: 'I found an error on the Self-Employment Tax Calculator.\n\nState: \nDetails: ',
+  });
+
+  // Popover open/close. Each menu lives next to its trigger inside .menu-wrapper.
+  function toggleEmailMenu(e, menuId) {
+    e.stopPropagation();
+    const menu = document.getElementById(menuId);
+    const trigger = e.currentTarget;
+    const wasOpen = menu.classList.contains('open');
+    closeEmailMenus();
+    if (!wasOpen) {
+      menu.classList.add('open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+  }
+  function closeEmailMenus() {
+    document.querySelectorAll('.email-menu.open').forEach(m => {
+      m.classList.remove('open');
+      const wrapper = m.closest('.menu-wrapper');
+      const trigger = wrapper && wrapper.querySelector('.has-menu');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+  // Click outside or Escape closes the menu. Clicking a link inside
+  // navigates (and we close on the next tick anyway).
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.menu-wrapper')) closeEmailMenus();
+    else if (e.target.closest('.email-menu a')) closeEmailMenus();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeEmailMenus(); });
+
+  function copyEmailAddress() {
+    navigator.clipboard.writeText('hello@indiecalc.com')
+      .then(() => showToast('Copied hello@indiecalc.com to clipboard', 'success'))
+      .catch(() => showToast('Couldn\u2019t copy \u2014 your browser blocked clipboard access', 'warning'));
+  }
+
+  // Toast helper. variant: 'success' | 'warning' | '' (default dark)
+  let toastTimer;
+  function showToast(message, variant) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast show' + (variant ? ' ' + variant : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 4000);
+  }
+
+  // Detect mailto failure: when a user clicks a mailto link, the OS handler
+  // (if any) takes focus away from the browser. If focus is still here ~1s
+  // later, no handler exists \u2014 show a toast pointing to Gmail/Outlook.
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[data-handler="mailto"]');
+    if (!link) return;
+    let handlerOpened = false;
+    const onBlur = () => { handlerOpened = true; };
+    const onVis  = () => { if (document.hidden) handlerOpened = true; };
+    window.addEventListener('blur', onBlur, { once: true });
+    document.addEventListener('visibilitychange', onVis, { once: true });
+    setTimeout(() => {
+      window.removeEventListener('blur', onBlur);
+      document.removeEventListener('visibilitychange', onVis);
+      if (!handlerOpened && document.hasFocus()) {
+        showToast('No default mail app set on this device. Try Gmail or Outlook from the menu instead.', 'warning');
+      }
+    }, 1000);
+  });
 
   // Strip leading zeros on blur
   document.querySelectorAll('input[type="number"]').forEach(el => {
@@ -450,11 +597,9 @@
       '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
       'indiecalc.com — estimates only, not tax advice';
 
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copyBtn');
-      btn.textContent = 'Copied!';
-      setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000);
-    });
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('Report copied to clipboard \u2014 paste it into your email', 'success'))
+      .catch(() => showToast('Couldn\u2019t copy \u2014 your browser blocked clipboard access', 'warning'));
   }
 
   // Run on page load (no scroll — let user see the form first)
