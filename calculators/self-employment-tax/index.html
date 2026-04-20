@@ -251,7 +251,7 @@
     <div class="lead-capture">
       <h4>Want to keep this breakdown?</h4>
       <p>Get your personalized 2026 tax report + quarterly deadline calendar delivered to your inbox.</p>
-      <a href="mailto:" class="btn-lead" id="emailCTA">Email Me This Report &rarr;</a>
+      <a href="#" class="btn-lead" id="emailCTA" onclick="triggerMailto(this); return false;">Email Me This Report &rarr;</a>
       <button class="btn-lead" id="copyBtn" onclick="copyResults()" style="margin-left: 8px; background: var(--dark);">Copy to Clipboard</button>
     </div>
 
@@ -295,7 +295,7 @@
     </div>
 
     <div style="text-align: center; margin-bottom: 24px;">
-      <a href="mailto:hello@indiecalc.com?subject=Data%20Error%20Report&body=I%20found%20an%20error%20on%20the%20Self-Employment%20Tax%20Calculator.%0A%0AState:%20%0ADetails:%20" target="_blank" rel="noopener" style="font-size: 13px; color: var(--light); text-decoration: none; border: 1px solid var(--rule); padding: 8px 16px; border-radius: 6px; display: inline-block;">See an error? Let us know &rarr;</a>
+      <a href="#" onclick="triggerMailto(this); return false;" data-mailto="mailto:hello@indiecalc.com?subject=Data%20Error%20Report&body=I%20found%20an%20error%20on%20the%20Self-Employment%20Tax%20Calculator.%0A%0AState:%20%0ADetails:%20" style="font-size: 13px; color: var(--light); text-decoration: none; border: 1px solid var(--rule); padding: 8px 16px; border-radius: 6px; display: inline-block;">See an error? Let us know &rarr;</a>
       <p style="font-size: 11px; color: var(--light); margin-top: 6px;" id="lastUpdated"></p>
     </div>
   </div>
@@ -344,9 +344,20 @@
     stateSelect.appendChild(option);
   }
 
-  // Update the email CTA href whenever results change
+  // Trigger mailto via hidden iframe (avoids Chrome cancelling the navigation)
+  function triggerMailto(el) {
+    const url = el.dataset.mailto || el.href;
+    if (!url || url === '#') return;
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = url;
+    document.body.appendChild(iframe);
+    setTimeout(function() { document.body.removeChild(iframe); }, 3000);
+  }
+
+  // Update the email CTA data-mailto whenever results change
   function updateEmailCTA(income, stateName, takeHome, totalTax, rate, quarterly) {
-    const subject = encodeURIComponent('My 2026 Self-Employment Tax Estimate — IndieCalc');
+    const subject = encodeURIComponent('My 2026 Self-Employment Tax Estimate - IndieCalc');
     const body = encodeURIComponent(
       'My 2026 Tax Estimate (IndieCalc)\n' +
       '================================\n\n' +
@@ -359,7 +370,7 @@
       'Full breakdown: https://indiecalc.com/calculators/self-employment-tax/\n\n' +
       'Disclaimer: These are estimates for informational purposes only. Consult a tax professional.'
     );
-    document.getElementById('emailCTA').href = 'mailto:?subject=' + subject + '&body=' + body;
+    document.getElementById('emailCTA').dataset.mailto = 'mailto:?subject=' + subject + '&body=' + body;
   }
 
   // Strip leading zeros on blur
