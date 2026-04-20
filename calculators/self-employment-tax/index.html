@@ -367,7 +367,7 @@
       'Full breakdown: https://indiecalc.com/calculators/self-employment-tax/\n\n' +
       'Disclaimer: These are estimates for informational purposes only. Consult a tax professional.'
     );
-    window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
+    window.open('mailto:?subject=' + subject + '&body=' + body, '_blank');
   }
 
   // Strip leading zeros on blur
