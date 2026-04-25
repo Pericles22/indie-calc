@@ -82,10 +82,25 @@
   footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
   footer a { color: var(--teal); text-decoration: none; }
 
+  .state-directory { margin: 32px 0; }
+  .state-directory h3 { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+  .state-directory .dir-group { margin-bottom: 20px; }
+  .state-directory .dir-group-label { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+  .state-directory .dir-group-label.no-tax { color: var(--teal); }
+  .state-directory .dir-group-label.has-tax { color: var(--medium); }
+  .state-directory .dir-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 6px 16px; }
+  .state-directory .dir-grid a { font-size: 14px; color: var(--teal); text-decoration: none; padding: 4px 0; display: block; }
+  .state-directory .dir-grid a:hover { text-decoration: underline; }
+  .state-directory .dir-grid .rate { color: var(--light); font-size: 12px; }
+
+  .article-body .state-link { color: var(--teal); text-decoration: none; }
+  .article-body .state-link:hover { text-decoration: underline; }
+
   @media (max-width: 600px) {
     .article-header h2 { font-size: 24px; }
     .article-body h3 { font-size: 19px; }
     .example-box { padding: 16px; overflow-x: auto; }
+    .state-directory .dir-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -117,25 +132,25 @@
 
     <div class="state-tier">
       <div class="tier-label no-tax">Tier 1: No State Income Tax</div>
-      <div class="tier-states"><strong>Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, Wyoming</strong></div>
+      <div class="tier-states"><strong><a class="state-link" href="../../calculators/self-employment-tax/alaska/">Alaska</a>, <a class="state-link" href="../../calculators/self-employment-tax/florida/">Florida</a>, <a class="state-link" href="../../calculators/self-employment-tax/nevada/">Nevada</a>, <a class="state-link" href="../../calculators/self-employment-tax/new-hampshire/">New Hampshire</a>, <a class="state-link" href="../../calculators/self-employment-tax/south-dakota/">South Dakota</a>, <a class="state-link" href="../../calculators/self-employment-tax/tennessee/">Tennessee</a>, <a class="state-link" href="../../calculators/self-employment-tax/texas/">Texas</a>, <a class="state-link" href="../../calculators/self-employment-tax/washington/">Washington</a>, <a class="state-link" href="../../calculators/self-employment-tax/wyoming/">Wyoming</a></strong></div>
       <div class="tier-detail">Nine states levy no tax on earned income. At $100K net SE income, that's $0 in state tax. New Hampshire and Tennessee recently joined this group &mdash; NH phased out its Interest &amp; Dividends Tax in 2025, and Tennessee's Hall Tax ended in 2021.</div>
     </div>
 
     <div class="state-tier">
       <div class="tier-label low-tax">Tier 2: Low Tax (Effective Rate Under 3.5%)</div>
-      <div class="tier-states"><strong>North Dakota, Pennsylvania, Arizona, Indiana, Nebraska, North Carolina, Colorado, Kentucky, Louisiana, Ohio</strong></div>
+      <div class="tier-states"><strong><a class="state-link" href="../../calculators/self-employment-tax/north-dakota/">North Dakota</a>, <a class="state-link" href="../../calculators/self-employment-tax/pennsylvania/">Pennsylvania</a>, <a class="state-link" href="../../calculators/self-employment-tax/arizona/">Arizona</a>, <a class="state-link" href="../../calculators/self-employment-tax/indiana/">Indiana</a>, <a class="state-link" href="../../calculators/self-employment-tax/nebraska/">Nebraska</a>, <a class="state-link" href="../../calculators/self-employment-tax/north-carolina/">North Carolina</a>, <a class="state-link" href="../../calculators/self-employment-tax/colorado/">Colorado</a>, <a class="state-link" href="../../calculators/self-employment-tax/kentucky/">Kentucky</a>, <a class="state-link" href="../../calculators/self-employment-tax/louisiana/">Louisiana</a>, <a class="state-link" href="../../calculators/self-employment-tax/ohio/">Ohio</a></strong></div>
       <div class="tier-detail">Flat-rate states in the 2.5%&ndash;4% range, or graduated states with low top rates. Most have generous standard deductions or personal exemptions that push the effective rate well below the nominal rate. At $100K, expect $1,500&ndash;$3,200 in state tax.</div>
     </div>
 
     <div class="state-tier">
       <div class="tier-label mid-tax">Tier 3: Moderate Tax (3.5%&ndash;6%)</div>
-      <div class="tier-states"><strong>Georgia, Idaho, Illinois, Iowa, Michigan, Missouri, Montana, Oklahoma, Utah, Virginia, Wisconsin</strong> and others</div>
+      <div class="tier-states"><strong><a class="state-link" href="../../calculators/self-employment-tax/georgia/">Georgia</a>, <a class="state-link" href="../../calculators/self-employment-tax/idaho/">Idaho</a>, <a class="state-link" href="../../calculators/self-employment-tax/illinois/">Illinois</a>, <a class="state-link" href="../../calculators/self-employment-tax/iowa/">Iowa</a>, <a class="state-link" href="../../calculators/self-employment-tax/michigan/">Michigan</a>, <a class="state-link" href="../../calculators/self-employment-tax/missouri/">Missouri</a>, <a class="state-link" href="../../calculators/self-employment-tax/montana/">Montana</a>, <a class="state-link" href="../../calculators/self-employment-tax/oklahoma/">Oklahoma</a>, <a class="state-link" href="../../calculators/self-employment-tax/utah/">Utah</a>, <a class="state-link" href="../../calculators/self-employment-tax/virginia/">Virginia</a>, <a class="state-link" href="../../calculators/self-employment-tax/wisconsin/">Wisconsin</a></strong> and others</div>
       <div class="tier-detail">The biggest group. Effective rates land between 3.5% and 6% on a $100K freelance income. Many are flat-rate states (Illinois at 4.95%, Michigan at 4.25%) where what you see is close to what you pay.</div>
     </div>
 
     <div class="state-tier">
       <div class="tier-label high-tax">Tier 4: High Tax (Effective Rate Above 6%)</div>
-      <div class="tier-states"><strong>California, New York, New Jersey, Oregon, Minnesota, Hawaii, Connecticut, Vermont, DC</strong></div>
+      <div class="tier-states"><strong><a class="state-link" href="../../calculators/self-employment-tax/california/">California</a>, <a class="state-link" href="../../calculators/self-employment-tax/new-york/">New York</a>, <a class="state-link" href="../../calculators/self-employment-tax/new-jersey/">New Jersey</a>, <a class="state-link" href="../../calculators/self-employment-tax/oregon/">Oregon</a>, <a class="state-link" href="../../calculators/self-employment-tax/minnesota/">Minnesota</a>, <a class="state-link" href="../../calculators/self-employment-tax/hawaii/">Hawaii</a>, <a class="state-link" href="../../calculators/self-employment-tax/connecticut/">Connecticut</a>, <a class="state-link" href="../../calculators/self-employment-tax/vermont/">Vermont</a>, <a class="state-link" href="../../calculators/self-employment-tax/district-of-columbia/">DC</a></strong></div>
       <div class="tier-detail">Top marginal rates above 6.5%, often reaching 9%+ at higher incomes. California's top rate is 13.3%, Oregon's is 9.9%, and Hawaii's reaches 11%. At $100K, expect $4,500&ndash;$6,500+. At $200K, the gap vs. no-tax states exceeds $12,000/year.</div>
     </div>
 
@@ -147,15 +162,15 @@
       <div class="example-title">Estimated State Tax by Income Level (Single Filer, 2026)</div>
       <table>
         <thead><tr><th>State</th><th>$75,000</th><th>$100,000</th><th>$150,000</th></tr></thead>
-        <tr><td>Texas / Florida</td><td>$0</td><td>$0</td><td>$0</td></tr>
-        <tr><td>North Carolina (3.99%)</td><td>$2,486</td><td>$3,484</td><td>$5,479</td></tr>
-        <tr><td>Pennsylvania (3.07%)</td><td>$2,303</td><td>$3,070</td><td>$4,605</td></tr>
-        <tr><td>Colorado (4.40%)</td><td>$2,596</td><td>$3,692</td><td>$5,884</td></tr>
-        <tr><td>Illinois (4.95%)</td><td>$3,583</td><td>$4,821</td><td>$7,296</td></tr>
-        <tr><td>Georgia (5.19%)</td><td>$3,275</td><td>$4,574</td><td>$7,172</td></tr>
-        <tr><td>New York</td><td>$3,814</td><td>$5,347</td><td>$8,375</td></tr>
-        <tr><td>California</td><td>$3,432</td><td>$5,470</td><td>$10,094</td></tr>
-        <tr><td>Oregon (9.9%)</td><td>$5,447</td><td>$7,692</td><td>$12,432</td></tr>
+        <tr><td><a class="state-link" href="../../calculators/self-employment-tax/texas/">Texas</a> / <a class="state-link" href="../../calculators/self-employment-tax/florida/">Florida</a></td><td>$0</td><td>$0</td><td>$0</td></tr>
+        <tr><td><a class="state-link" href="../../calculators/self-employment-tax/north-carolina/">North Carolina</a> (3.99%)</td><td>$2,486</td><td>$3,484</td><td>$5,479</td></tr>
+        <tr><td><a class="state-link" href="../../calculators/self-employment-tax/pennsylvania/">Pennsylvania</a> (3.07%)</td><td>$2,303</td><td>$3,070</td><td>$4,605</td></tr>
+        <tr><td><a class="state-link" href="../../calculators/self-employment-tax/colorado/">Colorado</a> (4.40%)</td><td>$2,596</td><td>$3,692</td><td>$5,884</td></tr>
+        <tr><td><a class="state-link" href="../../calculators/self-employment-tax/illinois/">Illinois</a> (4.95%)</td><td>$3,583</td><td>$4,821</td><td>$7,296</td></tr>
+        <tr><td><a class="state-link" href="../../calculators/self-employment-tax/georgia/">Georgia</a> (5.19%)</td><td>$3,275</td><td>$4,574</td><td>$7,172</td></tr>
+        <tr><td><a class="state-link" href="../../calculators/self-employment-tax/new-york/">New York</a></td><td>$3,814</td><td>$5,347</td><td>$8,375</td></tr>
+        <tr><td><a class="state-link" href="../../calculators/self-employment-tax/california/">California</a></td><td>$3,432</td><td>$5,470</td><td>$10,094</td></tr>
+        <tr><td><a class="state-link" href="../../calculators/self-employment-tax/oregon/">Oregon</a> (9.9%)</td><td>$5,447</td><td>$7,692</td><td>$12,432</td></tr>
         <tr class="highlight"><td>Spread (Highest vs. $0)</td><td>$5,447</td><td>$7,692</td><td>$12,432</td></tr>
       </table>
       <p class="table-note">Estimates use 2026 state brackets and standard deductions from state revenue department publications. Does not include local/city taxes (NYC, Portland, Ohio municipalities). Actual liability may vary based on itemized deductions and state-specific adjustments.</p>
@@ -241,6 +256,74 @@
     <p>The right approach isn't to chase the lowest rate. It's to understand what you're actually paying, compare it against realistic alternatives, and make a decision with the full picture. A $6,000 annual tax savings doesn't help if your rent goes up by $8,000 or your nearest client is a flight away instead of a train ride.</p>
 
     <p>Start with the numbers. Then factor in everything else.</p>
+
+    <div class="state-directory">
+      <h3>Calculate Your Tax by State</h3>
+      <p style="font-size: 15px; color: var(--medium); margin-bottom: 20px;">Every state calculator uses 2026 brackets and is pre-configured with your state's rates, deductions, and exemptions.</p>
+
+      <div class="dir-group">
+        <div class="dir-group-label no-tax">No State Income Tax</div>
+        <div class="dir-grid">
+          <a href="../../calculators/self-employment-tax/alaska/">Alaska</a>
+          <a href="../../calculators/self-employment-tax/florida/">Florida</a>
+          <a href="../../calculators/self-employment-tax/nevada/">Nevada</a>
+          <a href="../../calculators/self-employment-tax/new-hampshire/">New Hampshire</a>
+          <a href="../../calculators/self-employment-tax/south-dakota/">South Dakota</a>
+          <a href="../../calculators/self-employment-tax/tennessee/">Tennessee</a>
+          <a href="../../calculators/self-employment-tax/texas/">Texas</a>
+          <a href="../../calculators/self-employment-tax/washington/">Washington</a>
+          <a href="../../calculators/self-employment-tax/wyoming/">Wyoming</a>
+        </div>
+      </div>
+
+      <div class="dir-group">
+        <div class="dir-group-label has-tax">States with Income Tax</div>
+        <div class="dir-grid">
+          <a href="../../calculators/self-employment-tax/alabama/">Alabama <span class="rate">2&ndash;5%</span></a>
+          <a href="../../calculators/self-employment-tax/arizona/">Arizona <span class="rate">2.5%</span></a>
+          <a href="../../calculators/self-employment-tax/arkansas/">Arkansas <span class="rate">2&ndash;3.9%</span></a>
+          <a href="../../calculators/self-employment-tax/california/">California <span class="rate">1&ndash;13.3%</span></a>
+          <a href="../../calculators/self-employment-tax/colorado/">Colorado <span class="rate">4.4%</span></a>
+          <a href="../../calculators/self-employment-tax/connecticut/">Connecticut <span class="rate">2&ndash;6.99%</span></a>
+          <a href="../../calculators/self-employment-tax/delaware/">Delaware <span class="rate">0&ndash;6.6%</span></a>
+          <a href="../../calculators/self-employment-tax/district-of-columbia/">District of Columbia <span class="rate">4&ndash;10.75%</span></a>
+          <a href="../../calculators/self-employment-tax/georgia/">Georgia <span class="rate">5.19%</span></a>
+          <a href="../../calculators/self-employment-tax/hawaii/">Hawaii <span class="rate">1.4&ndash;11%</span></a>
+          <a href="../../calculators/self-employment-tax/idaho/">Idaho <span class="rate">5.3%</span></a>
+          <a href="../../calculators/self-employment-tax/illinois/">Illinois <span class="rate">4.95%</span></a>
+          <a href="../../calculators/self-employment-tax/indiana/">Indiana <span class="rate">2.95%</span></a>
+          <a href="../../calculators/self-employment-tax/iowa/">Iowa <span class="rate">3.8%</span></a>
+          <a href="../../calculators/self-employment-tax/kansas/">Kansas <span class="rate">5.2&ndash;5.58%</span></a>
+          <a href="../../calculators/self-employment-tax/kentucky/">Kentucky <span class="rate">3.5%</span></a>
+          <a href="../../calculators/self-employment-tax/louisiana/">Louisiana <span class="rate">3%</span></a>
+          <a href="../../calculators/self-employment-tax/maine/">Maine <span class="rate">5.8&ndash;7.15%</span></a>
+          <a href="../../calculators/self-employment-tax/maryland/">Maryland <span class="rate">2&ndash;6.5%</span></a>
+          <a href="../../calculators/self-employment-tax/massachusetts/">Massachusetts <span class="rate">5&ndash;9%</span></a>
+          <a href="../../calculators/self-employment-tax/michigan/">Michigan <span class="rate">4.25%</span></a>
+          <a href="../../calculators/self-employment-tax/minnesota/">Minnesota <span class="rate">5.35&ndash;9.85%</span></a>
+          <a href="../../calculators/self-employment-tax/mississippi/">Mississippi <span class="rate">4%</span></a>
+          <a href="../../calculators/self-employment-tax/missouri/">Missouri <span class="rate">4%</span></a>
+          <a href="../../calculators/self-employment-tax/montana/">Montana <span class="rate">4.7&ndash;5.65%</span></a>
+          <a href="../../calculators/self-employment-tax/nebraska/">Nebraska <span class="rate">2.46&ndash;4.55%</span></a>
+          <a href="../../calculators/self-employment-tax/new-jersey/">New Jersey <span class="rate">1.4&ndash;10.75%</span></a>
+          <a href="../../calculators/self-employment-tax/new-mexico/">New Mexico <span class="rate">1.5&ndash;5.9%</span></a>
+          <a href="../../calculators/self-employment-tax/new-york/">New York <span class="rate">4&ndash;10.9%</span></a>
+          <a href="../../calculators/self-employment-tax/north-carolina/">North Carolina <span class="rate">3.99%</span></a>
+          <a href="../../calculators/self-employment-tax/north-dakota/">North Dakota <span class="rate">0&ndash;2.5%</span></a>
+          <a href="../../calculators/self-employment-tax/ohio/">Ohio <span class="rate">2.75%</span></a>
+          <a href="../../calculators/self-employment-tax/oklahoma/">Oklahoma <span class="rate">0&ndash;4.5%</span></a>
+          <a href="../../calculators/self-employment-tax/oregon/">Oregon <span class="rate">4.75&ndash;9.9%</span></a>
+          <a href="../../calculators/self-employment-tax/pennsylvania/">Pennsylvania <span class="rate">3.07%</span></a>
+          <a href="../../calculators/self-employment-tax/rhode-island/">Rhode Island <span class="rate">3.75&ndash;5.99%</span></a>
+          <a href="../../calculators/self-employment-tax/south-carolina/">South Carolina <span class="rate">0&ndash;6%</span></a>
+          <a href="../../calculators/self-employment-tax/utah/">Utah <span class="rate">4.5%</span></a>
+          <a href="../../calculators/self-employment-tax/vermont/">Vermont <span class="rate">3.35&ndash;8.75%</span></a>
+          <a href="../../calculators/self-employment-tax/virginia/">Virginia <span class="rate">2&ndash;5.75%</span></a>
+          <a href="../../calculators/self-employment-tax/west-virginia/">West Virginia <span class="rate">2.22&ndash;4.82%</span></a>
+          <a href="../../calculators/self-employment-tax/wisconsin/">Wisconsin <span class="rate">3.5&ndash;7.65%</span></a>
+        </div>
+      </div>
+    </div>
 
     <div class="disclaimer-box">
       <strong>Disclaimer:</strong> This article is for informational purposes only and does not constitute tax, legal, or financial advice. State tax laws change frequently, and individual circumstances vary. The estimates above use simplified calculations based on published 2026 rates and may not reflect local surcharges, credits, or deductions specific to your situation. Moving between states has tax implications beyond income tax. Consult a qualified tax professional before making relocation decisions.
