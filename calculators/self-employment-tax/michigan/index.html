@@ -732,7 +732,7 @@
     if (params.get("retirement")) document.getElementById("retirementContrib").value = params.get("retirement");
   })();
 
-  setTimeout(function() { shouldScroll = false; updateSSTBRow(); updateSpouseSeniorRow(); calculate(); }, 100);
+  shouldScroll = false; updateSSTBRow(); updateSpouseSeniorRow(); calculate();
 
   function calculate() {
     var netProfitRaw = document.getElementById('netProfit').value;

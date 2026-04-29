@@ -891,8 +891,14 @@
     return '../'; // main calculator page
   })();
 
-  // Run on page load.
-  setTimeout(() => { shouldScroll = false; updateSSTBRow(); updateSpouseSeniorRow(); calculate(); }, 100);
+  // Run on page load — synchronously, before first paint, to avoid a CLS
+  // shift when calculate() populates the results section and the methodology
+  // div below it gets pushed down. The previous setTimeout deferred this to
+  // after first paint, which produced a visible jump on every page load.
+  shouldScroll = false;
+  updateSSTBRow();
+  updateSpouseSeniorRow();
+  calculate();
 
   function calculate() {
     const netProfitField = document.getElementById('netProfit');
