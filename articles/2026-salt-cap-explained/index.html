@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 2026 SALT Cap: Who Actually Benefits from the New $40,400 Limit | IndieCalc</title>
+<meta name="description" content="OBBBA raised the SALT cap from $10K to $40,400 for 2026. Here's who actually benefits, with worked examples for freelancers in CA, NY, NJ, and TX.">
+<link rel="canonical" href="https://indie-calc.com/articles/2026-salt-cap-explained/">
+<meta property="og:title" content="The 2026 SALT Cap: Who Actually Benefits from the $40,400 Limit">
+<meta property="og:description" content="The SALT cap quadrupled for 2026 under OBBBA. But it doesn't help everyone — here's who actually benefits, with the math worked out.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://indie-calc.com/articles/2026-salt-cap-explained/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The 2026 SALT Cap: Who Actually Benefits from the $40,400 Limit">
+<meta name="twitter:description" content="The SALT cap quadrupled for 2026 under OBBBA. But it doesn't help everyone — here's who actually benefits, with the math worked out.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.7; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .header-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 20px; font-weight: 700; }
+  header h1 a { color: white; text-decoration: none; }
+  header h1 span { color: var(--teal); }
+  header nav a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; }
+
+  .article-header { padding: 48px 0 32px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+  .article-header .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .article-header h2 { font-size: 32px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+  .article-header .subtitle { font-size: 18px; color: var(--medium); line-height: 1.5; }
+  .article-header .meta { font-size: 13px; color: var(--light); margin-top: 16px; }
+
+  .article-body h3 { font-size: 22px; font-weight: 700; margin: 40px 0 16px; padding-top: 8px; }
+  .article-body h4 { font-size: 17px; font-weight: 600; margin: 28px 0 12px; }
+  .article-body p { font-size: 16px; color: var(--medium); margin-bottom: 20px; }
+  .article-body ul, .article-body ol { font-size: 16px; color: var(--medium); margin-bottom: 20px; padding-left: 24px; }
+  .article-body li { margin-bottom: 8px; }
+  .article-body strong { color: var(--dark); }
+
+  .callout { background: var(--teal-bg); border-left: 4px solid var(--teal); padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .callout p { margin-bottom: 0; font-size: 15px; }
+  .callout p + p { margin-top: 12px; }
+  .callout strong { color: var(--teal); }
+
+  .warning { background: #fff8f0; border-left: 4px solid #e8a84c; padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .warning p { margin-bottom: 0; font-size: 15px; color: #7a5a2a; }
+  .warning strong { color: #7a5a2a; }
+
+  .example-box { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 24px; margin: 24px 0; }
+  .example-box .example-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .example-box table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .example-box th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .example-box td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; color: var(--medium); }
+  .example-box td:last-child { text-align: right; font-weight: 500; }
+  .example-box tr.highlight td { font-weight: 700; color: var(--dark); }
+
+  .cta-box { background: var(--teal); border-radius: 12px; padding: 32px; margin: 36px 0; text-align: center; color: white; }
+  .cta-box h4 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: white; }
+  .cta-box p { font-size: 15px; opacity: 0.85; margin-bottom: 16px; color: white; }
+  .cta-box a { display: inline-block; background: white; color: var(--teal); padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; }
+  .cta-box a:hover { background: var(--teal-light); }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 36px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .article-header h2 { font-size: 24px; }
+    .article-body h3 { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1><a href="../../">Indie<span>Calc</span></a></h1>
+    <nav><a href="../../">&larr; All Calculators</a></nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="article-header">
+    <div class="label">2026 Tax Guide</div>
+    <h2>The 2026 SALT Cap: Who Actually Benefits from the New $40,400 Limit (and Who Doesn't)</h2>
+    <p class="subtitle">The OBBBA quadrupled the SALT cap from $10,000 to $40,400. The headlines said "huge win for blue states." The math is more interesting &mdash; here's who the new cap actually helps.</p>
+    <p class="meta">Updated April 2026 &middot; 9 min read</p>
+  </div>
+
+  <div class="article-body">
+    <div class="callout" style="margin-top: 0;">
+      <p><strong>TL;DR:</strong> The One Big Beautiful Bill Act raised the SALT deduction cap from $10,000 to <strong>$40,400 for 2026</strong> &mdash; a four-fold increase, and the biggest change to SALT since the cap was introduced in 2018. But it only helps you if your itemized deductions exceed the standard deduction ($16,100 single / $32,200 joint). For most freelancers earning under $150K, that bar is still too high. For high-earning freelancers in CA, NY, NJ, IL, or other high-tax states, the new cap can be worth $4K&ndash;$8K in real federal tax savings &mdash; but only if your calculator catches it. Most still don't.</p>
+    </div>
+
+    <p>If you've been hearing about the new $40,400 SALT cap and wondering whether it actually changes anything for you, the honest answer is: probably not, unless you fit a specific profile. The cap matters if (a) you live in a state with meaningful income tax, (b) your income is high enough that your state taxes plus property taxes plus other itemizable deductions exceed your standard deduction, and (c) your tax software actually applies the new cap correctly. Each of those is a real filter.</p>
+
+    <p>This guide walks through what the cap is, what changed under OBBBA, and the specific income-and-state combinations where the math flips in your favor. Worked examples at five income levels in five states.</p>
+
+    <h3>What the SALT Deduction Actually Is</h3>
+
+    <p>SALT stands for <strong>State and Local Tax</strong>, codified at IRC &sect;164(b)(5). It's a federal itemized deduction that lets you deduct from your federal taxable income the state-and-local taxes you paid that year:</p>
+
+    <ul>
+      <li>State income tax (and local income tax, where it exists &mdash; New York City, Yonkers, most Ohio cities, etc.), <strong>OR</strong></li>
+      <li>State and local general sales tax (your choice &mdash; pick whichever is larger; you can't take both)</li>
+      <li><strong>Plus</strong> state and local property tax (real estate + personal property like cars, where the tax is value-based)</li>
+    </ul>
+
+    <p>What's <em>not</em> included: federal income tax (you can't deduct federal taxes from federal taxes), foreign taxes (those go on a separate Foreign Tax Credit), and the flat-fee portion of vehicle registration (only the value-based portion qualifies).</p>
+
+    <p>Before 2018, the SALT deduction was uncapped. The 2017 Tax Cuts and Jobs Act introduced the $10,000 cap to raise federal revenue and reduce what some viewed as a federal subsidy of high-tax states. That cap was scheduled to expire after 2025. Instead, the OBBBA raised it.</p>
+
+    <h3>What the OBBBA Changed</h3>
+
+    <p>Section 70120 of the OBBBA replaces the $10,000 cap with $40,400 for 2026, then indexes it up by a fixed 1% per year through 2029:</p>
+
+    <div class="example-box">
+      <div class="example-title">SALT Cap Schedule Under OBBBA</div>
+      <table>
+        <thead><tr><th>Tax Year</th><th>Cap (Single / MFJ / HoH)</th><th>Cap (MFS)</th></tr></thead>
+        <tr><td>2025</td><td>$10,000</td><td>$5,000</td></tr>
+        <tr class="highlight"><td>2026</td><td>$40,400</td><td>$20,200</td></tr>
+        <tr><td>2027</td><td>$40,804</td><td>$20,402</td></tr>
+        <tr><td>2028</td><td>$41,212</td><td>$20,606</td></tr>
+        <tr><td>2029</td><td>$41,624</td><td>$20,812</td></tr>
+        <tr><td>2030+</td><td>$10,000 (reverts unless extended)</td><td>$5,000</td></tr>
+      </table>
+    </div>
+
+    <p>The 1% annual indexing is fixed by statute, <em>not</em> tied to actual CPI inflation. If real inflation runs hotter than 1% (which it has been), the cap erodes in purchasing power each year. And the entire elevated cap is set to sunset after 2029. Anyone planning around it for the medium term should assume the $10K cap may return.</p>
+
+    <div class="warning">
+      <p><strong>The MFS trap.</strong> Married couples filing separately get a $20,200 cap each &mdash; <em>half</em> of the joint cap. For most couples, MFJ remains the better choice, but if you're one of the rare situations where MFS helps (high medical expenses, income-driven student loan plans, etc.), the SALT cap halving is a significant additional cost worth modeling.</p>
+    </div>
+
+    <h3>Why Most People Still Won't Itemize</h3>
+
+    <p>Here's the catch the headlines tend to miss: the SALT cap only matters if you itemize, and you only itemize if your total itemized deductions exceed the standard deduction. The 2026 standard deduction is large:</p>
+
+    <ul>
+      <li>Single or MFS: $16,100</li>
+      <li>Married Filing Jointly: $32,200</li>
+      <li>Head of Household: $24,150</li>
+      <li>Add $2,000 (single/HoH) or $1,600 each (MFJ) if 65+</li>
+    </ul>
+
+    <p>Itemizing only wins if SALT (capped at $40,400) + mortgage interest + charitable contributions + medical expenses above 7.5% of AGI &gt; standard deduction.</p>
+
+    <p>Under the old $10K cap, the typical itemizer was a high-income filer with a substantial mortgage. Under the new $40,400 cap, the universe expands &mdash; but not as much as you might think. SALT alone is rarely enough to break the standard-deduction threshold unless your state taxes are genuinely high <em>and</em> your income is high enough to generate them.</p>
+
+    <h3>Worked Examples: Where the Math Flips</h3>
+
+    <p>Five scenarios. State income tax estimates assume self-employment income with no above-the-line deductions modifying state AGI. Federal tax savings are calculated at the relevant marginal bracket; actual savings depend on the rest of your return.</p>
+
+    <h4>Example 1: $80K Single in Texas, No Property Tax</h4>
+
+    <div class="example-box">
+      <div class="example-title">Standard Deduction Wins by a Mile</div>
+      <table>
+        <tr><td>State income tax (TX has none)</td><td>$0</td></tr>
+        <tr><td>Property tax</td><td>$0</td></tr>
+        <tr><td>Total SALT</td><td>$0</td></tr>
+        <tr><td>Standard deduction (single)</td><td>$16,100</td></tr>
+        <tr class="highlight"><td>Result</td><td>Standard wins</td></tr>
+        <tr><td>Benefit from new SALT cap</td><td>$0</td></tr>
+      </table>
+    </div>
+
+    <p>For freelancers in no-income-tax states (TX, FL, WA, NV, WY, SD, TN, NH, AK), the new SALT cap is irrelevant unless they own real estate. Even with significant property taxes, sales tax (deductible in lieu of income tax) plus property tax rarely exceeds the standard deduction at this income level. The cap change literally does nothing for most filers in these states.</p>
+
+    <h4>Example 2: $200K MFJ in New York, $4K Property Tax</h4>
+
+    <div class="example-box">
+      <div class="example-title">Standard Still Wins for Joint Filers</div>
+      <table>
+        <tr><td>NY state income tax (approx.)</td><td>$11,200</td></tr>
+        <tr><td>Property tax</td><td>$4,000</td></tr>
+        <tr><td>Total SALT (well under $40,400 cap)</td><td>$15,200</td></tr>
+        <tr><td>Other itemized (assume $0)</td><td>$0</td></tr>
+        <tr><td>Total itemized</td><td>$15,200</td></tr>
+        <tr><td>Standard deduction (MFJ)</td><td>$32,200</td></tr>
+        <tr class="highlight"><td>Result</td><td>Standard wins by $17,000</td></tr>
+        <tr><td>Benefit from new SALT cap</td><td>$0</td></tr>
+      </table>
+    </div>
+
+    <p>This is the case that surprises a lot of people. A married couple making $200K in New York &mdash; not exactly low income, in a famously high-tax state &mdash; still doesn't itemize because the joint standard deduction is $32,200. Without significant mortgage interest or charitable giving, SALT alone can't get them there. The $40,400 cap doesn't help because they're nowhere near it.</p>
+
+    <h4>Example 3: $250K Single in California, No Property Tax</h4>
+
+    <div class="example-box">
+      <div class="example-title">Itemizing Now Wins, Doesn't Hit the Cap</div>
+      <table>
+        <tr><td>CA state income tax (approx.)</td><td>$18,500</td></tr>
+        <tr><td>CA SDI (1.3% uncapped, applies to SE income)</td><td>$3,250</td></tr>
+        <tr><td>Property tax</td><td>$0</td></tr>
+        <tr><td>Total SALT (under $40,400 cap)</td><td>$21,750</td></tr>
+        <tr><td>Standard deduction (single)</td><td>$16,100</td></tr>
+        <tr class="highlight"><td>Result</td><td>Itemize, save $5,650 in deductions</td></tr>
+        <tr><td>Federal tax savings (at 24% marginal)</td><td>~$1,350</td></tr>
+      </table>
+    </div>
+
+    <p>For a single freelancer earning $250K in California, state taxes alone (income + SDI) push past the standard deduction. Itemizing now wins, even without a mortgage. Notice that California's SDI &mdash; the state disability insurance contribution that's now uncapped under SB 951 &mdash; counts as a state income tax for SALT purposes per IRS guidance.</p>
+
+    <h4>Example 4: $400K Single in California, $15K Property Tax</h4>
+
+    <div class="example-box">
+      <div class="example-title">The $40,400 Cap Becomes Binding</div>
+      <table>
+        <tr><td>CA state income tax (approx.)</td><td>$32,500</td></tr>
+        <tr><td>CA SDI (uncapped)</td><td>$5,200</td></tr>
+        <tr><td>Property tax</td><td>$15,000</td></tr>
+        <tr><td>Total SALT (uncapped)</td><td>$52,700</td></tr>
+        <tr><td>SALT (capped at $40,400)</td><td>$40,400</td></tr>
+        <tr><td>Standard deduction (single)</td><td>$16,100</td></tr>
+        <tr class="highlight"><td>Result</td><td>Itemize, save $24,300 in deductions</td></tr>
+        <tr><td>Federal tax savings (at 35% marginal)</td><td>~$8,505</td></tr>
+      </table>
+    </div>
+
+    <p>This is where the new cap really pays. A single freelancer earning $400K in California with $15K in property tax has $52,700 of state and local taxes that <em>could</em> be deducted &mdash; but the cap holds them at $40,400. Compared to the old $10,000 cap, this person picks up an extra $30,400 of deduction. At their 35% marginal federal bracket, that's roughly <strong>$10,640 in federal tax savings</strong> versus the pre-OBBBA rules. This is the OBBBA-as-blue-state-relief headline writ specific.</p>
+
+    <h4>Example 5: $300K MFJ in New Jersey, $14K Property Tax</h4>
+
+    <div class="example-box">
+      <div class="example-title">High Property Tax + Moderate State Tax = Cap Hit</div>
+      <table>
+        <tr><td>NJ state income tax (approx.)</td><td>$15,800</td></tr>
+        <tr><td>Property tax</td><td>$14,000</td></tr>
+        <tr><td>Total SALT (under $40,400 cap)</td><td>$29,800</td></tr>
+        <tr><td>Standard deduction (MFJ)</td><td>$32,200</td></tr>
+        <tr class="highlight"><td>Result</td><td>Standard still wins by $2,400</td></tr>
+        <tr><td>With $5K mortgage interest &mdash; itemize wins</td><td>Save ~$600 in fed tax</td></tr>
+      </table>
+    </div>
+
+    <p>New Jersey has the highest average property tax in the country (~$9,800 statewide; suburbs of NYC easily exceed $14K). For an MFJ couple at $300K, even with that property tax burden, SALT alone is just under the joint standard deduction. A modest amount of mortgage interest or charitable giving flips the calculation. This is the "almost itemizes" zone where small additions matter.</p>
+
+    <h3>Where the Cap Actually Bites: State-by-State</h3>
+
+    <p>The states where the $40,400 cap is most likely to be binding (i.e., where high earners actually hit it) are the ones with both meaningful income tax rates and elevated property tax. In rough order of relevance for high-income freelancers:</p>
+
+    <ol>
+      <li><strong>California</strong> &mdash; top rate 13.3% (including the 1% Mental Health Services surcharge above $1M); uncapped SDI on all wages. Single filers above ~$300K and MFJ above ~$500K typically itemize and often hit the cap.</li>
+      <li><strong>New York</strong> &mdash; top rate 10.9%; NYC residents add 3.078&ndash;3.876% city tax (which also counts toward SALT). NYC residents at $250K+ usually hit the cap.</li>
+      <li><strong>New Jersey</strong> &mdash; top rate 10.75% plus the highest average property tax in the country. The combination drives middle-bracket NJ filers into the cap.</li>
+      <li><strong>Hawaii</strong> &mdash; top rate 11%; income-tax-driven cap pressure.</li>
+      <li><strong>Oregon</strong> &mdash; top rate 9.9%; no sales tax, so income tax dominates the SALT calc.</li>
+      <li><strong>Massachusetts</strong> &mdash; flat 5% but with a 4% millionaire surtax above $1.1M; high property tax.</li>
+      <li><strong>Minnesota</strong> &mdash; top rate 9.85%; meaningful for high earners.</li>
+      <li><strong>DC</strong> &mdash; top rate 10.75%.</li>
+    </ol>
+
+    <p>Conversely, the cap is mostly irrelevant for filers in no-income-tax states (TX, FL, WA, NV, SD, TN, WY, AK, NH) unless they own significant real estate. Texas and Florida have unusually high property tax rates (TX averages around 1.6&ndash;1.8% of assessed value), so high-value Texas homeowners can occasionally itemize via property tax alone &mdash; but it's the exception, not the rule.</p>
+
+    <h3>Common Mistakes (and Where Most Calculators Fail)</h3>
+
+    <p>If you're using a free online tax calculator to estimate your 2026 liability, watch for these:</p>
+
+    <ul>
+      <li><strong>Stale SALT cap.</strong> Many calculators are still hardcoded to the old $10,000 cap. If yours doesn't show the correct $40,400 figure for 2026, the entire itemize-vs-standard decision is broken.</li>
+      <li><strong>No auto-itemize logic.</strong> Some tools force you to manually choose between standard and itemized, or default to standard without checking. The "right" answer is to compute both and take the larger &mdash; which a good calculator does automatically.</li>
+      <li><strong>Forgetting local income tax.</strong> NYC city tax, Yonkers surcharge, and Ohio municipal income taxes all count toward SALT under IRC &sect;164(b)(5)(A). A New York City resident earning $200K is paying meaningful city tax that should flow into the cap calculation. Most generic calculators ignore this entirely.</li>
+      <li><strong>Including non-deductible items.</strong> The flat portion of vehicle registration, federal income/SE tax, and sin taxes don't qualify. SALT is a specific subset.</li>
+      <li><strong>Sales tax vs. income tax confusion.</strong> You can choose to deduct sales tax instead of income tax (relevant for residents of no-income-tax states). The IRS publishes optional sales-tax tables. Most freelancers in income-tax states should pick income tax; sales tax wins for high-spending residents of TX/FL/etc.</li>
+    </ul>
+
+    <div class="warning">
+      <p><strong>AMT consideration at very high income.</strong> Under the Alternative Minimum Tax, the SALT deduction is added back when calculating Alternative Minimum Taxable Income (AMTI). At very high income levels (single filers above ~$626K, MFJ above ~$1.25M), a large SALT deduction can trigger AMT and effectively claw back some of the federal tax savings. AMT modeling is beyond the scope of most consumer calculators &mdash; if you're in this range, talk to a CPA before assuming the full benefit.</p>
+    </div>
+
+    <h3>What This Means for Freelancers Specifically</h3>
+
+    <p>Self-employment income tends to land in higher state-tax brackets faster than W-2 wages, because there's no employer-side withholding offsetting the calculation and (in California) SDI applies to all SE earnings without the W-2 employer-paid offset. That means high-earning freelancers in high-tax states are more likely to bump into the cap than W-2 employees at the same income.</p>
+
+    <p>Self-employed homeowners are the archetype the new cap helps the most: significant state income tax from SE earnings <em>plus</em> property tax stacks up fast. A $300K single freelancer in California with $10K of property tax is likely hitting the $40,400 cap just from SALT, before any mortgage interest or charitable giving.</p>
+
+    <p>If you're recalculating your quarterly estimated tax payments for 2026, the SALT cap change is one of the few that can move your federal liability by thousands of dollars without changing your gross income. If you've been using a calculator that assumes standard deduction (or one stuck on the old $10K cap), your quarterlies are probably overstated &mdash; you may be sending the IRS more money than you owe.</p>
+
+    <div class="cta-box">
+      <h4>Run your own SALT calculation</h4>
+      <p>Our self-employment tax calculator auto-itemizes when SALT plus other itemized deductions beats the standard deduction. Enter your income, state, and property tax &mdash; it does the comparison and shows you both numbers in the breakdown.</p>
+      <a href="../../calculators/self-employment-tax/">Calculate Your 2026 Tax &rarr;</a>
+    </div>
+
+    <h3>What to Do Now</h3>
+
+    <ol>
+      <li><strong>Re-run your numbers.</strong> If you've been taking the standard deduction in recent years and your income is above $200K (single) or $300K (MFJ) in a high-tax state, the math may have flipped under the new cap.</li>
+      <li><strong>Check that your tax software has updated.</strong> The cap change took effect for 2026 returns. Anything still showing $10K is wrong for this tax year.</li>
+      <li><strong>Update your quarterly estimates.</strong> If you're paying quarterly estimated tax, redo the calculation for 2026 with the new cap. Q2 is due June 15. Overpaying earlier in the year and getting it back at filing is cash you don't have.</li>
+      <li><strong>Plan for the 2030 cliff.</strong> The $40,400 cap (with 1% indexing) lasts through 2029. Unless Congress extends it, the cap reverts to $10,000 for tax year 2030. If you're making multi-year decisions about home purchases, charitable giving, or relocation, factor in the sunset.</li>
+    </ol>
+
+    <div class="disclaimer-box">
+      <strong>Disclaimer:</strong> This article is for informational purposes only and does not constitute tax, legal, or financial advice. Tax laws are complex and individual circumstances vary. The examples above use simplified calculations and may not reflect your specific situation, including AMT exposure, PTET workarounds, or state-specific rules not modeled here. Consult a qualified tax professional before making decisions based on this information.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">All Calculators</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+</body>
+</html>
