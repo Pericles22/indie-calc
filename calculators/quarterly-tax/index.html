@@ -93,6 +93,24 @@
 
   .info-tip { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 4px; cursor: help; }
 
+  .checkbox-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--teal); margin-top: 2px; flex-shrink: 0; }
+  .checkbox-row label { font-size: 13px; color: var(--medium); cursor: pointer; line-height: 1.5; }
+  .checkbox-row .tooltip { font-size: 12px; color: var(--hint); margin-left: 4px; display: block; width: 100%; padding-left: 26px; }
+
+  .accordion-toggle { background: none; border: 1px solid var(--rule); border-radius: 6px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--teal); cursor: pointer; font-family: var(--font); width: 100%; text-align: left; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .accordion-toggle:hover { background: var(--teal-light); }
+  .accordion-toggle .arrow { transition: transform 0.2s; }
+  .accordion-toggle.open .arrow { transform: rotate(180deg); }
+  .accordion-body { display: none; border: 1px solid var(--rule); border-radius: 8px; padding: 20px; margin-bottom: 16px; background: var(--bg); }
+  .accordion-body.open { display: block; }
+  .accordion-body .form-group { margin-bottom: 12px; }
+  .accordion-body .form-group:last-child { margin-bottom: 0; }
+  .accordion-body .field-help { font-size: 12px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
+
+  .disclaimer-box { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; font-size: 13px; color: var(--medium); line-height: 1.6; }
+  .disclaimer-box strong { color: var(--dark); }
+
   /* Results */
   .results { display: none; }
   .results.visible { display: block; }
@@ -361,16 +379,99 @@
         <div class="field-help">Federal tax withheld from W-2 paychecks so far in 2026. Reduces the amount you need to pay quarterly.</div>
       </div>
     </div>
-    <div class="form-row">
+    <div class="form-row" id="localityRow" style="display: none;">
       <div class="form-group">
-        <label for="propertyTax">Property Tax Paid -- optional</label>
-        <div class="prefix"><input type="number" id="propertyTax" placeholder="0" value="0"></div>
-        <div class="field-help">Counts toward the $40,400 SALT cap (OBBBA 2026, up from $10,000) along with state income tax. Engine auto-itemizes when SALT + other itemized exceeds your standard deduction.</div>
+        <label for="locality">City / Local Tax — optional</label>
+        <select id="locality">
+          <option value="">None</option>
+        </select>
+        <div class="field-help">NYC residents pay an additional ~3.08–3.88% city income tax. Yonkers residents pay a 16.75% surcharge on state tax. Ohio municipalities typically levy 1–2.5%.</div>
       </div>
-      <div class="form-group">
-        <label for="otherItemized">Other Itemized Deductions -- optional</label>
-        <div class="prefix"><input type="number" id="otherItemized" placeholder="0" value="0"></div>
-        <div class="field-help">Mortgage interest, charitable giving, medical expenses above 7.5% AGI. Do NOT include state/property tax.</div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="includeQBI" checked aria-describedby="qbi-help">
+      <label for="includeQBI">Include QBI deduction (20% of business income)</label>
+      <span class="tooltip" id="qbi-help">20% deduction on qualified business income. Phase-out begins above $201,775 (single) / $403,550 (joint) for 2026. Use the SSTB checkbox below if your business is a specified service trade.</span>
+    </div>
+    <div class="checkbox-row" id="sstbRow" style="display: none;">
+      <input type="checkbox" id="isSSTB" aria-describedby="sstb-help">
+      <label for="isSSTB">My business is an SSTB (law, accounting, health, consulting, etc.)</label>
+      <span class="tooltip" id="sstb-help">Specified Service Trade or Business. Above the QBI threshold + phase-in range, SSTBs lose the QBI deduction entirely.</span>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="isSenior" aria-describedby="senior-help">
+      <label for="isSenior">I am 65 or older</label>
+      <span class="tooltip" id="senior-help">Additional $6,000 deduction (OBBBA). Phases out at 6% above $75K single / $150K joint AGI.</span>
+    </div>
+    <div class="checkbox-row" id="spouseSeniorRow" style="display: none;">
+      <input type="checkbox" id="spouseIsSenior" aria-describedby="spouse-senior-help">
+      <label for="spouseIsSenior">My spouse is also 65 or older</label>
+      <span class="tooltip" id="spouse-senior-help">Doubles the senior deduction to $12,000 when both spouses qualify (MFJ only).</span>
+    </div>
+
+    <button class="accordion-toggle" id="advancedToggle" type="button" aria-expanded="false" aria-controls="advancedBody">
+      Add Credits &amp; Deductions (Dependents, Health Insurance, Retirement, etc.)
+      <span class="arrow" aria-hidden="true">&#9660;</span>
+    </button>
+    <div class="accordion-body" id="advancedBody" hidden>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="numChildren">Children Under 17</label>
+          <input type="number" id="numChildren" placeholder="0" value="0" min="0" max="20">
+          <div class="field-help">Child Tax Credit: $2,200 per child (OBBBA). Phases out above $200K (single) / $400K (joint).</div>
+        </div>
+        <div class="form-group">
+          <label for="healthInsurance">Self-Employed Health Insurance Premiums</label>
+          <div class="prefix"><input type="number" id="healthInsurance" placeholder="0" value="0"></div>
+          <div class="field-help">Above-the-line deduction. Cannot exceed net SE income. Not available for months you were eligible for an employer-sponsored plan.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="retirementContrib">Retirement Contributions (SEP IRA / Solo 401k)</label>
+          <div class="prefix"><input type="number" id="retirementContrib" placeholder="0" value="0"></div>
+          <div class="field-help">Above-the-line deduction. SEP IRA max: ~18.6% of net SE income (up to $70,000). Solo 401k: up to $23,500 employee + 25% employer.</div>
+        </div>
+        <div class="form-group">
+          <label for="homeOfficeSqft">Home Office (Square Feet)</label>
+          <input type="number" id="homeOfficeSqft" placeholder="0" value="0" min="0" max="300">
+          <div class="field-help">Simplified method: $5/sq ft, max 300 sq ft ($1,500). Used exclusively and regularly for business.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="max-width: 50%;">
+          <label for="studentLoanInterest">Student Loan Interest Paid</label>
+          <div class="prefix"><input type="number" id="studentLoanInterest" placeholder="0" value="0"></div>
+          <div class="field-help">Above-the-line deduction, max $2,500. Phases out at higher incomes.</div>
+        </div>
+      </div>
+      <div style="border-top: 1px solid var(--rule); margin: 16px 0; padding-top: 16px;">
+        <div style="font-size: 13px; font-weight: 600; color: var(--medium); margin-bottom: 4px;">Itemized Deductions <span style="font-weight: 400; color: var(--hint);">(used only if greater than your standard deduction)</span></div>
+        <p style="font-size: 12px; color: var(--hint); margin-bottom: 12px;">SALT (state income tax + property tax) is capped at $40,400 for 2026 under OBBBA &mdash; up from $10,000.</p>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="propertyTax">Property Tax Paid</label>
+          <div class="prefix"><input type="number" id="propertyTax" placeholder="0" value="0"></div>
+          <div class="field-help">Real estate + personal property taxes. Combined with state income tax, the total counts toward the $40,400 SALT cap.</div>
+        </div>
+        <div class="form-group">
+          <label for="otherItemized">Other Itemized Deductions</label>
+          <div class="prefix"><input type="number" id="otherItemized" placeholder="0" value="0"></div>
+          <div class="field-help">Mortgage interest, charitable contributions, medical expenses above 7.5% of AGI. Do NOT include state/property tax &mdash; those are SALT, computed automatically.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="investmentIncome">Investment Income <span style="color:var(--hint); font-weight: 400;">(subset of "Other Income")</span></label>
+          <div class="prefix"><input type="number" id="investmentIncome" placeholder="0" value="0"></div>
+          <div class="field-help">Interest, dividends, capital gains, rental, royalties &mdash; should already be inside your Other Income above. Triggers a 3.8% NIIT surtax above $200K single / $250K MFJ AGI.</div>
+        </div>
+        <div class="form-group">
+          <label for="qualifiedTips">Qualified Tips <span style="color:var(--hint); font-weight: 400;">(OBBBA &ldquo;No Tax on Tips&rdquo;)</span></label>
+          <div class="prefix"><input type="number" id="qualifiedTips" placeholder="0" value="0"></div>
+          <div class="field-help">Up to $25,000 of qualified tip income is exempt from federal income tax under OBBBA &sect;70201. Still subject to SE tax. Most freelancers do not have tip income.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -444,6 +545,19 @@
         <thead><tr><th>Component</th><th>Amount</th></tr></thead>
         <tbody id="breakdownBody"></tbody>
       </table>
+    </div>
+
+    <div class="disclaimer-box" id="sstbWarning" style="display:none; background:#fff8f0; border-color:#f0d8b8;">
+      <strong>SSTB Notice:</strong> Your income exceeds the 2026 QBI threshold ($201,775 single / $403,550 joint).
+      If your business is a Specified Service Trade or Business (SSTB) &mdash; law, accounting, health, consulting, athletics, financial services, performing arts, or brokerage &mdash;
+      check the &ldquo;My business is an SSTB&rdquo; box above for an accurate phase-out.
+      <strong>Consult a tax professional for QBI optimization.</strong>
+    </div>
+
+    <div class="disclaimer-box" id="amtWarning" style="display:none; background:#fff8f0; border-color:#f0d8b8;">
+      <strong>AMT Notice:</strong> Your income and itemized SALT are both high, which puts you in the rare zone where the Alternative Minimum Tax (AMT) may apply.
+      Itemized SALT is added back when computing AMTI, so a large SALT deduction at very high income can trigger AMT.
+      This calculator does not compute AMT. <strong>If you&rsquo;re in this range, consult a CPA before filing.</strong>
     </div>
 
     <div class="disclaimer-box">
@@ -533,6 +647,72 @@
     option.textContent = state.name + (state.hasIncomeTax ? '' : ' (no income tax)');
     stateSelect.appendChild(option);
   }
+
+  /* ── Locality dropdown (NYC, Yonkers, OH municipal — auto-populates per state) ── */
+  const localityRow = document.getElementById('localityRow');
+  const localitySelect = document.getElementById('locality');
+  function refreshLocalityOptions() {
+    const stateKey = stateSelect.value;
+    const stateData = STATES[stateKey];
+    while (localitySelect.firstChild) localitySelect.removeChild(localitySelect.firstChild);
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.textContent = 'None';
+    localitySelect.appendChild(noneOpt);
+    if (stateData && stateData.localities) {
+      for (const [key, loc] of Object.entries(stateData.localities)) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = loc.name || key;
+        localitySelect.appendChild(opt);
+      }
+      localityRow.style.display = '';
+    } else {
+      localityRow.style.display = 'none';
+    }
+  }
+  refreshLocalityOptions();
+  stateSelect.addEventListener('change', refreshLocalityOptions);
+
+  /* ── Toggle SSTB row when QBI is on AND income above threshold ── */
+  function updateSSTBRow() {
+    const includeQBI = document.getElementById('includeQBI').checked;
+    const filingStatus = document.getElementById('filingStatus').value;
+    const netProfit = parseFloat(document.getElementById('netProfit').value) || 0;
+    const otherIncome = parseFloat(document.getElementById('otherIncome').value) || 0;
+    const totalIncome = netProfit + otherIncome;
+    const fed = FEDERAL['2026'];
+    const threshold = fed.qbiThreshold[filingStatus] || fed.qbiThreshold.single;
+    document.getElementById('sstbRow').style.display = (includeQBI && totalIncome > threshold) ? '' : 'none';
+  }
+
+  /* ── Toggle spouse-senior row only when MFJ + isSenior checked ── */
+  function updateSpouseSeniorRow() {
+    const filingStatus = document.getElementById('filingStatus').value;
+    const isSenior = document.getElementById('isSenior').checked;
+    document.getElementById('spouseSeniorRow').style.display = (filingStatus === 'marriedJoint' && isSenior) ? '' : 'none';
+  }
+
+  /* ── Accordion toggle ── */
+  document.getElementById('advancedToggle').addEventListener('click', function() {
+    const body = document.getElementById('advancedBody');
+    const isOpen = !body.hidden;
+    body.hidden = isOpen;
+    this.setAttribute('aria-expanded', String(!isOpen));
+    body.classList.toggle('open', !isOpen);
+    this.classList.toggle('open', !isOpen);
+  });
+
+  /* ── Toggle handlers wired to relevant inputs ── */
+  document.getElementById('includeQBI').addEventListener('change', () => { updateSSTBRow(); calculate(); });
+  document.getElementById('isSenior').addEventListener('change', () => { updateSpouseSeniorRow(); calculate(); });
+  document.querySelectorAll('#netProfit, #otherIncome, #filingStatus').forEach(el => {
+    el.addEventListener('input', updateSSTBRow);
+    el.addEventListener('change', updateSSTBRow);
+  });
+  document.getElementById('filingStatus').addEventListener('change', updateSpouseSeniorRow);
+
+  setTimeout(() => { updateSSTBRow(); updateSpouseSeniorRow(); }, 0);
 
   /* ── Email menu helpers ── */
   function setMenuLinks(menuId, opts) {
@@ -627,10 +807,10 @@
   let debounceTimer;
   function debounce(fn, ms) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fn(...args), ms); }; }
 
-  document.querySelectorAll('#netProfit, #otherIncome, #priorYearTax, #priorYearAGI, #withholding, #propertyTax, #otherItemized').forEach(el => {
+  document.querySelectorAll('#netProfit, #otherIncome, #priorYearTax, #priorYearAGI, #withholding, #propertyTax, #otherItemized, #investmentIncome, #qualifiedTips, #numChildren, #healthInsurance, #retirementContrib, #homeOfficeSqft, #studentLoanInterest').forEach(el => {
     el.addEventListener('input', debounce(() => { calculate(); persistState(); }, 200));
   });
-  document.querySelectorAll('#filingStatus, #state').forEach(el => {
+  document.querySelectorAll('#filingStatus, #state, #locality, #isSSTB, #spouseIsSenior').forEach(el => {
     el.addEventListener('change', () => { calculate(); persistState(); });
   });
 
@@ -737,21 +917,61 @@
     const withholding = Math.max(0, parseFloat(document.getElementById('withholding').value) || 0);
     const propertyTax = Math.max(0, parseFloat(document.getElementById('propertyTax').value) || 0);
     const otherItemized = Math.max(0, parseFloat(document.getElementById('otherItemized').value) || 0);
+    const includeQBI = document.getElementById('includeQBI').checked;
+    const isSSTB = document.getElementById('isSSTB').checked;
+    const isSenior = document.getElementById('isSenior').checked;
+    const spouseIsSenior = document.getElementById('spouseIsSenior').checked;
+    const numChildren = parseInt(document.getElementById('numChildren').value) || 0;
+    const healthInsuranceRaw = Math.max(0, parseFloat(document.getElementById('healthInsurance').value) || 0);
+    const healthInsurance = Math.min(healthInsuranceRaw, netProfit);
+    const retirementContribRaw = Math.max(0, parseFloat(document.getElementById('retirementContrib').value) || 0);
+    const retirementCap = Math.min(Math.max(0, netProfit) * 0.18587, 70000);
+    const retirementContrib = Math.min(retirementContribRaw, retirementCap);
+    const homeOfficeSqft = Math.min(Math.max(0, parseInt(document.getElementById('homeOfficeSqft').value) || 0), 300);
+    const studentLoanInterest = Math.min(Math.max(0, parseFloat(document.getElementById('studentLoanInterest').value) || 0), 2500);
+    const homeOfficeDeduction = homeOfficeSqft * 5;
+    const otherAboveLine = homeOfficeDeduction + studentLoanInterest;
+    const investmentIncome = Math.max(0, parseFloat(document.getElementById('investmentIncome').value) || 0);
+    const qualifiedTips = Math.max(0, parseFloat(document.getElementById('qualifiedTips').value) || 0);
+    const localityEl = document.getElementById('locality');
+    const locality = localityEl && localityEl.value ? localityEl.value : null;
 
     const federal = FEDERAL['2026'];
     const state = STATES[stateKey];
     const totalIncome = netProfit + otherIncome;
+    const fedCopy = includeQBI ? federal : Object.assign({}, federal, { qbiDeductionRate: 0 });
 
     /* Use the shared calculator engine for the tax computation. */
     const result = calculateAll(
-      { netProfit, filingStatus, otherIncome, propertyTax, otherItemized },
-      federal,
+      {
+        netProfit, filingStatus, otherIncome,
+        isSenior, spouseIsSenior, isSSTB,
+        healthInsurance, retirementContrib, otherAboveLine,
+        propertyTax, otherItemized,
+        investmentIncome, qualifiedTips, locality,
+      },
+      fedCopy,
       state,
     );
 
-    const totalFederalTax = result.summary.totalFederalTax;
+    /* Child Tax Credit (OBBBA $2,200/child) — phases out above $200K single / $400K MFJ.
+       Done outside the engine since it's a credit, not a deduction. */
+    const ctcThreshold = (filingStatus === 'marriedJoint') ? 400000 : 200000;
+    let ctcPerChild = 2200;
+    if (totalIncome > ctcThreshold) {
+      ctcPerChild = Math.max(0, 2200 - Math.ceil((totalIncome - ctcThreshold) / 1000) * 50);
+    }
+    const totalCTC = numChildren * ctcPerChild;
+    const ctcAgainstTax = Math.min(result.summary.federalIncomeTax, totalCTC);
+    const ctcRemainder = totalCTC - ctcAgainstTax;
+    const actcCap = numChildren * federal.actcMaxPerChild;
+    const actcEarnedLimit = Math.max(0, (totalIncome - federal.actcEarnedIncomeFloor) * federal.actcEarnedIncomeRate);
+    const actcRefundable = Math.min(ctcRemainder, actcCap, actcEarnedLimit);
+
+    const federalIncomeTaxAfterCredits = Math.max(0, result.summary.federalIncomeTax - ctcAgainstTax);
+    const totalFederalTax = result.selfEmploymentTax.total + federalIncomeTaxAfterCredits + result.summary.niit - actcRefundable;
     const stateTaxAmt = result.summary.stateTax;
-    const totalTax = result.summary.totalTax;
+    const totalTax = totalFederalTax + stateTaxAmt;
 
     /* Amounts remaining after W-2 withholding. */
     const federalAfterWithholding = Math.max(0, totalFederalTax - withholding);
@@ -973,6 +1193,7 @@
     body.replaceChildren();
     const bFrag = document.createDocumentFragment();
 
+    const ssCapped = result.selfEmploymentTax.taxableBase > federal.ssWageBase;
     const rows = [
       { label: 'Gross Self-Employment Income', value: fmt(netProfit) },
     ];
@@ -980,11 +1201,55 @@
       rows.push({ label: 'Other Income (W-2, etc.)', value: fmt(otherIncome) });
     }
     rows.push({ label: 'Self-Employment Tax (15.3%)', value: fmt(result.summary.selfEmploymentTax) });
-    rows.push({ label: 'Federal Income Tax', value: fmt(result.summary.federalIncomeTax) });
-    rows.push({ label: 'Total Federal Tax', value: fmt(totalFederalTax) });
+    rows.push({ label: '   Social Security (12.4%)', value: fmt(result.selfEmploymentTax.socialSecurity), valueColor: ssCapped ? 'var(--medium)' : null });
+    rows.push({ label: '   Medicare (2.9%)', value: fmt(result.selfEmploymentTax.medicare) });
+    if (result.selfEmploymentTax.additionalMedicare > 0) {
+      rows.push({ label: '   Additional Medicare (0.9%)', value: fmt(result.selfEmploymentTax.additionalMedicare) });
+    }
+    rows.push({ label: 'Half-SE Deduction', value: '(' + fmt(result.selfEmploymentTax.deductibleHalf) + ')' });
+    if (result.federalIncomeTax.qbiDeduction > 0) {
+      rows.push({ label: 'QBI Deduction', value: '(' + fmt(result.federalIncomeTax.qbiDeduction) + ')' });
+    }
+    if (result.federalIncomeTax.seniorDeduction > 0) {
+      rows.push({ label: 'Senior Deduction (65+)', value: '(' + fmt(result.federalIncomeTax.seniorDeduction) + ')' });
+    }
+    if (healthInsurance > 0) {
+      rows.push({ label: 'SE Health Insurance', value: '(' + fmt(healthInsurance) + ')' });
+    }
+    if (retirementContrib > 0) {
+      rows.push({ label: 'Retirement (SEP/Solo 401k)', value: '(' + fmt(retirementContrib) + ')' });
+    }
+    if (homeOfficeDeduction > 0) {
+      rows.push({ label: 'Home Office (' + homeOfficeSqft + ' sq ft)', value: '(' + fmt(homeOfficeDeduction) + ')' });
+    }
+    if (studentLoanInterest > 0) {
+      rows.push({ label: 'Student Loan Interest', value: '(' + fmt(studentLoanInterest) + ')' });
+    }
+    if (result.federalIncomeTax.tipExemption > 0) {
+      rows.push({ label: 'Qualified Tips Exemption (OBBBA)', value: '(' + fmt(result.federalIncomeTax.tipExemption) + ')' });
+    }
+    if (result.federalIncomeTax.usedItemized) {
+      rows.push({ label: 'Itemized Deduction (SALT + other)', value: '(' + fmt(result.federalIncomeTax.deductionUsed) + ')' });
+    } else {
+      rows.push({ label: 'Standard Deduction', value: '(' + fmt(result.federalIncomeTax.standardDeductionAmount) + ')' });
+    }
+    rows.push({ label: 'Federal Income Tax (before credits)', value: fmt(result.summary.federalIncomeTax) });
+    if (totalCTC > 0) {
+      rows.push({ label: 'Child Tax Credit (' + numChildren + (numChildren === 1 ? ' child' : ' children') + ')', value: '-' + fmt(ctcAgainstTax), valueColor: 'var(--green)' });
+      if (actcRefundable > 0) {
+        rows.push({ label: 'Additional Child Tax Credit (refundable)', value: '-' + fmt(actcRefundable), valueColor: 'var(--green)' });
+      }
+    }
+    if (result.summary.niit > 0) {
+      rows.push({ label: 'Net Investment Income Tax (3.8%)', value: fmt(result.summary.niit) });
+    }
+    rows.push({ label: 'Federal Tax (after credits + NIIT)', value: fmt(result.selfEmploymentTax.total + federalIncomeTaxAfterCredits + result.summary.niit - actcRefundable) });
     if (withholding > 0) {
       rows.push({ label: 'W-2 Withholding (already paid)', value: '-' + fmt(withholding), valueColor: 'var(--green)' });
       rows.push({ label: 'Federal Tax Remaining', value: fmt(federalAfterWithholding) });
+    }
+    if (result.stateTax && result.stateTax.localityTax > 0) {
+      rows.push({ label: '   Local/City Tax (' + result.stateTax.locality + ')', value: fmt(result.stateTax.localityTax) });
     }
     rows.push({ label: 'State Tax (' + state.name + ')', value: fmt(stateTaxAmt) });
 
@@ -1015,6 +1280,20 @@
     bFrag.appendChild(trQuarterly);
 
     body.appendChild(bFrag);
+
+    /* ── SSTB warning: high earner with QBI on but SSTB unchecked ── */
+    const sstbThreshold = federal.qbiThreshold[filingStatus] || federal.qbiThreshold.single;
+    const sstbWarning = document.getElementById('sstbWarning');
+    sstbWarning.style.display = (includeQBI && !isSSTB && totalIncome > sstbThreshold) ? 'block' : 'none';
+
+    /* ── AMT zone heuristic: very high income + significant itemized SALT ── */
+    const amtIncomeFloor = (filingStatus === 'marriedJoint') ? 1000000 : 500000;
+    const amtSaltFloor = 30000;
+    const amtWarning = document.getElementById('amtWarning');
+    const inAMTZone = totalIncome >= amtIncomeFloor
+      && result.federalIncomeTax.usedItemized
+      && result.federalIncomeTax.saltDeduction >= amtSaltFloor;
+    amtWarning.style.display = inAMTZone ? 'block' : 'none';
 
     document.getElementById('lastUpdated').textContent = 'Tax data last verified: April 2026. Sources: IRS Form 1040-ES, SSA, Tax Foundation, state revenue depts.';
 
