@@ -825,9 +825,29 @@
     if (studentLoanInterest > 0) rows.push({ label: 'Student Loan Interest', value: '(' + fmt(studentLoanInterest) + ')' });
     if (result.federalIncomeTax.usedItemized) {
       var saltCapped = result.federalIncomeTax.saltUncapped > result.federalIncomeTax.saltCap;
+      var phaseoutActive = result.federalIncomeTax.saltCapPhaseoutActive;
+      var limitationActive = result.federalIncomeTax.itemizedLimitationActive;
       rows.push({ label: 'Itemized Deduction', value: '(' + fmt(result.federalIncomeTax.deductionUsed) + ')', tipText: 'itemized', tip: 'Itemizing beats the standard deduction (' + fmt(result.federalIncomeTax.standardDeductionAmount) + ')' });
-      rows.push({ label: '   SALT (state + property tax)', value: '(' + fmt(result.federalIncomeTax.saltDeduction) + ')', tipText: saltCapped ? 'OBBBA cap' : 'OBBBA', tip: saltCapped ? 'OBBBA $40,400 cap binding (uncapped: ' + fmt(result.federalIncomeTax.saltUncapped) + ')' : 'State income tax + property tax, below the OBBBA $40,400 cap' });
+      var saltTip;
+      var saltTipText;
+      if (phaseoutActive && result.federalIncomeTax.saltCap <= result.federalIncomeTax.saltCapFloor + 0.01) {
+        saltTip = 'OBBBA SALT cap fully phased out at high MAGI. Cap reverts to pre-OBBBA $10K floor ($5K MFS).';
+        saltTipText = 'phased out';
+      } else if (phaseoutActive) {
+        saltTip = 'OBBBA SALT cap reduced from ' + fmt(result.federalIncomeTax.saltCapBase) + ' to ' + fmt(result.federalIncomeTax.saltCap) + ' (MAGI phaseout).';
+        saltTipText = 'partial phaseout';
+      } else if (saltCapped) {
+        saltTip = 'OBBBA ' + fmt(result.federalIncomeTax.saltCap) + ' cap binding (uncapped: ' + fmt(result.federalIncomeTax.saltUncapped) + ')';
+        saltTipText = 'OBBBA cap';
+      } else {
+        saltTip = 'State income tax + property tax, below the OBBBA cap';
+        saltTipText = 'OBBBA';
+      }
+      rows.push({ label: '   SALT (state + property tax)', value: '(' + fmt(result.federalIncomeTax.saltDeduction) + ')', tipText: saltTipText, tip: saltTip });
       if (otherItemized > 0) rows.push({ label: '   Other (mortgage, charity, medical)', value: '(' + fmt(otherItemized) + ')' });
+      if (limitationActive) {
+        rows.push({ label: '   2/37 limitation (37% bracket)', value: '+' + fmt(result.federalIncomeTax.itemizedLimitationReduction), tipText: 'OBBBA 2/37', tip: 'OBBBA 35% itemized deduction value cap for top-bracket filers.' });
+      }
     } else {
       rows.push({ label: 'Standard Deduction', value: '(' + fmt(result.federalIncomeTax.standardDeductionAmount) + ')' });
     }

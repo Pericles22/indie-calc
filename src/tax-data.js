@@ -76,7 +76,42 @@ FEDERAL['2026'] = {
   actcMaxPerChild: 1700,
   actcEarnedIncomeFloor: 2500,
   actcEarnedIncomeRate: 0.15,
-  saltCap: 40400, // OBBBA §70120: increased from $10,000
+  // SALT cap (OBBBA §70120): increased from $10,000 to $40,400 for 2026.
+  // Married filing separately gets exactly half the cap.
+  // saltCapBase: keyed by filing status; the post-phaseout cap is computed dynamically.
+  saltCapBase: {
+    single: 40400,
+    marriedJoint: 40400,
+    marriedSeparate: 20200,
+    headOfHousehold: 40400,
+  },
+  // MAGI phaseout: cap reduces by 30% of MAGI excess over the threshold,
+  // floored at the original $10,000 ($5,000 MFS) cap. Phaseout completes
+  // around MAGI = threshold + $101,333 (single/MFJ/HoH) at which point
+  // the effective cap returns to the pre-OBBBA $10,000 floor.
+  saltCapPhaseoutThreshold: {
+    single: 500000,
+    marriedJoint: 500000,
+    marriedSeparate: 250000,
+    headOfHousehold: 500000,
+  },
+  saltCapPhaseoutRate: 0.30,
+  saltCapFloor: {
+    single: 10000,
+    marriedJoint: 10000,
+    marriedSeparate: 5000,
+    headOfHousehold: 10000,
+  },
+  // Legacy field kept for backward-compat with code that reads federal.saltCap directly.
+  saltCap: 40400,
+  // OBBBA itemized deduction limitation ("2/37 rule"): for taxpayers in the
+  // top 37% bracket, itemized deductions are reduced by 2/37 (~5.4%) of the
+  // lesser of (a) total itemized deductions or (b) taxable income excess
+  // over the 37% bracket threshold. Effectively caps the value of itemized
+  // deductions at 35% rather than 37%.
+  itemizedLimitationRate: 2 / 37,
+  // The 37% bracket threshold is derived from federal.brackets[filingStatus]
+  // at runtime (find the bracket where rate === 0.37 and use its `min`).
   tipExemption: 25000, // OBBBA §70201: "No Tax on Tips" — up to $25K in qualified tips exempt from income tax (not SE tax)
   // Net Investment Income Tax (§1411): 3.8% surtax on lesser of
   //   (a) net investment income, or

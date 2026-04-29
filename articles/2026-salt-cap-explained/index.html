@@ -106,6 +106,7 @@
   <div class="article-body">
     <div class="callout" style="margin-top: 0;">
       <p><strong>TL;DR:</strong> The One Big Beautiful Bill Act raised the SALT deduction cap from $10,000 to <strong>$40,400 for 2026</strong> &mdash; a four-fold increase, and the biggest change to SALT since the cap was introduced in 2018. But it only helps you if your itemized deductions exceed the standard deduction ($16,100 single / $32,200 joint). For most freelancers earning under $150K, that bar is still too high. For high-earning freelancers in CA, NY, NJ, IL, or other high-tax states, the new cap can be worth $4K&ndash;$8K in real federal tax savings &mdash; but only if your calculator catches it. Most still don't.</p>
+      <p><strong>Two important wrinkles most coverage misses:</strong> (1) the cap <em>phases out</em> for high earners &mdash; if your MAGI exceeds $500K (single / MFJ / HoH) or $250K (MFS), the increased cap shrinks by 30&cent; for every dollar of MAGI excess and floors at the pre-OBBBA $10K. (2) Married couples filing separately get exactly half the cap: $20,200, not $40,400. Both matter.</p>
     </div>
 
     <p>If you've been hearing about the new $40,400 SALT cap and wondering whether it actually changes anything for you, the honest answer is: probably not, unless you fit a specific profile. The cap matters if (a) you live in a state with meaningful income tax, (b) your income is high enough that your state taxes plus property taxes plus other itemizable deductions exceed your standard deduction, and (c) your tax software actually applies the new cap correctly. Each of those is a real filter.</p>
@@ -147,6 +148,31 @@
 
     <div class="warning">
       <p><strong>The MFS trap.</strong> Married couples filing separately get a $20,200 cap each &mdash; <em>half</em> of the joint cap. For most couples, MFJ remains the better choice, but if you're one of the rare situations where MFS helps (high medical expenses, income-driven student loan plans, etc.), the SALT cap halving is a significant additional cost worth modeling.</p>
+    </div>
+
+    <h3>The MAGI Phaseout (the Other Reason the Cap Doesn't Help You)</h3>
+
+    <p>The headline "$40,400 cap" assumes you actually get the full $40,400. For high earners, you don't. OBBBA includes a phaseout: the increased cap reduces by <strong>30 cents for every dollar your MAGI exceeds $500,000</strong> (single, MFJ, or HoH) or $250,000 (MFS), and floors at the pre-OBBBA $10,000 cap ($5,000 MFS).</p>
+
+    <p>The phaseout zone is short. The increased portion of the cap is $30,400 ($40,400 minus the $10,000 floor). At a 30% reduction rate, the phaseout completes after $30,400 / 0.30 &asymp; $101,333 of MAGI excess over the threshold. After that, your effective cap is back to $10,000 &mdash; the same as it was under TCJA.</p>
+
+    <div class="example-box">
+      <div class="example-title">Effective SALT Cap by MAGI (Single / MFJ / HoH)</div>
+      <table>
+        <thead><tr><th>MAGI</th><th>Effective Cap</th><th>Notes</th></tr></thead>
+        <tr><td>$500,000 or less</td><td>$40,400</td><td>No phaseout</td></tr>
+        <tr><td>$525,000</td><td>$32,900</td><td>$7,500 reduction</td></tr>
+        <tr><td>$550,000</td><td>$25,400</td><td>$15,000 reduction</td></tr>
+        <tr><td>$575,000</td><td>$17,900</td><td>$22,500 reduction</td></tr>
+        <tr><td>$600,000</td><td>$10,400</td><td>$30,000 reduction (near floor)</td></tr>
+        <tr class="highlight"><td>$601,333+</td><td>$10,000</td><td>Floor &mdash; back to TCJA cap</td></tr>
+      </table>
+    </div>
+
+    <p>For MFS, halve everything: threshold is $250K, floor is $5K, phaseout completes around MAGI = $250,000 + $50,667 = $300,667.</p>
+
+    <div class="warning">
+      <p><strong>Who actually loses to the phaseout.</strong> This hits exactly the audience the headlines pitched the new cap to: high earners in high-tax states. A $700K single freelancer in California is paying $50K+ in state income tax and could theoretically benefit from the higher cap &mdash; but their MAGI is well past $601K, so their effective cap is $10K, not $40,400. The OBBBA gave them nothing relative to TCJA.</p>
     </div>
 
     <h3>Why Most People Still Won't Itemize</h3>
@@ -252,6 +278,45 @@
     </div>
 
     <p>New Jersey has the highest average property tax in the country (~$9,800 statewide; suburbs of NYC easily exceed $14K). For an MFJ couple at $300K, even with that property tax burden, SALT alone is just under the joint standard deduction. A modest amount of mortgage interest or charitable giving flips the calculation. This is the "almost itemizes" zone where small additions matter.</p>
+
+    <h4>Example 6: $700K Single in California (the Phaseout Bite)</h4>
+
+    <div class="example-box">
+      <div class="example-title">High Earner, Cap Fully Phased Out</div>
+      <table>
+        <tr><td>CA state income tax (approx.)</td><td>$67,500</td></tr>
+        <tr><td>CA SDI (uncapped, applies to SE income)</td><td>$9,100</td></tr>
+        <tr><td>Property tax (assume $20,000)</td><td>$20,000</td></tr>
+        <tr><td>Total SALT (uncapped)</td><td>$96,600</td></tr>
+        <tr><td>MAGI (approximately)</td><td>~$678,000</td></tr>
+        <tr><td>Phaseout reduction (capped at $30,400 max)</td><td>$30,400</td></tr>
+        <tr><td>Effective SALT cap</td><td><strong>$10,000</strong></td></tr>
+        <tr><td>SALT deduction (after cap)</td><td>$10,000</td></tr>
+        <tr class="highlight"><td>Result</td><td>Itemize, but only $10K of SALT counts</td></tr>
+        <tr><td>Federal tax savings vs. standard</td><td>~$0 from SALT alone (need other itemized to flip)</td></tr>
+      </table>
+    </div>
+
+    <p>This is the case the OBBBA pitched and then quietly took back. A $700K single freelancer in California is paying nearly $100,000 in state-and-local taxes &mdash; exactly the kind of filer the cap increase was supposedly for. But because their MAGI is well past $601,333, the phaseout has fully kicked in and their effective cap is back to the TCJA-era $10,000. From a SALT-deduction perspective, the OBBBA made <em>no difference</em> for this filer compared to the prior law. Same $10K cap, same disallowed deduction on the rest.</p>
+
+    <p>The 1% indexing on the phaseout thresholds is in the bill, but at 1% per year through 2029, the thresholds barely keep up with the cap itself. The shape of the phaseout is essentially fixed.</p>
+
+    <h3>The Other High-Earner Limitation: The 2/37 Rule</h3>
+
+    <p>OBBBA also introduced a new limitation on the <em>value</em> of itemized deductions for taxpayers in the top 37% bracket. Mechanically: itemized deductions are reduced by 2/37 (~5.4%) of the lesser of (a) total itemized deductions or (b) taxable income excess over the 37% bracket threshold. The effect is to cap the value of itemized deductions at 35&cent; per dollar instead of 37&cent;.</p>
+
+    <p>The 37% bracket starts at:</p>
+    <ul>
+      <li>Single / Head of Household: $640,600</li>
+      <li>Married Filing Jointly: $768,700</li>
+      <li>Married Filing Separately: $384,350</li>
+    </ul>
+
+    <p>For a $1M single filer with $50,000 of itemized deductions (mostly mortgage interest, since SALT is mostly phased out at this income), the reduction is (2/37) &times; $50,000 &asymp; $2,700. At a 37% marginal rate, that's roughly $1,000 of additional federal tax. Real money, but smaller in dollar terms than the SALT phaseout.</p>
+
+    <div class="warning">
+      <p><strong>Stacking the limitations.</strong> A high earner in a high-tax state can hit all three OBBBA limitations simultaneously: the SALT $40,400 cap, the SALT MAGI phaseout, and the 2/37 itemized deduction haircut. The <a href="../../calculators/self-employment-tax/">SE tax calculator</a> models all three. Most online tax tools don't model any of them yet.</p>
+    </div>
 
     <h3>Where the Cap Actually Bites: State-by-State</h3>
 

@@ -929,11 +929,19 @@ function runSALTTests() {
 
   // CA $1M single: state tax > $40,400 → SALT must hit cap exactly.
   {
+    // CA $1M single: MAGI is well above the $500K phaseout threshold, so the
+    // increased cap is fully phased out and only the $10,000 floor remains.
+    // Phaseout completes at MAGI ≈ $500K + ($30,400 / 0.30) ≈ $601,333.
     const result = calculateAll({ netProfit: 1000000, filingStatus: 'single' }, federal, STATES.california);
     assert(
-      approxEqual(result.federalIncomeTax.saltDeduction, 40400, 0.01),
-      `CA $1M single: SALT should be capped at $40,400`,
+      approxEqual(result.federalIncomeTax.saltDeduction, 10000, 0.01),
+      `CA $1M single: SALT capped at $10K floor (cap fully phased out above ~$601K MAGI)`,
       { saltDeduction: result.federalIncomeTax.saltDeduction, saltUncapped: result.federalIncomeTax.saltUncapped }
+    );
+    assert(
+      result.federalIncomeTax.saltCapPhaseoutActive,
+      `CA $1M single: phaseout flag should be active`,
+      { active: result.federalIncomeTax.saltCapPhaseoutActive }
     );
     assert(
       result.federalIncomeTax.saltUncapped > 40400,
@@ -1049,6 +1057,111 @@ function runSALTTests() {
       `Negative property tax should not push SALT below state-tax-only`,
       { saltDeduction: result.federalIncomeTax.saltDeduction }
     );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 9a. SALT cap MFS + MAGI phaseout tests (OBBBA §70120)
+// ---------------------------------------------------------------------------
+function runSALTPhaseoutTests() {
+  console.log('=== SALT Cap MFS + MAGI Phaseout Tests ===\n');
+
+  // Married filing separately gets $20,200 cap (half of single/MFJ).
+  {
+    const r = calculateAll(
+      { netProfit: 200000, filingStatus: 'marriedSeparate', propertyTax: 30000 },
+      federal, STATES.california,
+    );
+    assert(approxEqual(r.federalIncomeTax.saltCapBase, 20200), `MFS: saltCapBase = $20,200`, { saltCapBase: r.federalIncomeTax.saltCapBase });
+    assert(approxEqual(r.federalIncomeTax.saltDeduction, 20200), `MFS $200K + $30K property: SALT capped at $20,200`, { saltDeduction: r.federalIncomeTax.saltDeduction });
+  }
+
+  // Single/MFJ/HoH all get $40,400 base.
+  for (const status of ['single', 'marriedJoint', 'headOfHousehold']) {
+    const r = calculateAll({ netProfit: 250000, filingStatus: status }, federal, STATES.texas);
+    assert(approxEqual(r.federalIncomeTax.saltCapBase, 40400), `${status}: saltCapBase = $40,400`, { saltCapBase: r.federalIncomeTax.saltCapBase });
+  }
+
+  // Below phaseout threshold: full cap, no phaseout.
+  {
+    const r = calculateAll({ netProfit: 400000, filingStatus: 'single', propertyTax: 15000 }, federal, STATES.california);
+    assert(!r.federalIncomeTax.saltCapPhaseoutActive, `$400K single: phaseout NOT active (under $500K MAGI)`, { active: r.federalIncomeTax.saltCapPhaseoutActive });
+    assert(approxEqual(r.federalIncomeTax.saltCap, 40400), `$400K single: saltCap stays at $40,400`, { saltCap: r.federalIncomeTax.saltCap });
+  }
+
+  // Just above threshold: small phaseout.
+  // CA $520K single: MAGI ≈ $501,866. Excess ≈ $1,866. Phaseout = 0.30 × $1,866 ≈ $560.
+  {
+    const r = calculateAll({ netProfit: 520000, filingStatus: 'single' }, federal, STATES.california);
+    assert(r.federalIncomeTax.saltCapPhaseoutActive, `$520K single: phaseout active`, { active: r.federalIncomeTax.saltCapPhaseoutActive });
+    assert(r.federalIncomeTax.saltCap > 39000 && r.federalIncomeTax.saltCap < 40400, `$520K single: saltCap between $39K and $40,400`, { saltCap: r.federalIncomeTax.saltCap });
+  }
+
+  // Deep phaseout: at MAGI > $601K, phaseout reaches the $10K floor.
+  // CA $700K single: MAGI ≈ $678K. Excess = $178K. Phaseout = 0.30 × $178K = $53,400, capped at $30,400 reduction → floor.
+  {
+    const r = calculateAll({ netProfit: 700000, filingStatus: 'single' }, federal, STATES.california);
+    assert(approxEqual(r.federalIncomeTax.saltCap, 10000), `$700K single CA: saltCap fully phased out to $10K floor`, { saltCap: r.federalIncomeTax.saltCap });
+  }
+
+  // MFS phaseout threshold is $250K (half of single).
+  {
+    const r = calculateAll({ netProfit: 350000, filingStatus: 'marriedSeparate' }, federal, STATES.california);
+    assert(r.federalIncomeTax.saltCapPhaseoutActive, `MFS $350K: phaseout active (above $250K threshold)`, { active: r.federalIncomeTax.saltCapPhaseoutActive });
+  }
+
+  // No-state-tax + low income: phaseout doesn't matter, SALT is $0 anyway.
+  {
+    const r = calculateAll({ netProfit: 100000, filingStatus: 'single' }, federal, STATES.texas);
+    assert(approxEqual(r.federalIncomeTax.saltDeduction, 0), `TX $100K single: SALT $0 regardless of cap`, { saltDeduction: r.federalIncomeTax.saltDeduction });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 9b. Itemized deduction limitation ("2/37 rule") tests (OBBBA)
+// ---------------------------------------------------------------------------
+function runItemizedLimitationTests() {
+  console.log('=== Itemized Deduction Limitation (2/37 rule) Tests ===\n');
+
+  // Below 37% bracket: no limitation regardless of itemized amount.
+  {
+    const r = calculateAll(
+      { netProfit: 300000, filingStatus: 'single', propertyTax: 20000 },
+      federal, STATES.california,
+    );
+    assert(!r.federalIncomeTax.itemizedLimitationActive, `$300K single (below 37% bracket): 2/37 rule NOT active`, { active: r.federalIncomeTax.itemizedLimitationActive });
+    assert(approxEqual(r.federalIncomeTax.itemizedLimitationReduction, 0), `$300K single: no reduction`, { reduction: r.federalIncomeTax.itemizedLimitationReduction });
+  }
+
+  // High income + significant itemized: 2/37 rule kicks in.
+  // CA $1M single + $50K otherItemized:
+  //   SALT phased out to $10K + $50K = $60K itemized
+  //   Taxable before limit ≈ $922K (well above $640.6K threshold)
+  //   Excess = ~$281K. min($60K, $281K) = $60K. Reduction = (2/37) × $60K ≈ $3,243.
+  {
+    const r = calculateAll(
+      { netProfit: 1000000, filingStatus: 'single', otherItemized: 50000 },
+      federal, STATES.california,
+    );
+    assert(r.federalIncomeTax.itemizedLimitationActive, `$1M single + $50K itemized: 2/37 rule active`, { active: r.federalIncomeTax.itemizedLimitationActive });
+    assert(approxEqual(r.federalIncomeTax.itemizedLimitationReduction, 3243.24, 0.5), `$1M single: reduction ~$3,243 (2/37 of $60K itemized)`, { reduction: r.federalIncomeTax.itemizedLimitationReduction });
+  }
+
+  // Standard-deduction filer: 2/37 rule doesn't apply (only affects itemizers).
+  {
+    const r = calculateAll({ netProfit: 1000000, filingStatus: 'single' }, federal, STATES.texas);
+    assert(!r.federalIncomeTax.itemizedLimitationActive, `$1M single TX (standard deduction): 2/37 rule NOT active`, { active: r.federalIncomeTax.itemizedLimitationActive });
+  }
+
+  // Reduction can't push deductionUsed below standard deduction.
+  // (Verified by floor in the engine: itemizedLimitationReduction = min(reduction, deductionUsed - standardDeduction))
+  {
+    const r = calculateAll(
+      { netProfit: 800000, filingStatus: 'single', otherItemized: 1000 },
+      federal, STATES.california,
+    );
+    // itemized = $10K SALT (phased out) + $1K = $11K. Standard is $16,100, so usedItemized = false.
+    assert(!r.federalIncomeTax.itemizedLimitationActive, `Itemized below standard: 2/37 rule does not activate`, { itemized: r.federalIncomeTax.itemizedDeduction, standard: r.federalIncomeTax.standardDeductionAmount });
   }
 }
 
@@ -1324,6 +1437,8 @@ runStateTests();
 runKnownGoodTests();
 runAllStatesSmoke();
 runSALTTests();
+runSALTPhaseoutTests();
+runItemizedLimitationTests();
 runNIITTests();
 runAddlMedicareTests();
 runTipExemptionTests();

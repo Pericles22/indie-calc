@@ -310,31 +310,43 @@ function calculateAll(params, federal, state) {
   const totalIncome = Math.max(0, netProfit) + Math.max(0, otherIncome);
   const standardDeduction = federal.standardDeduction[filingStatus] || federal.standardDeduction.single;
 
-  // SALT deduction (OBBBA §70120: $40,400 cap for 2026, up from $10,000).
-  // Per IRC §164(b)(5), state income tax + state/local property tax + (sales tax in lieu of income tax)
-  // are aggregated and capped. Mandatory employee contributions to state disability/PFL programs
-  // (e.g., CA SDI) are treated as deductible state income tax. Our state tax engine already includes SDI.
-  const saltCap = federal.saltCap || 10000;
+  // OBBBA §70201 "No Tax on Tips": up to $25,000 of qualified tip income is
+  // exempt from federal income tax (NOT from SE tax / FICA — Social Security and
+  // Medicare still apply). Treated as an above-the-line deduction.
+  const tipExemptionCap = federal.tipExemption || 0;
+  const tipExemption = Math.min(Math.max(0, qualifiedTips), tipExemptionCap);
+
+  // Above-the-line deductions reduce AGI. Computed BEFORE SALT so the SALT
+  // MAGI phaseout can use AGI rather than gross income.
+  const aboveLineDeductions = healthInsurance + retirementContrib + otherAboveLine + seTax.deductibleHalf + tipExemption;
+  const agiForPhaseouts = Math.max(0, totalIncome - aboveLineDeductions);
+
+  // SALT deduction (OBBBA §70120 + §70120 phaseout).
+  // 1. Base cap depends on filing status ($40,400 for single/MFJ/HoH; $20,200 for MFS).
+  // 2. MAGI phaseout: cap reduces by 30% of MAGI excess over $500K ($250K MFS),
+  //    floored at the pre-OBBBA $10,000 ($5,000 MFS) cap.
+  // 3. Per IRC §164(b)(5), state income tax + property tax + (sales tax in lieu of income tax)
+  //    are aggregated and capped. CA SDI counts as state income tax (already in stateTax.total).
+  const saltCapBase = (federal.saltCapBase && federal.saltCapBase[filingStatus])
+    || (federal.saltCapBase && federal.saltCapBase.single)
+    || (federal.saltCap || 10000);
+  const phaseoutThreshold = (federal.saltCapPhaseoutThreshold && federal.saltCapPhaseoutThreshold[filingStatus]) || Infinity;
+  const phaseoutRate = federal.saltCapPhaseoutRate || 0;
+  const saltFloor = (federal.saltCapFloor && federal.saltCapFloor[filingStatus])
+    || (filingStatus === 'marriedSeparate' ? 5000 : 10000);
+  const saltMagiExcess = Math.max(0, agiForPhaseouts - phaseoutThreshold);
+  const saltPhaseoutAmount = Math.min(saltMagiExcess * phaseoutRate, saltCapBase - saltFloor);
+  const saltCap = Math.max(saltFloor, saltCapBase - saltPhaseoutAmount);
+
   const saltUncapped = stateTax.total + Math.max(0, propertyTax);
   const saltDeduction = Math.min(saltUncapped, saltCap);
   const itemizedTotal = saltDeduction + Math.max(0, otherItemized);
   const usedItemized = itemizedTotal > standardDeduction;
-  const deductionUsed = Math.max(itemizedTotal, standardDeduction);
-
-  // OBBBA §70201 "No Tax on Tips": up to $25,000 of qualified tip income is
-  // exempt from federal income tax (NOT from SE tax / FICA — Social Security and
-  // Medicare still apply). Treated here as an above-the-line deduction so it
-  // reduces AGI and therefore federal income tax base, but leaves SE tax intact.
-  const tipExemptionCap = federal.tipExemption || 0;
-  const tipExemption = Math.min(Math.max(0, qualifiedTips), tipExemptionCap);
-
-  // Above-the-line deductions reduce AGI.
-  // SE health insurance + SE retirement come from the user's accordion.
-  const aboveLineDeductions = healthInsurance + retirementContrib + otherAboveLine + seTax.deductibleHalf + tipExemption;
+  let deductionUsed = Math.max(itemizedTotal, standardDeduction);
 
   // Senior deduction (OBBBA §70103): $6,000 per qualifying senior, MFJ
-  // doubles to $12,000 if both spouses qualify. Phases out at 6% above
-  // $75K single / $150K MFJ AGI.
+  // doubles to $12,000 if both spouses qualify. Phases out at 6% of MAGI
+  // above $75K single / $150K MFJ. Use AGI as the phaseout base.
   let seniorDeduction = 0;
   if (isSenior && federal.seniorDeduction) {
     const seniorThreshold = (filingStatus === 'marriedJoint') ? 150000 : 75000;
@@ -347,10 +359,33 @@ function calculateAll(params, federal, state) {
     }
   }
 
+  // OBBBA itemized deduction limitation ("2/37 rule"): for taxpayers in the
+  // top 37% bracket, itemized deductions are reduced by 2/37 (~5.4%) of the
+  // lesser of (a) total itemized deductions or (b) taxable income excess
+  // over the 37% bracket threshold. Effectively caps the value of itemized
+  // deductions at 35¢ per dollar rather than 37¢.
+  let itemizedLimitationReduction = 0;
+  let top37Threshold = null;
+  if (usedItemized && federal.itemizedLimitationRate) {
+    const bracketKey = federal.brackets[filingStatus] ? filingStatus : 'single';
+    const top37Bracket = federal.brackets[bracketKey].find(b => Math.abs(b.rate - 0.37) < 1e-6);
+    if (top37Bracket) {
+      top37Threshold = top37Bracket.min;
+      // Estimate taxable income before the limit (after itemized but before QBI).
+      const taxableBeforeLimit = Math.max(0, totalIncome - aboveLineDeductions - seniorDeduction - deductionUsed);
+      const excessOverThreshold = Math.max(0, taxableBeforeLimit - top37Threshold);
+      const reduction = federal.itemizedLimitationRate * Math.min(deductionUsed, excessOverThreshold);
+      // Reduction can't push below the standard deduction (which is always available).
+      itemizedLimitationReduction = Math.min(reduction, deductionUsed - standardDeduction);
+      itemizedLimitationReduction = Math.max(0, itemizedLimitationReduction);
+      deductionUsed = deductionUsed - itemizedLimitationReduction;
+    }
+  }
+
   // QBI deduction. Per §199A, the QBI base is reduced by the deductible
   // part of SE tax, SE health insurance, and SE retirement contributions.
-  // The QBI deduction itself is computed AFTER standard deduction (it's a
-  // "below-the-line" deduction taken on top of the standard deduction).
+  // The QBI deduction itself is computed AFTER standard/itemized deduction
+  // (it's a "below-the-line" deduction).
   const qbiBase = Math.max(0,
     Math.max(0, netProfit) - seTax.deductibleHalf - healthInsurance - retirementContrib
   );
@@ -424,6 +459,12 @@ function calculateAll(params, federal, state) {
       saltDeduction,
       saltUncapped,
       saltCap,
+      saltCapBase,
+      saltCapPhaseoutAmount: saltPhaseoutAmount,
+      saltCapPhaseoutActive: saltPhaseoutAmount > 0,
+      saltCapFloor: saltFloor,
+      itemizedLimitationReduction,
+      itemizedLimitationActive: itemizedLimitationReduction > 0,
       usedItemized,
       tipExemption,
       halfSEDeduction: seTax.deductibleHalf,
