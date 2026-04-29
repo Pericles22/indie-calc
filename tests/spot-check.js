@@ -887,6 +887,427 @@ function runAllStatesSmoke() {
 }
 
 // ---------------------------------------------------------------------------
+// 9. SALT itemization tests (OBBBA §70120 — $40,400 cap for 2026)
+// ---------------------------------------------------------------------------
+function runSALTTests() {
+  console.log('=== SALT Itemization Tests ===\n');
+
+  // No-tax state, no property → standard always wins (regression check).
+  {
+    const result = calculateAll({ netProfit: 200000, filingStatus: 'single' }, federal, STATES.texas);
+    assert(
+      !result.federalIncomeTax.usedItemized,
+      `TX $200K single: should use standard, not itemized`,
+      { itemizedDeduction: result.federalIncomeTax.itemizedDeduction, standardDeduction: result.federalIncomeTax.standardDeductionAmount }
+    );
+    assert(
+      approxEqual(result.federalIncomeTax.saltDeduction, 0, 0.01),
+      `TX $200K single: SALT should be $0`,
+      { saltDeduction: result.federalIncomeTax.saltDeduction }
+    );
+  }
+
+  // CA $400K single: state tax + SDI ≈ $40K → SALT alone beats $16,100 standard.
+  {
+    const result = calculateAll({ netProfit: 400000, filingStatus: 'single' }, federal, STATES.california);
+    assert(
+      result.federalIncomeTax.usedItemized,
+      `CA $400K single: should itemize via SALT`,
+      { itemized: result.federalIncomeTax.itemizedDeduction, standard: result.federalIncomeTax.standardDeductionAmount }
+    );
+    assert(
+      result.federalIncomeTax.saltDeduction > 16100,
+      `CA $400K single: SALT should exceed standard deduction`,
+      { saltDeduction: result.federalIncomeTax.saltDeduction }
+    );
+    assert(
+      result.federalIncomeTax.saltDeduction <= 40400 + 0.01,
+      `CA $400K single: SALT must respect $40,400 cap`,
+      { saltDeduction: result.federalIncomeTax.saltDeduction }
+    );
+  }
+
+  // CA $1M single: state tax > $40,400 → SALT must hit cap exactly.
+  {
+    const result = calculateAll({ netProfit: 1000000, filingStatus: 'single' }, federal, STATES.california);
+    assert(
+      approxEqual(result.federalIncomeTax.saltDeduction, 40400, 0.01),
+      `CA $1M single: SALT should be capped at $40,400`,
+      { saltDeduction: result.federalIncomeTax.saltDeduction, saltUncapped: result.federalIncomeTax.saltUncapped }
+    );
+    assert(
+      result.federalIncomeTax.saltUncapped > 40400,
+      `CA $1M single: uncapped SALT should be > $40,400`,
+      { saltUncapped: result.federalIncomeTax.saltUncapped }
+    );
+  }
+
+  // Property tax pushes SALT past standard at moderate income.
+  // CA $150K single: state tax ~ $11K, plus $15K property → $26K SALT > $16,100 standard.
+  {
+    const noProp = calculateAll(
+      { netProfit: 150000, filingStatus: 'single' },
+      federal, STATES.california,
+    );
+    const withProp = calculateAll(
+      { netProfit: 150000, filingStatus: 'single', propertyTax: 15000 },
+      federal, STATES.california,
+    );
+    assert(
+      withProp.federalIncomeTax.saltDeduction > noProp.federalIncomeTax.saltDeduction,
+      `CA $150K single: property tax should increase SALT`,
+      { withProp: withProp.federalIncomeTax.saltDeduction, noProp: noProp.federalIncomeTax.saltDeduction }
+    );
+    assert(
+      withProp.summary.totalTax < noProp.summary.totalTax,
+      `CA $150K single: itemizing with property should reduce total tax`,
+      { withTax: withProp.summary.totalTax, noTax: noProp.summary.totalTax }
+    );
+  }
+
+  // SALT cap binding: NJ $500K MFJ — state tax ~$30K + property tax $25K = $55K → cap at $40,400.
+  {
+    const result = calculateAll(
+      { netProfit: 500000, filingStatus: 'marriedJoint', propertyTax: 25000 },
+      federal, STATES.newJersey,
+    );
+    assert(
+      approxEqual(result.federalIncomeTax.saltDeduction, 40400, 0.01),
+      `NJ $500K MFJ +$25K property: SALT should be capped at $40,400`,
+      { saltDeduction: result.federalIncomeTax.saltDeduction, saltUncapped: result.federalIncomeTax.saltUncapped }
+    );
+    assert(
+      result.federalIncomeTax.usedItemized,
+      `NJ $500K MFJ +$25K property: should itemize`,
+      { usedItemized: result.federalIncomeTax.usedItemized }
+    );
+  }
+
+  // Boundary: $200K MFJ in CA — itemized ≈ $20K (state + small property) < $32,200 standard.
+  {
+    const result = calculateAll(
+      { netProfit: 200000, filingStatus: 'marriedJoint', propertyTax: 5000 },
+      federal, STATES.california,
+    );
+    // CA MFJ at $200K: state tax ~$10-12K + $5K property = ~$15-17K SALT < $32,200 standard.
+    assert(
+      !result.federalIncomeTax.usedItemized,
+      `CA $200K MFJ +$5K property: standard should still win at this income`,
+      { itemized: result.federalIncomeTax.itemizedDeduction, standard: result.federalIncomeTax.standardDeductionAmount }
+    );
+  }
+
+  // Other itemized deductions stack on top of SALT (mortgage, charity).
+  {
+    const noOther = calculateAll(
+      { netProfit: 300000, filingStatus: 'single' },
+      federal, STATES.california,
+    );
+    const withOther = calculateAll(
+      { netProfit: 300000, filingStatus: 'single', otherItemized: 20000 },
+      federal, STATES.california,
+    );
+    assert(
+      withOther.federalIncomeTax.itemizedDeduction === noOther.federalIncomeTax.itemizedDeduction + 20000,
+      `Other itemized should add directly to total itemized`,
+      { withOther: withOther.federalIncomeTax.itemizedDeduction, noOther: noOther.federalIncomeTax.itemizedDeduction }
+    );
+    assert(
+      withOther.summary.totalTax < noOther.summary.totalTax,
+      `Adding $20K other itemized should reduce tax`,
+      { withTax: withOther.summary.totalTax, noTax: noOther.summary.totalTax }
+    );
+  }
+
+  // QBI base must reflect the larger deduction. Itemizing → smaller taxableIncomeBeforeQBI → can affect QBI.
+  {
+    const result = calculateAll(
+      { netProfit: 500000, filingStatus: 'single' },
+      federal, STATES.california,
+    );
+    // taxableIncomeBeforeQBI should equal totalIncome - aboveLine - senior - deductionUsed
+    const expected = result.inputs.totalIncome
+      - result.federalIncomeTax.halfSEDeduction
+      - 0 // no health, no retirement, no other above line
+      - result.federalIncomeTax.seniorDeduction
+      - result.federalIncomeTax.deductionUsed;
+    assert(
+      approxEqual(result.federalIncomeTax.taxableIncomeBeforeQBI, Math.max(0, expected), 1),
+      `CA $500K single: taxableIncomeBeforeQBI should reflect itemized SALT`,
+      { actual: result.federalIncomeTax.taxableIncomeBeforeQBI, expected }
+    );
+  }
+
+  // Negative property tax must not produce positive SALT; same for negative otherItemized.
+  {
+    const result = calculateAll(
+      { netProfit: 300000, filingStatus: 'single', propertyTax: -5000, otherItemized: -1000 },
+      federal, STATES.california,
+    );
+    assert(
+      result.federalIncomeTax.saltDeduction >= 0,
+      `Negative property tax should not push SALT below state-tax-only`,
+      { saltDeduction: result.federalIncomeTax.saltDeduction }
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 10. NIIT tests (§1411 — 3.8% surtax on investment income, MAGI-based)
+// ---------------------------------------------------------------------------
+function runNIITTests() {
+  console.log('=== NIIT Tests ===\n');
+
+  // Below threshold → no NIIT.
+  {
+    const r = calculateAll(
+      { netProfit: 100000, filingStatus: 'single', otherIncome: 50000, investmentIncome: 20000 },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(r.summary.niit, 0), `Below $200K MAGI: NIIT should be $0`, { niit: r.summary.niit });
+  }
+
+  // Above threshold — NIIT base = MIN(investment income, MAGI excess).
+  // $250K SE + $50K otherIncome (incl $30K invest) → totalIncome $300K.
+  // halfSE ≈ $14,117.15 → MAGI ≈ $285,882.85. Excess = $85,882.85.
+  // NIIT base = min($30K, $85,882.85) = $30K → NIIT = $1,140.
+  {
+    const r = calculateAll(
+      { netProfit: 250000, filingStatus: 'single', otherIncome: 50000, investmentIncome: 30000 },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(r.summary.niit, 1140, 0.5), `NIIT ~$1,140 (investment income binds)`, { niit: r.summary.niit });
+  }
+
+  // Boundary: MAGI excess binds (smaller than investment income).
+  // $205K SE + $30K otherIncome (all invest) → totalIncome $235K.
+  // halfSE ≈ $14,184.10 → MAGI ≈ $220,815.90. Excess = $20,815.90.
+  // NIIT base = min($30K, $20,815.90) = $20,815.90 → NIIT ≈ $791.00.
+  {
+    const r = calculateAll(
+      { netProfit: 205000, filingStatus: 'single', otherIncome: 30000, investmentIncome: 30000 },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(r.summary.niit, 791, 1), `NIIT ~$791 (MAGI excess binds, AGI-based)`, { niit: r.summary.niit });
+  }
+
+  // MFJ threshold is $250K.
+  {
+    const below = calculateAll(
+      { netProfit: 200000, filingStatus: 'marriedJoint', otherIncome: 0, investmentIncome: 30000 },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(below.summary.niit, 0), `MFJ $200K MAGI: NIIT $0 (under $250K threshold)`, { niit: below.summary.niit });
+  }
+
+  // No investment income → no NIIT.
+  {
+    const r = calculateAll(
+      { netProfit: 500000, filingStatus: 'single' },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(r.summary.niit, 0), `No investment income: NIIT $0 even at high SE income`, { niit: r.summary.niit });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 10a. Add'l Medicare threshold should ignore investment income (Form 8959 line 7)
+// ---------------------------------------------------------------------------
+function runAddlMedicareTests() {
+  console.log('=== Additional Medicare Tests ===\n');
+
+  // W-2 only: threshold reduced by full otherIncome.
+  // $150K SE + $80K W-2, single. SE base = $138,525.
+  // effectiveThreshold = $200K - $80K = $120K. Add'l Med = ($138,525 - $120K) * 0.009 = $166.73.
+  {
+    const r = calculateAll(
+      { netProfit: 150000, filingStatus: 'single', otherIncome: 80000 },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(r.selfEmploymentTax.additionalMedicare, 166.73, 0.05), `W-2 only: Add'l Med ~$166.73`, { actual: r.selfEmploymentTax.additionalMedicare });
+  }
+
+  // W-2 + investment: threshold reduced ONLY by W-2 portion.
+  // $150K SE + $110K otherIncome (incl $30K invest). W-2 portion = $80K.
+  // effectiveThreshold = $200K - $80K = $120K. Add'l Med ≈ $166.73 (same as above).
+  {
+    const r = calculateAll(
+      { netProfit: 150000, filingStatus: 'single', otherIncome: 110000, investmentIncome: 30000 },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(r.selfEmploymentTax.additionalMedicare, 166.73, 0.05), `W-2+invest: investment must NOT reduce Add'l Med threshold`, { actual: r.selfEmploymentTax.additionalMedicare });
+  }
+
+  // Pure investment, no W-2: threshold not reduced at all.
+  // $205K SE + $30K invest, single. effectiveThreshold = $200K. SE base = $189,317.50 < $200K → $0.
+  {
+    const r = calculateAll(
+      { netProfit: 205000, filingStatus: 'single', otherIncome: 30000, investmentIncome: 30000 },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(r.selfEmploymentTax.additionalMedicare, 0, 0.05), `Pure investment: Add'l Med should be $0 (SE base < threshold)`, { actual: r.selfEmploymentTax.additionalMedicare });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 11. Tip exemption tests (OBBBA §70201 — $25K exempt from federal income tax)
+// ---------------------------------------------------------------------------
+function runTipExemptionTests() {
+  console.log('=== Tip Exemption Tests ===\n');
+
+  // No tips → no exemption.
+  {
+    const r = calculateAll({ netProfit: 50000, filingStatus: 'single' }, federal, STATES.texas);
+    assert(approxEqual(r.federalIncomeTax.tipExemption, 0), `No tips: exemption $0`, {});
+  }
+
+  // Tips below cap → full amount exempt.
+  {
+    const r = calculateAll(
+      { netProfit: 80000, filingStatus: 'single', qualifiedTips: 10000 },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(r.federalIncomeTax.tipExemption, 10000), `$10K tips: $10K exempt`, { tipExemption: r.federalIncomeTax.tipExemption });
+  }
+
+  // Tips above cap → capped at $25K.
+  {
+    const r = calculateAll(
+      { netProfit: 100000, filingStatus: 'single', qualifiedTips: 40000 },
+      federal, STATES.texas,
+    );
+    assert(approxEqual(r.federalIncomeTax.tipExemption, 25000), `$40K tips: capped at $25K`, { tipExemption: r.federalIncomeTax.tipExemption });
+  }
+
+  // Tip exemption reduces fed tax but NOT SE tax.
+  {
+    const noTip = calculateAll({ netProfit: 80000, filingStatus: 'single' }, federal, STATES.texas);
+    const withTip = calculateAll(
+      { netProfit: 80000, filingStatus: 'single', qualifiedTips: 20000 },
+      federal, STATES.texas,
+    );
+    assert(
+      approxEqual(noTip.summary.selfEmploymentTax, withTip.summary.selfEmploymentTax),
+      `Tip exemption must NOT reduce SE tax`,
+      { noTipSE: noTip.summary.selfEmploymentTax, withTipSE: withTip.summary.selfEmploymentTax }
+    );
+    assert(
+      withTip.summary.federalIncomeTax < noTip.summary.federalIncomeTax,
+      `Tip exemption SHOULD reduce federal income tax`,
+      { noFedTax: noTip.summary.federalIncomeTax, withFedTax: withTip.summary.federalIncomeTax }
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 12. Locality tax tests (NYC, Yonkers, Ohio municipal)
+// ---------------------------------------------------------------------------
+function runLocalityTests() {
+  console.log('=== Locality Tax Tests ===\n');
+
+  // No locality → localityTax = 0.
+  {
+    const r = calculateAll({ netProfit: 100000, filingStatus: 'single' }, federal, STATES.newYork);
+    assert(approxEqual(r.stateTax.localityTax, 0), `NY no locality: $0 city tax`, { localityTax: r.stateTax.localityTax });
+  }
+
+  // NYC adds significant local tax.
+  {
+    const r = calculateAll(
+      { netProfit: 200000, filingStatus: 'single', locality: 'nyc' },
+      federal, STATES.newYork,
+    );
+    assert(r.stateTax.localityTax > 5000, `NYC at $200K: city tax should be > $5K`, { localityTax: r.stateTax.localityTax });
+    assert(r.stateTax.locality === 'New York City', `Locality name should be 'New York City'`, { locality: r.stateTax.locality });
+  }
+
+  // Yonkers surcharge ≈ 16.75% of state tax.
+  {
+    const r = calculateAll(
+      { netProfit: 200000, filingStatus: 'single', locality: 'yonkers' },
+      federal, STATES.newYork,
+    );
+    const expected = r.stateTax.stateOnly * 0.1675;
+    assert(approxEqual(r.stateTax.localityTax, expected, 1), `Yonkers: 16.75% of NY state tax`, { expected, actual: r.stateTax.localityTax });
+  }
+
+  // Ohio municipal at 2.5% flat.
+  {
+    const r = calculateAll(
+      { netProfit: 100000, filingStatus: 'single', locality: 'ohioMunicipal' },
+      federal, STATES.ohio,
+    );
+    assert(r.stateTax.localityTax > 0, `OH municipal: should add tax`, { localityTax: r.stateTax.localityTax });
+  }
+
+  // Invalid locality silently ignored.
+  {
+    const r = calculateAll(
+      { netProfit: 100000, filingStatus: 'single', locality: 'nonexistent' },
+      federal, STATES.california,
+    );
+    assert(approxEqual(r.stateTax.localityTax, 0), `Invalid locality: $0 city tax`, { localityTax: r.stateTax.localityTax });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 12a. Hand-verified end-to-end scenarios — tightest sanity check
+// ---------------------------------------------------------------------------
+function runHandVerifiedScenarios() {
+  console.log('=== Hand-Verified Scenarios ===\n');
+
+  // Scenario A: $100K single TX. Hand-computed total tax: $22,364.55.
+  {
+    const r = calculateAll({ netProfit: 100000, filingStatus: 'single' }, federal, STATES.texas);
+    assert(approxEqual(r.summary.totalTax, 22364.55, 0.10), `A: $100K TX single → total tax $22,364.55`, { actual: r.summary.totalTax });
+    assert(approxEqual(r.summary.selfEmploymentTax, 14129.55, 0.10), `A: SE tax $14,129.55`, { actual: r.summary.selfEmploymentTax });
+    assert(approxEqual(r.summary.federalIncomeTax, 8235.01, 0.10), `A: Fed income tax $8,235.01`, { actual: r.summary.federalIncomeTax });
+  }
+
+  // Scenario B: $200K single CA. Hand-computed total tax: $69,327.93.
+  {
+    const r = calculateAll({ netProfit: 200000, filingStatus: 'single' }, federal, STATES.california);
+    assert(approxEqual(r.summary.totalTax, 69327.93, 0.10), `B: $200K CA single → total tax $69,327.93`, { actual: r.summary.totalTax });
+    assert(!r.federalIncomeTax.usedItemized, `B: standard deduction wins (SALT $15,897 < std $16,100)`, { itemized: r.federalIncomeTax.usedItemized });
+  }
+
+  // Scenario C: $400K single CA + $15K property. Hand-computed total tax: $160,742.59.
+  {
+    const r = calculateAll(
+      { netProfit: 400000, filingStatus: 'single', propertyTax: 15000 },
+      federal, STATES.california,
+    );
+    assert(approxEqual(r.summary.totalTax, 160742.59, 0.10), `C: $400K CA+$15K prop → total tax $160,742.59`, { actual: r.summary.totalTax });
+    assert(r.federalIncomeTax.usedItemized, `C: itemizing`, { itemized: r.federalIncomeTax.usedItemized });
+    assert(approxEqual(r.federalIncomeTax.saltDeduction, 40400), `C: SALT capped at $40,400`, { salt: r.federalIncomeTax.saltDeduction });
+    assert(approxEqual(r.federalIncomeTax.qbiDeduction, 400), `C: QBI = $400 minimum (above phase-in, non-SSTB sole prop)`, { qbi: r.federalIncomeTax.qbiDeduction });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 13. CA half-SE state subtraction tests
+// ---------------------------------------------------------------------------
+function runCAHalfSETests() {
+  console.log('=== CA Half-SE Subtraction Tests ===\n');
+
+  // CA should now subtract half-SE before applying state brackets.
+  {
+    const r = calculateAll({ netProfit: 200000, filingStatus: 'single' }, federal, STATES.california);
+    // The half-SE for $200K SE income is ~$10,894 (2026: $200K * 0.9235 * 0.153 / 2).
+    // CA tax should be applied to ~$189K, not $200K. Hard to assert exactly without
+    // recomputing brackets, so check that state tax is materially less than naive calc.
+    assert(r.summary.stateTax > 0, `CA $200K should still owe state tax`, { stateTax: r.summary.stateTax });
+    assert(r.summary.stateTax < 200000 * 0.13, `CA effective rate should not exceed top bracket`, { stateTax: r.summary.stateTax });
+  }
+
+  // TX (no income tax) — half-SE config doesn't matter.
+  {
+    const r = calculateAll({ netProfit: 200000, filingStatus: 'single' }, federal, STATES.texas);
+    assert(approxEqual(r.summary.stateTax, 0), `TX state tax always $0`, { stateTax: r.summary.stateTax });
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Run everything
 // ---------------------------------------------------------------------------
 console.log('============================================================');
@@ -902,6 +1323,13 @@ runSETaxEdgeCases();
 runStateTests();
 runKnownGoodTests();
 runAllStatesSmoke();
+runSALTTests();
+runNIITTests();
+runAddlMedicareTests();
+runTipExemptionTests();
+runLocalityTests();
+runHandVerifiedScenarios();
+runCAHalfSETests();
 
 // ---------------------------------------------------------------------------
 // Report

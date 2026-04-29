@@ -254,6 +254,12 @@
       </div>
     </div>
 
+    <div class="checkbox-row" style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 12px; background: var(--teal-bg); border-radius: 6px; font-size: 13px;">
+      <input type="checkbox" id="isSSTB" style="margin: 0;">
+      <label for="isSSTB" style="margin: 0; flex: 1; color: var(--medium);">My business is an SSTB (law, accounting, health, consulting, financial services, performing arts, athletics, brokerage)</label>
+      <span class="info-tip" title="Specified Service Trade or Business. Above the QBI threshold ($201,775 single / $403,550 MFJ for 2026), SSTBs lose QBI entirely. Non-SSTBs hit a W-2 wages limit instead — for an S-Corp, QBI is capped at 50% of salary paid.">§199A</span>
+    </div>
+
     <div class="salary-slider-group">
       <label for="salarySlider">Reasonable Salary <span class="info-tip" title="The IRS requires S-Corp shareholders to pay themselves a 'reasonable salary' before taking distributions. This is subjective and heavily scrutinized. Too low = audit risk. Too high = less tax savings.">IRS-scrutinized</span></label>
       <div class="salary-slider-row">
@@ -506,7 +512,7 @@
   document.querySelectorAll('#netIncome, #salaryManual, #costPayroll, #costTaxReturn, #costStateFees, #costFUTA, #costSUTA').forEach(el => {
     el.addEventListener('input', () => { updateSalaryDisplay(); updateCostsLabel(); debouncedCalc(); });
   });
-  document.querySelectorAll('#filingStatus, #state').forEach(el => {
+  document.querySelectorAll('#filingStatus, #state, #isSSTB').forEach(el => {
     el.addEventListener('change', () => { calculate(); });
   });
 
@@ -532,12 +538,13 @@
     const salary = Math.min(getSalary(), netIncome);
     const distributions = Math.max(0, netIncome - salary);
     const scorpCosts = getTotalCosts();
+    const isSSTB = document.getElementById('isSSTB').checked;
 
     // ==========================================
     // COLUMN 1: Sole Proprietor / Single-Member LLC
     // ==========================================
     const llcResult = calculateAll(
-      { netProfit: netIncome, filingStatus, otherIncome: 0, isSSTB: false },
+      { netProfit: netIncome, filingStatus, otherIncome: 0, isSSTB },
       federal,
       state,
     );
@@ -575,29 +582,58 @@
     const scorpQBIBase = distributions; // No half-SE reduction needed — that's an SE concept
     const scorpHalfSE = 0; // No SE tax for S-Corp
 
-    // For S-Corp federal income tax: taxable income = salary + distributions - employer FICA deduction - standard deduction - QBI
+    // For S-Corp federal income tax: taxable income = salary + distributions - employer FICA deduction - deduction (std or itemized) - QBI
     const scorpTotalIncome = netIncome; // Same gross income
     const scorpAGI = scorpTotalIncome - employerFICA; // Employer FICA is above-the-line
     const standardDeduction = federal.standardDeduction[filingStatus] || federal.standardDeduction.single;
-    const scorpTaxableBeforeQBI = Math.max(0, scorpAGI - standardDeduction);
 
-    // QBI for S-Corp: 20% of distributions, capped at 20% of taxable income before QBI
-    const scorpQBIRaw = scorpQBIBase * federal.qbiDeductionRate;
-    const scorpQBICap = scorpTaxableBeforeQBI * federal.qbiDeductionRate;
-    let scorpQBI = Math.min(scorpQBIRaw, scorpQBICap);
+    // Apply same SALT itemization logic as the LLC side (parity for fair comparison).
+    // State income tax + SDI counts toward SALT under IRC §164(b)(5), capped at $40,400 (OBBBA 2026).
+    // Property tax / other itemized not modeled in this comparison view (would apply equally to both sides).
+    const scorpStateTaxPreview = calculateStateTax(scorpTotalIncome, state, filingStatus);
+    const scorpSaltCap = federal.saltCap || 10000;
+    const scorpSaltDeduction = Math.min(scorpStateTaxPreview.total, scorpSaltCap);
+    const scorpDeductionUsed = Math.max(scorpSaltDeduction, standardDeduction);
+    const scorpTaxableBeforeQBI = Math.max(0, scorpAGI - scorpDeductionUsed);
 
-    // Apply QBI threshold phase-out (same rules, but on distributions)
+    // QBI for S-Corp: 20% of distributions, capped at 20% of taxable income before QBI.
+    // Above the threshold + phase-in, §199A(b)(2) caps QBI at the GREATER of:
+    //   (a) 50% of W-2 wages paid by the business
+    //   (b) 25% of W-2 wages + 2.5% of UBIA (qualified property) — UBIA assumed $0 for typical solo S-Corp
+    // SSTBs lose QBI entirely above threshold + phase-in (regardless of wages).
+    const scorpQBIRaw = scorpQBIBase * federal.qbiDeductionRate; // 20% of distributions
+    const scorpQBICap = scorpTaxableBeforeQBI * federal.qbiDeductionRate; // overall taxable-income limit
+    const wagesLimit = salary * 0.50; // §199A(b)(2)(B) — assume $0 UBIA for solo S-Corp
     const qbiThreshold = federal.qbiThreshold[filingStatus] || federal.qbiThreshold.single;
     const qbiPhaseIn = federal.qbiPhaseInRange[filingStatus] || federal.qbiPhaseInRange.single;
-    if (scorpTaxableBeforeQBI > qbiThreshold) {
-      if (scorpTaxableBeforeQBI >= qbiThreshold + qbiPhaseIn) {
-        scorpQBI = 0;
+
+    let scorpQBI;
+    if (scorpTaxableBeforeQBI <= qbiThreshold) {
+      // Below threshold: full 20% of distributions, subject to overall cap.
+      scorpQBI = Math.min(scorpQBIRaw, scorpQBICap);
+    } else if (scorpTaxableBeforeQBI >= qbiThreshold + qbiPhaseIn) {
+      // Fully phased in.
+      if (isSSTB) {
+        scorpQBI = 0; // SSTB above phase-in: zero (W-2 limit irrelevant — provision lost entirely).
       } else {
-        const phaseInPct = (scorpTaxableBeforeQBI - qbiThreshold) / qbiPhaseIn;
-        scorpQBI = scorpQBI * (1 - phaseInPct);
+        // Non-SSTB: capped at the W-2 wages limit (and the overall cap).
+        scorpQBI = Math.min(scorpQBIRaw, wagesLimit, scorpQBICap);
+      }
+    } else {
+      // Within phase-in: linearly interpolate from full QBI to the limit.
+      const phaseInPct = (scorpTaxableBeforeQBI - qbiThreshold) / qbiPhaseIn;
+      if (isSSTB) {
+        // SSTB: 20% of distributions reduced linearly toward zero, then W-2 limited.
+        const reducedQBI = scorpQBIRaw * (1 - phaseInPct);
+        scorpQBI = Math.min(reducedQBI, scorpQBICap);
+      } else {
+        // Non-SSTB: blend full QBI with W-2-limited QBI based on phase-in progress.
+        const limited = Math.min(scorpQBIRaw, wagesLimit);
+        const blended = scorpQBIRaw - phaseInPct * (scorpQBIRaw - limited);
+        scorpQBI = Math.min(blended, scorpQBICap);
       }
     }
-    // OBBBA minimum
+    // OBBBA $400 minimum (applies regardless of phase-in / wages limit, if eligible).
     if (federal.qbiMinimumDeduction && netIncome >= (federal.qbiMinimumQBIThreshold || 1000) && scorpQBI < federal.qbiMinimumDeduction) {
       scorpQBI = Math.min(federal.qbiMinimumDeduction, scorpQBICap);
     }
@@ -790,12 +826,14 @@
     // S-Corp income tax (simplified for break-even search)
     const employerFICA = (ssSalaryBase * (federal.ssRate / 2)) + (salary * (federal.medicareRate / 2));
     const standardDeduction = federal.standardDeduction[filingStatus] || federal.standardDeduction.single;
-    const scorpTaxableBeforeQBI = Math.max(0, income - employerFICA - standardDeduction);
+    const scorpStateTax = calculateStateTax(income, state, filingStatus).total;
+    // SALT itemization parity with the LLC side (state-tax-only; no property tax in break-even search).
+    const scorpDeduction = Math.max(Math.min(scorpStateTax, federal.saltCap || 10000), standardDeduction);
+    const scorpTaxableBeforeQBI = Math.max(0, income - employerFICA - scorpDeduction);
     const scorpQBI = Math.min(distributions * 0.20, scorpTaxableBeforeQBI * 0.20);
     const scorpTaxable = Math.max(0, scorpTaxableBeforeQBI - scorpQBI);
     const bracketKey = federal.brackets[filingStatus] ? filingStatus : 'single';
     const scorpFedTax = calculateBracketTax(scorpTaxable, federal.brackets[bracketKey]).total;
-    const scorpStateTax = calculateStateTax(income, state, filingStatus).total;
 
     const scorpTotal = scorpPayroll + scorpFedTax + scorpStateTax + scorpCosts;
     return llcTotal - scorpTotal;

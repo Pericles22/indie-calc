@@ -361,6 +361,18 @@
         <div class="field-help">Federal tax withheld from W-2 paychecks so far in 2026. Reduces the amount you need to pay quarterly.</div>
       </div>
     </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="propertyTax">Property Tax Paid -- optional</label>
+        <div class="prefix"><input type="number" id="propertyTax" placeholder="0" value="0"></div>
+        <div class="field-help">Counts toward the $40,400 SALT cap (OBBBA 2026, up from $10,000) along with state income tax. Engine auto-itemizes when SALT + other itemized exceeds your standard deduction.</div>
+      </div>
+      <div class="form-group">
+        <label for="otherItemized">Other Itemized Deductions -- optional</label>
+        <div class="prefix"><input type="number" id="otherItemized" placeholder="0" value="0"></div>
+        <div class="field-help">Mortgage interest, charitable giving, medical expenses above 7.5% AGI. Do NOT include state/property tax.</div>
+      </div>
+    </div>
   </div>
 
   <div class="empty-state" id="emptyState" hidden>
@@ -615,7 +627,7 @@
   let debounceTimer;
   function debounce(fn, ms) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fn(...args), ms); }; }
 
-  document.querySelectorAll('#netProfit, #otherIncome, #priorYearTax, #priorYearAGI, #withholding').forEach(el => {
+  document.querySelectorAll('#netProfit, #otherIncome, #priorYearTax, #priorYearAGI, #withholding, #propertyTax, #otherItemized').forEach(el => {
     el.addEventListener('input', debounce(() => { calculate(); persistState(); }, 200));
   });
   document.querySelectorAll('#filingStatus, #state').forEach(el => {
@@ -662,7 +674,7 @@
   }
 
   /* ── URL state persistence ── */
-  const STATE_PARAMS_NUM = ['netProfit', 'otherIncome', 'priorYearTax', 'priorYearAGI', 'withholding'];
+  const STATE_PARAMS_NUM = ['netProfit', 'otherIncome', 'priorYearTax', 'priorYearAGI', 'withholding', 'propertyTax', 'otherItemized'];
   const STATE_PARAMS_SEL = ['filingStatus', 'state'];
   function persistState() {
     const params = new URLSearchParams();
@@ -723,6 +735,8 @@
     const priorYearTax = Math.max(0, parseFloat(document.getElementById('priorYearTax').value) || 0);
     const priorYearAGI = Math.max(0, parseFloat(document.getElementById('priorYearAGI').value) || 0);
     const withholding = Math.max(0, parseFloat(document.getElementById('withholding').value) || 0);
+    const propertyTax = Math.max(0, parseFloat(document.getElementById('propertyTax').value) || 0);
+    const otherItemized = Math.max(0, parseFloat(document.getElementById('otherItemized').value) || 0);
 
     const federal = FEDERAL['2026'];
     const state = STATES[stateKey];
@@ -730,7 +744,7 @@
 
     /* Use the shared calculator engine for the tax computation. */
     const result = calculateAll(
-      { netProfit, filingStatus, otherIncome },
+      { netProfit, filingStatus, otherIncome, propertyTax, otherItemized },
       federal,
       state,
     );

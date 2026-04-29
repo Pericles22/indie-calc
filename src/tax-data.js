@@ -78,6 +78,12 @@ FEDERAL['2026'] = {
   actcEarnedIncomeRate: 0.15,
   saltCap: 40400, // OBBBA §70120: increased from $10,000
   tipExemption: 25000, // OBBBA §70201: "No Tax on Tips" — up to $25K in qualified tips exempt from income tax (not SE tax)
+  // Net Investment Income Tax (§1411): 3.8% surtax on lesser of
+  //   (a) net investment income, or
+  //   (b) MAGI minus filing-status threshold.
+  // Thresholds are NOT inflation-adjusted (statutory).
+  niitRate: 0.038,
+  niitThreshold: { single: 200000, marriedJoint: 250000, marriedSeparate: 125000, headOfHousehold: 200000 },
 };
 
 /**
@@ -122,6 +128,7 @@ const STATES = {
     },
     sdiRate: 0.013, // 2026: increased from 1.2% in 2025
     sdiWageCap: Infinity, // SB 951 removed the wage cap effective Jan 1, 2024
+    subtractsHalfSE: true, // CA conforms to federal AGI start, which already deducts half-SE.
     notes: 'California charges SDI (State Disability Insurance) at 1.3% on ALL wages (no cap, per SB 951). The Mental Health Services Tax (1% above $1M) is rolled into the 13.3% top bracket.',
     sourceUrl: 'https://www.ftb.ca.gov/file/personal/tax-rates.html',
   },
@@ -172,6 +179,33 @@ const STATES = {
     },
     notes: 'New York City residents pay an additional 3.078-3.876% city income tax. Yonkers residents pay a 16.75% surcharge on state tax.',
     sourceUrl: 'https://www.tax.ny.gov/pit/file/tax_tables.htm',
+    localities: {
+      // NYC personal income tax: graduated 3.078%-3.876% (2026 rates).
+      // Same brackets for single and MFJ at the upper end; using flat-rate
+      // approximation at the top marginal rate for an estimator.
+      nyc: {
+        name: 'New York City',
+        brackets: {
+          single: [
+            { min: 0, max: 12000, rate: 0.03078 },
+            { min: 12000, max: 25000, rate: 0.03762 },
+            { min: 25000, max: 50000, rate: 0.03819 },
+            { min: 50000, max: Infinity, rate: 0.03876 },
+          ],
+          marriedJoint: [
+            { min: 0, max: 21600, rate: 0.03078 },
+            { min: 21600, max: 45000, rate: 0.03762 },
+            { min: 45000, max: 90000, rate: 0.03819 },
+            { min: 90000, max: Infinity, rate: 0.03876 },
+          ],
+        },
+      },
+      // Yonkers: 16.75% surcharge on NY state tax liability.
+      yonkers: {
+        name: 'Yonkers',
+        surchargeOfStateTax: 0.1675,
+      },
+    },
   },
   illinois: {
     name: 'Illinois',
@@ -198,6 +232,13 @@ const STATES = {
     flatRateFloor: 26050,
     notes: 'Ohio uses a flat rate of 2.75% on nonbusiness income above $26,050. Many Ohio cities levy additional municipal income taxes (typically 1-2.5%). Source: Tax Foundation 2026.',
     sourceUrl: 'https://tax.ohio.gov/individual/resources/annual-tax-rates',
+    localities: {
+      // Approximation across major Ohio cities (Columbus, Cleveland, Cincinnati typically 2.5%).
+      ohioMunicipal: {
+        name: 'Ohio municipal (avg 2.5%)',
+        flatRate: 0.025,
+      },
+    },
   },
   georgia: {
     name: 'Georgia',

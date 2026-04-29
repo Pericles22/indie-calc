@@ -346,6 +346,15 @@
         <div class="prefix"><input type="number" id="otherIncome" placeholder="0" value="0"></div>
       </div>
     </div>
+    <div class="form-row" id="localityRow" style="display: none;">
+      <div class="form-group">
+        <label for="locality">City / Local Tax — optional</label>
+        <select id="locality">
+          <option value="">None</option>
+        </select>
+        <div class="field-help">NYC residents pay an additional ~3.08–3.88% city income tax. Yonkers residents pay a 16.75% surcharge on state tax. Ohio municipalities typically levy 1–2.5% (Columbus, Cleveland, Cincinnati avg ~2.5%).</div>
+      </div>
+    </div>
     <div class="checkbox-row">
       <input type="checkbox" id="includeQBI" checked aria-describedby="qbi-help">
       <label for="includeQBI">Include QBI deduction (20% of business income)</label>
@@ -402,6 +411,34 @@
           <label for="studentLoanInterest">Student Loan Interest Paid</label>
           <div class="prefix"><input type="number" id="studentLoanInterest" placeholder="0" value="0"></div>
           <div class="field-help">Above-the-line deduction, max $2,500. Phases out at higher incomes.</div>
+        </div>
+      </div>
+      <div style="border-top: 1px solid var(--rule); margin: 16px 0; padding-top: 16px;">
+        <div style="font-size: 13px; font-weight: 600; color: var(--medium); margin-bottom: 4px;">Itemized Deductions <span style="font-weight: 400; color: var(--hint);">(used only if greater than your standard deduction)</span></div>
+        <p style="font-size: 12px; color: var(--hint); margin-bottom: 12px;">SALT (state income tax + property tax) is capped at $40,400 for 2026 under OBBBA &mdash; up from $10,000.</p>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="propertyTax">Property Tax Paid</label>
+          <div class="prefix"><input type="number" id="propertyTax" placeholder="0" value="0"></div>
+          <div class="field-help">Real estate + personal property taxes. Combined with state income tax, the total counts toward the $40,400 SALT cap.</div>
+        </div>
+        <div class="form-group">
+          <label for="otherItemized">Other Itemized Deductions</label>
+          <div class="prefix"><input type="number" id="otherItemized" placeholder="0" value="0"></div>
+          <div class="field-help">Mortgage interest, charitable contributions, medical expenses above 7.5% of AGI. Do NOT include state/property tax &mdash; those are SALT, computed automatically.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="investmentIncome">Investment Income <span style="color:var(--hint); font-weight: 400;">(subset of "Other Income")</span></label>
+          <div class="prefix"><input type="number" id="investmentIncome" placeholder="0" value="0"></div>
+          <div class="field-help">Interest, dividends, capital gains, rental, royalties &mdash; should already be inside your Other Income above. Triggers a 3.8% NIIT surtax above $200K single / $250K MFJ AGI.</div>
+        </div>
+        <div class="form-group">
+          <label for="qualifiedTips">Qualified Tips <span style="color:var(--hint); font-weight: 400;">(OBBBA &ldquo;No Tax on Tips&rdquo;)</span></label>
+          <div class="prefix"><input type="number" id="qualifiedTips" placeholder="0" value="0"></div>
+          <div class="field-help">Up to $25,000 of qualified tip income is exempt from federal income tax under OBBBA &sect;70201. Still subject to SE tax. Most freelancers do not have tip income.</div>
         </div>
       </div>
     </div>
@@ -485,6 +522,13 @@
       <a href="../../articles/2026-obbba-freelancer-tax-changes/" style="display:block; margin-top:8px; color:var(--teal); font-size:12px;">Read more: The Freelancer&rsquo;s Guide to 2026 OBBBA Tax Changes &rarr;</a>
     </div>
 
+    <div class="disclaimer-box" id="amtWarning" style="display:none; background:#fff8f0; border-color:#f0d8b8;">
+      <strong>AMT Notice:</strong> Your income and itemized SALT are both high, which puts you in the rare zone where the Alternative Minimum Tax (AMT) may apply.
+      The OBBBA-era AMT exemption is roughly $88,100 (single) / $137,000 (MFJ), with phase-outs starting around $626,350 / $1,252,700.
+      Itemized SALT is added back when computing AMTI, so a large SALT deduction at very high income can trigger AMT.
+      This calculator does not compute AMT. <strong>If you&rsquo;re in this range, consult a CPA before filing.</strong>
+    </div>
+
     <div class="disclaimer-box">
       <strong>Important:</strong> This calculator provides estimates for informational purposes only. It is not tax, legal, or financial advice.
       Your actual tax liability depends on deductions, credits, other income, and factors not captured here.
@@ -564,6 +608,32 @@
     option.textContent = state.name + (state.hasIncomeTax ? '' : ' (no income tax)');
     stateSelect.appendChild(option);
   }
+
+  // Populate locality dropdown based on selected state.
+  const localityRow = document.getElementById('localityRow');
+  const localitySelect = document.getElementById('locality');
+  function refreshLocalityOptions() {
+    const stateKey = stateSelect.value;
+    const state = STATES[stateKey];
+    while (localitySelect.firstChild) localitySelect.removeChild(localitySelect.firstChild);
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.textContent = 'None';
+    localitySelect.appendChild(noneOpt);
+    if (state && state.localities) {
+      for (const [key, loc] of Object.entries(state.localities)) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = loc.name || key;
+        localitySelect.appendChild(opt);
+      }
+      localityRow.style.display = '';
+    } else {
+      localityRow.style.display = 'none';
+    }
+  }
+  stateSelect.addEventListener('change', () => { refreshLocalityOptions(); });
+  refreshLocalityOptions();
 
   // Build compose URLs for Gmail (web), Outlook.com (web), and mailto:.
   // Gmail/Outlook web links work for everyone signed into those services and
@@ -722,10 +792,10 @@
   let debounceTimer;
   function debounce(fn, ms) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fn(...args), ms); }; }
 
-  document.querySelectorAll('#netProfit, #otherIncome, #numChildren, #healthInsurance, #retirementContrib, #homeOfficeSqft, #studentLoanInterest').forEach(el => {
+  document.querySelectorAll('#netProfit, #otherIncome, #numChildren, #healthInsurance, #retirementContrib, #homeOfficeSqft, #studentLoanInterest, #propertyTax, #otherItemized, #investmentIncome, #qualifiedTips').forEach(el => {
     el.addEventListener('input', debounce(() => { shouldScroll = false; calculate(); persistState(); }, 200));
   });
-  document.querySelectorAll('#filingStatus, #state, #includeQBI, #isSSTB, #isSenior, #spouseIsSenior').forEach(el => {
+  document.querySelectorAll('#filingStatus, #state, #includeQBI, #isSSTB, #isSenior, #spouseIsSenior, #locality').forEach(el => {
     el.addEventListener('change', () => { shouldScroll = false; calculate(); persistState(); });
   });
 
@@ -862,6 +932,12 @@
     const studentLoanInterest = Math.min(Math.max(0, parseFloat(document.getElementById('studentLoanInterest').value) || 0), 2500);
     const homeOfficeDeduction = homeOfficeSqft * 5;
     const otherAboveLine = homeOfficeDeduction + studentLoanInterest;
+    const propertyTax = Math.max(0, parseFloat(document.getElementById('propertyTax').value) || 0);
+    const otherItemized = Math.max(0, parseFloat(document.getElementById('otherItemized').value) || 0);
+    const investmentIncome = Math.max(0, parseFloat(document.getElementById('investmentIncome').value) || 0);
+    const qualifiedTips = Math.max(0, parseFloat(document.getElementById('qualifiedTips').value) || 0);
+    const localityEl = document.getElementById('locality');
+    const locality = localityEl && localityEl.value ? localityEl.value : null;
 
     const federal = FEDERAL['2026'];
     const state = STATES[stateKey];
@@ -873,6 +949,8 @@
         netProfit, filingStatus, otherIncome,
         isSenior, spouseIsSenior, isSSTB,
         healthInsurance, retirementContrib, otherAboveLine,
+        propertyTax, otherItemized,
+        investmentIncome, qualifiedTips, locality,
       },
       fedCopy,
       state,
@@ -990,7 +1068,37 @@
     }
     if (homeOfficeDeduction > 0) rows.push({ label: 'Home Office (' + homeOfficeSqft + ' sq ft \u00D7 $5)', value: '(' + fmt(homeOfficeDeduction) + ')' });
     if (studentLoanInterest > 0) rows.push({ label: 'Student Loan Interest', value: '(' + fmt(studentLoanInterest) + ')' });
-    rows.push({ label: 'Standard Deduction', value: '(' + fmt(result.federalIncomeTax.standardDeduction) + ')' });
+    if (result.federalIncomeTax.tipExemption > 0) {
+      const tipCapped = qualifiedTips > result.federalIncomeTax.tipExemption;
+      rows.push({
+        label: 'Qualified Tips Exemption',
+        value: '(' + fmt(result.federalIncomeTax.tipExemption) + ')',
+        tip: tipCapped
+          ? 'Capped at $25K (OBBBA §70201). Income tax exempt only — SE tax still applies.'
+          : 'OBBBA §70201: tip income exempt from federal income tax (SE tax still applies)',
+        tipText: tipCapped ? 'OBBBA cap' : 'OBBBA',
+      });
+    }
+    if (result.federalIncomeTax.usedItemized) {
+      const saltCapped = result.federalIncomeTax.saltUncapped > result.federalIncomeTax.saltCap;
+      rows.push({
+        label: 'Itemized Deduction',
+        value: '(' + fmt(result.federalIncomeTax.deductionUsed) + ')',
+        tip: 'Itemizing beats the standard deduction (' + fmt(result.federalIncomeTax.standardDeductionAmount) + ')',
+        tipText: 'itemized',
+      });
+      rows.push({
+        label: '   SALT (state + property tax)',
+        value: '(' + fmt(result.federalIncomeTax.saltDeduction) + ')',
+        tip: saltCapped
+          ? 'OBBBA $40,400 cap binding (uncapped: ' + fmt(result.federalIncomeTax.saltUncapped) + ')'
+          : 'State income tax + property tax, below the OBBBA $40,400 cap',
+        tipText: saltCapped ? 'OBBBA cap' : 'OBBBA',
+      });
+      if (otherItemized > 0) rows.push({ label: '   Other (mortgage, charity, medical)', value: '(' + fmt(otherItemized) + ')' });
+    } else {
+      rows.push({ label: 'Standard Deduction', value: '(' + fmt(result.federalIncomeTax.standardDeductionAmount) + ')' });
+    }
     rows.push({
       label: 'Federal Taxable Income',
       value: fmt(result.federalIncomeTax.taxableIncome),
@@ -1018,10 +1126,26 @@
       }
     }
     rows.push({ label: 'Federal Income Tax (after credits)', value: fmt(s.federalIncomeTax) });
+    if (result.summary.niit > 0) {
+      rows.push({
+        label: 'Net Investment Income Tax (3.8%)',
+        value: fmt(result.summary.niit),
+        tip: '§3.8% surtax on portfolio income above $200K single / $250K MFJ AGI',
+        tipText: 'NIIT',
+      });
+    }
+    if (result.stateTax && result.stateTax.localityTax > 0) {
+      rows.push({
+        label: '   Local/City Tax (' + result.stateTax.locality + ')',
+        value: fmt(result.stateTax.localityTax),
+        tip: 'Estimated locality tax for ' + result.stateTax.locality,
+        tipText: 'local',
+      });
+    }
     rows.push({
       label: 'State Tax (' + state.name + ')',
       value: fmt(s.stateTax),
-      tip: state.hasIncomeTax ? 'Applied to total income (SE + W-2). Some states allow additional deductions (e.g. half-SE) not modeled here.' : null,
+      tip: state.hasIncomeTax ? (state.subtractsHalfSE ? 'Applied after subtracting half-SE (CA conformity)' : 'Applied to total income (SE + W-2). Some states allow additional deductions not modeled here.') : null,
       tipText: state.hasIncomeTax ? 'est.' : null,
     });
 
@@ -1156,6 +1280,16 @@
     const sstbThreshold = federal.qbiThreshold[filingStatus] || federal.qbiThreshold.single;
     const sstbWarning = document.getElementById('sstbWarning');
     sstbWarning.style.display = (includeQBI && !isSSTB && totalIncome > sstbThreshold) ? 'block' : 'none';
+
+    // AMT zone heuristic: very high income + significant itemized SALT.
+    // Conservative trigger so we only nudge users who actually might hit AMT.
+    const amtIncomeFloor = (filingStatus === 'marriedJoint') ? 1000000 : 500000;
+    const amtSaltFloor = 30000;
+    const amtWarning = document.getElementById('amtWarning');
+    const inAMTZone = totalIncome >= amtIncomeFloor
+      && result.federalIncomeTax.usedItemized
+      && result.federalIncomeTax.saltDeduction >= amtSaltFloor;
+    amtWarning.style.display = inAMTZone ? 'block' : 'none';
 
     document.getElementById('lastUpdated').textContent = 'Tax data last verified: April 2026. Sources: IRS Rev. Proc. 2025-32, SSA, Tax Foundation, state revenue depts.';
 

@@ -402,7 +402,27 @@
           <div class="field-help">Above-the-line deduction, max $2,500.</div>
         </div>
       </div>
-    </div>
+          <div style="border-top: 1px solid var(--rule); margin: 16px 0; padding-top: 16px;">
+        <div style="font-size: 13px; font-weight: 600; color: var(--medium); margin-bottom: 4px;">Itemized Deductions <span style="font-weight: 400; color: var(--hint);">(used only if greater than your standard deduction)</span></div>
+        <p style="font-size: 12px; color: var(--hint); margin-bottom: 12px;">SALT (state income tax + property tax) is capped at $40,400 for 2026 under OBBBA &mdash; up from 
+          <div class="field-help">Above-the-line deduction, max $2,500.</div>
+        </div>
+      </div>
+    0,000.</p>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="propertyTax">Property Tax Paid</label>
+          <div class="prefix"><input type="number" id="propertyTax" placeholder="0" value="0"></div>
+          <div class="field-help">Real estate + personal property taxes. Combined with state income tax, the total counts toward the $40,400 SALT cap.</div>
+        </div>
+        <div class="form-group">
+          <label for="otherItemized">Other Itemized Deductions</label>
+          <div class="prefix"><input type="number" id="otherItemized" placeholder="0" value="0"></div>
+          <div class="field-help">Mortgage interest, charitable contributions, medical expenses above 7.5% AGI. Do NOT include state/property tax.</div>
+        </div>
+      </div>
+</div>
   </div>
 
   <div class="empty-state" id="emptyState" hidden>
@@ -647,7 +667,7 @@
   var debounceTimer;
   function debounce(fn, ms) { return function() { clearTimeout(debounceTimer); debounceTimer = setTimeout(fn, ms); }; }
 
-  document.querySelectorAll('#netProfit, #otherIncome, #numChildren, #healthInsurance, #retirementContrib, #homeOfficeSqft, #studentLoanInterest').forEach(function(el) {
+  document.querySelectorAll('#netProfit, #otherIncome, #numChildren, #healthInsurance, #retirementContrib, #homeOfficeSqft, #studentLoanInterest, #propertyTax, #otherItemized').forEach(function(el) {
     el.addEventListener('input', debounce(function() { shouldScroll = false; calculate(); persistState(); }, 200));
   });
   document.querySelectorAll('#filingStatus, #state, #includeQBI, #isSSTB, #isSenior, #spouseIsSenior').forEach(function(el) {
@@ -742,12 +762,14 @@
     var homeOfficeDeduction = homeOfficeSqft * 5;
     var otherAboveLine = homeOfficeDeduction + studentLoanInterest;
 
+    var propertyTax = Math.max(0, parseFloat(document.getElementById('propertyTax').value) || 0);
+    var otherItemized = Math.max(0, parseFloat(document.getElementById('otherItemized').value) || 0);
     var federal = FEDERAL['2026'];
     var state = STATES[stateKey];
     var fedCopy = includeQBI ? federal : Object.assign({}, federal, { qbiDeductionRate: 0 });
 
     var result = calculateAll(
-      { netProfit: netProfit, filingStatus: filingStatus, otherIncome: otherIncome, isSenior: isSenior, spouseIsSenior: spouseIsSenior, isSSTB: isSSTB, healthInsurance: healthInsurance, retirementContrib: retirementContrib, otherAboveLine: otherAboveLine },
+      { netProfit: netProfit, filingStatus: filingStatus, otherIncome: otherIncome, isSenior: isSenior, spouseIsSenior: spouseIsSenior, isSSTB: isSSTB, healthInsurance: healthInsurance, retirementContrib: retirementContrib, otherAboveLine: otherAboveLine, propertyTax: propertyTax, otherItemized: otherItemized },
       fedCopy, state
     );
 
@@ -801,7 +823,14 @@
     if (retirementContrib > 0) rows.push({ label: 'Retirement Contributions', value: '(' + fmt(retirementContrib) + ')' });
     if (homeOfficeDeduction > 0) rows.push({ label: 'Home Office', value: '(' + fmt(homeOfficeDeduction) + ')' });
     if (studentLoanInterest > 0) rows.push({ label: 'Student Loan Interest', value: '(' + fmt(studentLoanInterest) + ')' });
-    rows.push({ label: 'Standard Deduction', value: '(' + fmt(result.federalIncomeTax.standardDeduction) + ')' });
+    if (result.federalIncomeTax.usedItemized) {
+      var saltCapped = result.federalIncomeTax.saltUncapped > result.federalIncomeTax.saltCap;
+      rows.push({ label: 'Itemized Deduction', value: '(' + fmt(result.federalIncomeTax.deductionUsed) + ')', tipText: 'itemized', tip: 'Itemizing beats the standard deduction (' + fmt(result.federalIncomeTax.standardDeductionAmount) + ')' });
+      rows.push({ label: '   SALT (state + property tax)', value: '(' + fmt(result.federalIncomeTax.saltDeduction) + ')', tipText: saltCapped ? 'OBBBA cap' : 'OBBBA', tip: saltCapped ? 'OBBBA $40,400 cap binding (uncapped: ' + fmt(result.federalIncomeTax.saltUncapped) + ')' : 'State income tax + property tax, below the OBBBA $40,400 cap' });
+      if (otherItemized > 0) rows.push({ label: '   Other (mortgage, charity, medical)', value: '(' + fmt(otherItemized) + ')' });
+    } else {
+      rows.push({ label: 'Standard Deduction', value: '(' + fmt(result.federalIncomeTax.standardDeductionAmount) + ')' });
+    }
     rows.push({ label: 'Federal Taxable Income', value: fmt(result.federalIncomeTax.taxableIncome) });
     rows.push({ label: 'Federal Income Tax', value: fmt(s.federalIncomeTax) });
     if (totalCTC > 0) rows.push({ label: 'Child Tax Credit', value: '-' + fmt(ctcAgainstTax), valueColor: 'var(--green)' });
