@@ -588,10 +588,17 @@
     const standardDeduction = federal.standardDeduction[filingStatus] || federal.standardDeduction.single;
 
     // Apply same SALT itemization logic as the LLC side (parity for fair comparison).
-    // State income tax + SDI counts toward SALT under IRC §164(b)(5), capped at $40,400 (OBBBA 2026).
-    // Property tax / other itemized not modeled in this comparison view (would apply equally to both sides).
+    // Includes the OBBBA filing-status-specific cap, MAGI phaseout, and the $10K floor.
     const scorpStateTaxPreview = calculateStateTax(scorpTotalIncome, state, filingStatus);
-    const scorpSaltCap = federal.saltCap || 10000;
+    const scorpSaltCapBase = (federal.saltCapBase && federal.saltCapBase[filingStatus]) || (federal.saltCap || 10000);
+    const scorpSaltFloor = (federal.saltCapFloor && federal.saltCapFloor[filingStatus]) || 10000;
+    const scorpPhaseoutThreshold = (federal.saltCapPhaseoutThreshold && federal.saltCapPhaseoutThreshold[filingStatus]) || Infinity;
+    const scorpPhaseoutRate = federal.saltCapPhaseoutRate || 0;
+    // MAGI ≈ AGI (gross income minus above-the-line deductions; for S-Corp, the employer
+    // half of FICA is the main above-the-line item).
+    const scorpMagiExcess = Math.max(0, scorpAGI - scorpPhaseoutThreshold);
+    const scorpPhaseoutAmount = Math.min(scorpMagiExcess * scorpPhaseoutRate, scorpSaltCapBase - scorpSaltFloor);
+    const scorpSaltCap = Math.max(scorpSaltFloor, scorpSaltCapBase - scorpPhaseoutAmount);
     const scorpSaltDeduction = Math.min(scorpStateTaxPreview.total, scorpSaltCap);
     const scorpDeductionUsed = Math.max(scorpSaltDeduction, standardDeduction);
     const scorpTaxableBeforeQBI = Math.max(0, scorpAGI - scorpDeductionUsed);
@@ -828,7 +835,15 @@
     const standardDeduction = federal.standardDeduction[filingStatus] || federal.standardDeduction.single;
     const scorpStateTax = calculateStateTax(income, state, filingStatus).total;
     // SALT itemization parity with the LLC side (state-tax-only; no property tax in break-even search).
-    const scorpDeduction = Math.max(Math.min(scorpStateTax, federal.saltCap || 10000), standardDeduction);
+    // Includes filing-status cap + MAGI phaseout for high-income break-even searches.
+    const scorpAGI = income - employerFICA;
+    const scorpSaltCapBase = (federal.saltCapBase && federal.saltCapBase[filingStatus]) || (federal.saltCap || 10000);
+    const scorpSaltFloor = (federal.saltCapFloor && federal.saltCapFloor[filingStatus]) || 10000;
+    const scorpPhaseoutThreshold = (federal.saltCapPhaseoutThreshold && federal.saltCapPhaseoutThreshold[filingStatus]) || Infinity;
+    const scorpPhaseoutRate = federal.saltCapPhaseoutRate || 0;
+    const scorpPhaseoutAmount = Math.min(Math.max(0, scorpAGI - scorpPhaseoutThreshold) * scorpPhaseoutRate, scorpSaltCapBase - scorpSaltFloor);
+    const scorpEffCap = Math.max(scorpSaltFloor, scorpSaltCapBase - scorpPhaseoutAmount);
+    const scorpDeduction = Math.max(Math.min(scorpStateTax, scorpEffCap), standardDeduction);
     const scorpTaxableBeforeQBI = Math.max(0, income - employerFICA - scorpDeduction);
     const scorpQBI = Math.min(distributions * 0.20, scorpTaxableBeforeQBI * 0.20);
     const scorpTaxable = Math.max(0, scorpTaxableBeforeQBI - scorpQBI);
