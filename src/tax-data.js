@@ -113,6 +113,18 @@ FEDERAL['2026'] = {
   // The 37% bracket threshold is derived from federal.brackets[filingStatus]
   // at runtime (find the bracket where rate === 0.37 and use its `min`).
   tipExemption: 25000, // OBBBA §70201: "No Tax on Tips" — up to $25K in qualified tips exempt from income tax (not SE tax)
+  // OBBBA §70202: "No Tax on Overtime" — above-the-line deduction for qualified overtime
+  // compensation reported separately on W-2/1099. MFS gets full single cap.
+  // Phaseout: $100 reduction per $1,000 of MAGI excess over threshold (10% rate).
+  // Complete phaseout: cap = 0 at MAGI >= threshold + ($cap × 10) i.e. $275K single, $550K MFJ.
+  overtimeDeductionMax: { single: 12500, marriedJoint: 25000, marriedSeparate: 12500, headOfHousehold: 12500 },
+  overtimePhaseoutThreshold: { single: 150000, marriedJoint: 300000, marriedSeparate: 150000, headOfHousehold: 150000 },
+  overtimePhaseoutRate: 0.10,
+  // OBBBA permanent: above-the-line charitable deduction for taxpayers who claim
+  // the standard deduction. Cash gifts to public charities only (no DAFs, no
+  // appreciated stock, no household goods). Itemizers route through Schedule A
+  // (where the new 0.5%-of-AGI floor applies — not modeled here).
+  charitableNonItemizerMax: { single: 1000, marriedJoint: 2000, marriedSeparate: 1000, headOfHousehold: 1000 },
   // Net Investment Income Tax (§1411): 3.8% surtax on lesser of
   //   (a) net investment income, or
   //   (b) MAGI minus filing-status threshold.
@@ -324,7 +336,7 @@ const STATES = {
   louisiana: { name: 'Louisiana', abbreviation: 'LA', hasIncomeTax: true, flatRate: 0.03, standardDeduction: { single: 12875, marriedJoint: 25750 }, notes: 'Flat rate of 3.00%. Source: Tax Foundation 2026.' },
   mississippi: { name: 'Mississippi', abbreviation: 'MS', hasIncomeTax: true, flatRate: 0.04, standardDeduction: { single: 2300, marriedJoint: 4600 }, personalExemption: 6000, notes: 'Flat rate of 4.00% (reduced from 4.40%). First $10,000 exempt. Source: Tax Foundation 2026.' },
   missouri: { name: 'Missouri', abbreviation: 'MO', hasIncomeTax: true, flatRate: 0.04, standardDeduction: { single: 15750, marriedJoint: 31500 }, notes: 'Flat rate of 4.00% effective 2026. Replaced graduated system. Source: Tax Foundation 2026.' },
-  utah: { name: 'Utah', abbreviation: 'UT', hasIncomeTax: true, flatRate: 0.045, notes: 'Flat rate of 4.50% (reduced from 4.55%). Credit-based system equivalent to 6% of federal standard deduction. Source: Tax Foundation 2026.' },
+  utah: { name: 'Utah', abbreviation: 'UT', hasIncomeTax: true, flatRate: 0.0445, notes: 'Flat rate of 4.45% for 2026 (reduced from 4.50% via SB 60, retroactive to January 1, 2026 — sixth consecutive annual cut). Credit-based system equivalent to 6% of federal standard deduction. Source: Utah State Tax Commission, SB 60 (2026).' },
 
   // Graduated Bracket States
   alabama: { name: 'Alabama', abbreviation: 'AL', hasIncomeTax: true, standardDeduction: { single: 3000, marriedJoint: 8500 }, personalExemption: 1500, brackets: { single: [{ min: 0, max: 500, rate: 0.02 },{ min: 500, max: 3000, rate: 0.04 },{ min: 3000, max: Infinity, rate: 0.05 }], marriedJoint: [{ min: 0, max: 1000, rate: 0.02 },{ min: 1000, max: 6000, rate: 0.04 },{ min: 6000, max: Infinity, rate: 0.05 }] }, notes: 'Graduated rates 2%-5%. Source: Tax Foundation 2026.' },

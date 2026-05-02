@@ -258,9 +258,12 @@ function calculateQBI(netProfit, reducedQBI, taxableIncomeBeforeQBI, filingStatu
  * @param {number} params.netProfit - Net self-employment income (after business expenses)
  * @param {string} params.filingStatus - 'single', 'marriedJoint', 'marriedSeparate', 'headOfHousehold'
  * @param {number} [params.otherIncome=0] - W-2 or other non-SE income
+ * @param {number} [params.qualifiedTips=0] - Qualified tip income (OBBBA §70201; up to $25K exempt from income tax, not SE tax)
+ * @param {number} [params.qualifiedOvertime=0] - Qualified overtime compensation (OBBBA §70202; up to $12,500 single / $25K MFJ above-the-line, phaseout $150K/$300K)
+ * @param {number} [params.charitableContrib=0] - Cash charitable contributions to public charities. Used as above-the-line deduction (up to $1K single / $2K MFJ) ONLY if taxpayer takes the standard deduction. Itemizers route through Schedule A separately.
  * @param {number} [params.propertyTax=0] - Real estate / personal property tax paid (counts toward SALT)
  * @param {number} [params.otherItemized=0] - Other itemized deductions: mortgage interest, charitable
- *   contributions, medical expenses above 7.5% AGI floor, etc. (DOES NOT include SALT — that's auto-computed)
+ *   contributions for itemizers, medical expenses above 7.5% AGI floor, etc. (DOES NOT include SALT — that's auto-computed)
  * @param {boolean} [params.isSenior=false] - Whether primary taxpayer is 65+
  * @param {boolean} [params.spouseIsSenior=false] - Whether spouse is 65+ (MFJ only); doubles senior deduction
  * @param {boolean} [params.isSSTB=false] - Whether the business is an SSTB
@@ -282,6 +285,8 @@ function calculateAll(params, federal, state) {
     otherIncome = 0,
     investmentIncome = 0,
     qualifiedTips = 0,
+    qualifiedOvertime = 0,
+    charitableContrib = 0,
     propertyTax = 0,
     otherItemized = 0,
     locality = null,
@@ -316,9 +321,31 @@ function calculateAll(params, federal, state) {
   const tipExemptionCap = federal.tipExemption || 0;
   const tipExemption = Math.min(Math.max(0, qualifiedTips), tipExemptionCap);
 
+  // OBBBA §70202 "No Tax on Overtime": up to $12,500 single / $25,000 MFJ of
+  // qualified overtime compensation is deductible above-the-line. Phaseout:
+  // $100 reduction per $1,000 of MAGI above $150K single / $300K MFJ (10%
+  // rate). Complete phaseout at $275K / $550K. Like the tip exemption, this
+  // applies to income tax only — Social Security and Medicare still apply
+  // to the underlying overtime wages.
+  const overtimeMaxBase = (federal.overtimeDeductionMax && federal.overtimeDeductionMax[filingStatus])
+    || (federal.overtimeDeductionMax && federal.overtimeDeductionMax.single)
+    || 0;
+  const overtimeThreshold = (federal.overtimePhaseoutThreshold && federal.overtimePhaseoutThreshold[filingStatus])
+    || (federal.overtimePhaseoutThreshold && federal.overtimePhaseoutThreshold.single)
+    || Infinity;
+  const overtimePhaseoutRate = federal.overtimePhaseoutRate || 0;
+  // Use totalIncome as the MAGI proxy. For most freelancers MAGI ≈ AGI; the
+  // above-the-line items below would barely change the phaseout result and
+  // using totalIncome avoids a circular dependency with the deduction itself.
+  const overtimeMagiExcess = Math.max(0, totalIncome - overtimeThreshold);
+  const overtimePhaseoutAmount = overtimeMagiExcess * overtimePhaseoutRate;
+  const overtimeCap = Math.max(0, overtimeMaxBase - overtimePhaseoutAmount);
+  const overtimeDeduction = Math.min(Math.max(0, qualifiedOvertime), overtimeCap);
+
   // Above-the-line deductions reduce AGI. Computed BEFORE SALT so the SALT
   // MAGI phaseout can use AGI rather than gross income.
-  const aboveLineDeductions = healthInsurance + retirementContrib + otherAboveLine + seTax.deductibleHalf + tipExemption;
+  const aboveLineDeductions = healthInsurance + retirementContrib + otherAboveLine
+    + seTax.deductibleHalf + tipExemption + overtimeDeduction;
   const agiForPhaseouts = Math.max(0, totalIncome - aboveLineDeductions);
 
   // SALT deduction (OBBBA §70120 + §70120 phaseout).
@@ -343,6 +370,21 @@ function calculateAll(params, federal, state) {
   const itemizedTotal = saltDeduction + Math.max(0, otherItemized);
   const usedItemized = itemizedTotal > standardDeduction;
   let deductionUsed = Math.max(itemizedTotal, standardDeduction);
+
+  // OBBBA permanent: above-the-line charitable deduction for taxpayers who
+  // claim the standard deduction. $1,000 single / $2,000 MFJ for cash gifts
+  // to public charities only (no DAFs, no appreciated stock, no household
+  // goods). Itemizers get nothing here — their charitable contributions
+  // route through Schedule A (where the new 0.5%-of-AGI floor applies, not
+  // modeled). Applied AFTER the itemization decision since it's only
+  // available to non-itemizers.
+  let charitableNonItemizerDeduction = 0;
+  if (!usedItemized && federal.charitableNonItemizerMax) {
+    const charCap = federal.charitableNonItemizerMax[filingStatus]
+      || federal.charitableNonItemizerMax.single
+      || 0;
+    charitableNonItemizerDeduction = Math.min(Math.max(0, charitableContrib), charCap);
+  }
 
   // Senior deduction (OBBBA §70103): $6,000 per qualifying senior, MFJ
   // doubles to $12,000 if both spouses qualify. Phases out at 6% of MAGI
@@ -372,7 +414,7 @@ function calculateAll(params, federal, state) {
     if (top37Bracket) {
       top37Threshold = top37Bracket.min;
       // Estimate taxable income before the limit (after itemized but before QBI).
-      const taxableBeforeLimit = Math.max(0, totalIncome - aboveLineDeductions - seniorDeduction - deductionUsed);
+      const taxableBeforeLimit = Math.max(0, totalIncome - aboveLineDeductions - charitableNonItemizerDeduction - seniorDeduction - deductionUsed);
       const excessOverThreshold = Math.max(0, taxableBeforeLimit - top37Threshold);
       const reduction = federal.itemizedLimitationRate * Math.min(deductionUsed, excessOverThreshold);
       // Reduction can't push below the standard deduction (which is always available).
@@ -390,7 +432,7 @@ function calculateAll(params, federal, state) {
     Math.max(0, netProfit) - seTax.deductibleHalf - healthInsurance - retirementContrib
   );
   const taxableIncomeBeforeQBI = Math.max(0,
-    totalIncome - aboveLineDeductions - seniorDeduction - deductionUsed
+    totalIncome - aboveLineDeductions - charitableNonItemizerDeduction - seniorDeduction - deductionUsed
   );
   const qbiDeduction = calculateQBI(
     netProfit,
@@ -467,6 +509,10 @@ function calculateAll(params, federal, state) {
       itemizedLimitationActive: itemizedLimitationReduction > 0,
       usedItemized,
       tipExemption,
+      overtimeDeduction,
+      overtimeCap,
+      overtimePhaseoutActive: overtimePhaseoutAmount > 0 && overtimeDeduction > 0,
+      charitableNonItemizerDeduction,
       halfSEDeduction: seTax.deductibleHalf,
       qbiDeduction,
       qbiBase,

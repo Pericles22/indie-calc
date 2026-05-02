@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Self-Employment Tax Calculator 2026 — Georgia | IndieCalc</title>
-<meta name="description" content="Free Georgia self-employment tax calculator for 2026. Calculate federal SE tax (15.3%), income tax, and Georgia state tax (a flat rate of 5.19%) on your freelance income. See take-home pay and quarterly estimated payments.">
+<title>Georgia Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc</title>
+<meta name="description" content="Free 2026 Georgia self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and Georgia state tax (a flat rate of 5.19%) on your freelance income. See take-home pay and quarterly estimated payments.">
 <link rel="canonical" href="https://indie-calc.com/calculators/self-employment-tax/georgia/">
-<meta property="og:title" content="Self-Employment Tax Calculator 2026 — Georgia | IndieCalc">
-<meta property="og:description" content="Calculate your federal SE tax, income tax, and Georgia state tax (a flat rate of 5.19%) on freelance income for 2026.">
+<meta property="og:title" content="Georgia Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc">
+<meta property="og:description" content="Free 2026 Georgia self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and Georgia state tax (a flat rate of 5.19%) on your freelance income. See take-home pay and quarterly estimated payments.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://indie-calc.com/calculators/self-employment-tax/georgia/">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Self-Employment Tax Calculator 2026 — Georgia | IndieCalc">
-<meta name="twitter:description" content="Calculate your federal SE tax, income tax, and Georgia state tax (a flat rate of 5.19%) on freelance income for 2026.">
+<meta name="twitter:title" content="Georgia Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc">
+<meta name="twitter:description" content="Free 2026 Georgia self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and Georgia state tax (a flat rate of 5.19%) on your freelance income. See take-home pay and quarterly estimated payments.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -99,8 +99,19 @@
   .btn { background: var(--teal); color: white; border: none; padding: 12px 32px; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: var(--font); }
   .btn:hover { background: #245a4c; }
 
-  .results { display: none; }
-  .results.visible { display: block; }
+  .results {
+    /* CLS fix: reserve vertical space upfront so the page doesn't shift when
+     * results render after auto-calculate. visibility:hidden keeps layout
+     * space allocated; .visible flips it back to visible. min-height is a
+     * conservative estimate of the typical rendered results height. */
+    visibility: hidden;
+    min-height: 760px;
+  }
+  .results.visible { visibility: visible; min-height: 0; }
+  @media (max-width: 600px) {
+    .results { min-height: 1000px; }
+    .results.visible { min-height: 0; }
+  }
 
   .hero-result { background: var(--teal); border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
   .hero-result .hero-value { font-size: 48px; font-weight: 700; letter-spacing: -1px; }
@@ -291,7 +302,50 @@
   }
   .empty-state h3 { color: var(--teal); font-size: 16px; margin-bottom: 8px; }
   .empty-state p { font-size: 14px; }
+
+  .state-guide {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 28px 32px; margin: 32px 0;
+  }
+  .state-guide h2 { font-size: 22px; font-weight: 700; margin: 0 0 16px; color: var(--dark); }
+  .state-guide h3 {
+    font-size: 16px; font-weight: 600; margin: 20px 0 8px; color: var(--dark);
+    padding: 0; border: none;
+  }
+  .state-guide p { font-size: 14px; color: var(--medium); margin: 0 0 12px; line-height: 1.7; }
+  .state-guide strong { color: var(--dark); font-weight: 600; }
+  .state-guide em { font-style: italic; }
+  @media (max-width: 600px) {
+    .state-guide { padding: 20px 18px; }
+    .state-guide h2 { font-size: 19px; }
+  }
+
+  .state-faq {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 28px 32px; margin: 32px 0;
+  }
+  .state-faq h2 { font-size: 22px; font-weight: 700; margin: 0 0 16px; color: var(--dark); }
+  .state-faq details { border-top: 1px solid var(--rule); padding: 16px 0; }
+  .state-faq details:first-of-type { border-top: none; padding-top: 4px; }
+  .state-faq summary {
+    font-size: 15px; font-weight: 600; color: var(--dark); cursor: pointer;
+    list-style: none; padding-right: 24px; position: relative; line-height: 1.4;
+  }
+  .state-faq summary::-webkit-details-marker { display: none; }
+  .state-faq summary::after {
+    content: '+'; position: absolute; right: 0; top: 0;
+    font-size: 22px; color: var(--teal); font-weight: 400;
+  }
+  .state-faq details[open] summary::after { content: '−'; }
+  .state-faq p { font-size: 14px; color: var(--medium); margin: 12px 0 0; line-height: 1.7; }
+  @media (max-width: 600px) {
+    .state-faq { padding: 20px 18px; }
+    .state-faq h2 { font-size: 19px; }
+  }
 </style>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"WebApplication","name":"Georgia Self-Employment Tax Calculator 2026 — Federal + State","url":"https://indie-calc.com/calculators/self-employment-tax/georgia/","description":"Free 2026 Georgia self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and Georgia state tax (a flat rate of 5.19%) on your freelance income. See take-home pay and quarterly estimated payments.","applicationCategory":"FinanceApplication","operatingSystem":"Any (browser-based)","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"creator":{"@type":"Organization","name":"IndieCalc","url":"https://indie-calc.com/"},"inLanguage":"en-US"}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How is self-employment tax calculated in Georgia for 2026?","acceptedAnswer":{"@type":"Answer","text":"Self-employment tax is a federal 15.3% tax on 92.35% of your net self-employment earnings (12.4% Social Security up to $184,500 for 2026 + 2.9% Medicare with no cap). It is the same in every state. Georgia freelancers pay this on top of federal income tax and Georgia state income tax."}},{"@type":"Question","name":"What state taxes do freelancers pay in Georgia?","acceptedAnswer":{"@type":"Answer","text":"As a freelancer in Georgia, you owe federal self-employment tax (15.3%), federal income tax, and Georgia state income tax on your net earnings. The exact state rate depends on your income level and filing status."}},{"@type":"Question","name":"Do I need to make quarterly estimated tax payments in Georgia?","acceptedAnswer":{"@type":"Answer","text":"Yes, if you expect to owe $1,000 or more in federal taxes for 2026, you must make quarterly estimated payments to the IRS. Georgia also requires estimated payments if you expect to owe state tax above its threshold. The 2026 federal due dates are April 15, June 15, September 15, and January 15, 2027."}},{"@type":"Question","name":"What deductions can Georgia freelancers claim in 2026?","acceptedAnswer":{"@type":"Answer","text":"Federal deductions for self-employed include the QBI deduction (up to 20% of qualified business income, made permanent under OBBBA), the deductible half of self-employment tax, self-employed health insurance premiums, retirement plan contributions (SEP IRA, Solo 401(k)), home office deduction, and ordinary business expenses. Georgia state-level deductions vary; consult a tax professional for state-specific items."}}]}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://indie-calc.com/"},{"@type":"ListItem","position":2,"name":"Self-Employment Tax","item":"https://indie-calc.com/calculators/self-employment-tax/"},{"@type":"ListItem","position":3,"name":"Georgia","item":"https://indie-calc.com/calculators/self-employment-tax/georgia/"}]}</script>
 </head>
 <body>
 
@@ -309,7 +363,7 @@
   <p class="subtitle">Calculate your federal self-employment tax, income tax, and Georgia state tax on freelance income.</p>
 
   <div class="state-intro">
-    <p>Georgia imposes a flat rate of 5.19% on individual income, which applies to your self-employment earnings on top of federal taxes. Georgia transitioned to a flat tax system and reduced its rate to 5.19% for 2026 (down from 5.49% in 2025). The state offers a generous standard deduction of $12,000 single / $24,000 joint.</p>
+    <p>Georgia imposes a flat rate of 5.19% on individual income, which applies to your self-employment earnings on top of federal taxes. Georgia transitioned to a flat tax system and currently sits at 5.19% (down from 5.39% in 2024, reduced to 5.19% in 2025 via HB 111). A 2026 acceleration bill on Governor Kemp's desk would bring the rate to 4.99% — see the guide below for status. The state offers a standard deduction of $12,000 single / $24,000 joint.</p>
     <p style="margin-top: 8px; font-size: 13px;">Use the calculator below to estimate your total tax burden as a self-employed Georgia resident for the 2026 tax year.</p>
   </div>
 
@@ -529,8 +583,44 @@
       <p style="font-size: 12px; color: var(--hint); margin-top: 6px;" id="lastUpdated"></p>
     </div>
   </section>
+  <section class="state-guide">
+    <h2>Georgia Freelancer Tax Guide for 2026</h2>
+    <h3>Georgia State Income Tax for Freelancers</h3>
+      <p>Georgia currently imposes a flat 5.19% state income tax on all freelance and self-employment income, set by HB 111 (signed by Governor Kemp on April 15, 2025), which reduced the rate from 5.39% in 2024 and put the state on a path of annual 0.10% reductions toward 4.99%. In the 2026 legislative session, lawmakers passed an additional acceleration bill (currently on the Governor's desk and expected to be signed) that would bring the rate directly to 4.99% effective for tax year 2026, with a longer-term legislative target of 3.99%. Pending the Governor's signature, the operative 2026 rate may be 4.99%; otherwise it remains 5.19%. The flat rate applies regardless of income level. Georgia conforms to federal taxable income calculations including the standard deduction, which simplifies state filing for most freelancers.</p>
 
-  <div class="methodology">
+      <h3>Georgia Pass-Through Entity Tax</h3>
+      <p>Georgia enacted a PTE tax election in 2022. S-Corps, partnerships, and multi-member LLCs can elect to pay GA state tax at the entity level (at the prevailing flat rate), generating a federal deduction that bypasses the SALT cap. Owners receive a corresponding refundable Georgia tax credit on their personal return, so net state tax is roughly unchanged — the federal deduction is what's unlocked, not a state tax reduction. For Georgia freelancers operating as S-Corps with $150K+ in income, the federal tax savings typically run $500–$2,000/year.</p>
+
+      <h3>Quarterly Estimated Payments in Georgia</h3>
+      <p>Georgia quarterly estimates align with the federal schedule (April 15, June 15, September 15, January 15). File Form 500-ES. Safe harbor is 100% of prior year or 70% of current year. Failure to pay timely triggers underpayment penalty interest based on the federal underpayment rate.</p>
+
+      <h3>Georgia Non-Conformity to OBBBA Tip and Overtime Deductions</h3>
+      <p>Georgia's IRC conformity date currently sits at January 1, 2025, which predates OBBBA's July 4, 2025 enactment. As a result, Georgia has <strong>not</strong> conformed to the federal "No Tax on Tips" (OBBBA §70201) or "No Tax on Overtime" (OBBBA §70202) deductions. If you take those federal deductions, Georgia adds the amounts back when computing Georgia taxable income — meaning you still owe Georgia state tax on tip and overtime income even when it's exempt from federal income tax. The Georgia legislature has considered conformity bills (e.g., HB 375) but none had been enacted as of early 2026; check current Georgia Department of Revenue guidance before filing.</p>
+
+      <h3>Common Georgia Freelancer Gotchas</h3>
+      <p>Georgia does <strong>not</strong> conform to the federal QBI deduction, so your 20% QBI benefit reduces your federal tax only. Atlanta and other Georgia cities don't impose a separate municipal income tax (unlike Ohio or Pennsylvania), making local tax compliance simpler. Georgia has a Net Worth Tax on corporations (including LLCs taxed as C-Corps) ranging from $10–$5,000 annually; LLCs taxed as partnerships or disregarded entities are exempt.</p>
+  </section>
+<section class="state-faq" data-faq="indiecalc">
+    <h2>Frequently Asked Questions: Georgia Freelancer Taxes</h2>
+    <details>
+      <summary>How is self-employment tax calculated in Georgia for 2026?</summary>
+      <p>Self-employment tax is a federal 15.3% tax on 92.35% of your net self-employment earnings (12.4% Social Security up to $184,500 for 2026 + 2.9% Medicare with no cap). It is the same in every state. Georgia freelancers pay this on top of federal income tax and Georgia state income tax.</p>
+    </details>
+    <details>
+      <summary>What state taxes do freelancers pay in Georgia?</summary>
+      <p>As a freelancer in Georgia, you owe federal self-employment tax (15.3%), federal income tax, and Georgia state income tax on your net earnings. The exact state rate depends on your income level and filing status.</p>
+    </details>
+    <details>
+      <summary>Do I need to make quarterly estimated tax payments in Georgia?</summary>
+      <p>Yes, if you expect to owe $1,000 or more in federal taxes for 2026, you must make quarterly estimated payments to the IRS. Georgia also requires estimated payments if you expect to owe state tax above its threshold. The 2026 federal due dates are April 15, June 15, September 15, and January 15, 2027.</p>
+    </details>
+    <details>
+      <summary>What deductions can Georgia freelancers claim in 2026?</summary>
+      <p>Federal deductions for self-employed include the QBI deduction (up to 20% of qualified business income, made permanent under OBBBA), the deductible half of self-employment tax, self-employed health insurance premiums, retirement plan contributions (SEP IRA, Solo 401(k)), home office deduction, and ordinary business expenses. Georgia state-level deductions vary; consult a tax professional for state-specific items.</p>
+    </details>
+  </section>
+
+<div class="methodology">
     <h2>How This Calculator Works</h2>
     <ol>
       <li><strong>Self-employment tax:</strong> Net income × 92.35% × 15.3% (12.4% Social Security + 2.9% Medicare). Social Security capped at $184,500 for 2026.</li>

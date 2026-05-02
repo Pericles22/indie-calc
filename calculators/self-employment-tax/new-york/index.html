@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Self-Employment Tax Calculator 2026 — New York | IndieCalc</title>
-<meta name="description" content="Free New York self-employment tax calculator for 2026. Calculate federal SE tax (15.3%), income tax, and New York state tax (graduated rates from 4% to 10.9%) on your freelance income. See take-home pay and quarterly estimated payments.">
+<title>New York Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc</title>
+<meta name="description" content="Free 2026 New York self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and New York state tax (graduated rates from 4% to 10.9%) on your freelance income. See take-home pay and quarterly estimated payments.">
 <link rel="canonical" href="https://indie-calc.com/calculators/self-employment-tax/new-york/">
-<meta property="og:title" content="Self-Employment Tax Calculator 2026 — New York | IndieCalc">
-<meta property="og:description" content="Calculate your federal SE tax, income tax, and New York state tax (graduated rates from 4% to 10.9%) on freelance income for 2026.">
+<meta property="og:title" content="New York Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc">
+<meta property="og:description" content="Free 2026 New York self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and New York state tax (graduated rates from 4% to 10.9%) on your freelance income. See take-home pay and quarterly estimated payments.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://indie-calc.com/calculators/self-employment-tax/new-york/">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Self-Employment Tax Calculator 2026 — New York | IndieCalc">
-<meta name="twitter:description" content="Calculate your federal SE tax, income tax, and New York state tax (graduated rates from 4% to 10.9%) on freelance income for 2026.">
+<meta name="twitter:title" content="New York Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc">
+<meta name="twitter:description" content="Free 2026 New York self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and New York state tax (graduated rates from 4% to 10.9%) on your freelance income. See take-home pay and quarterly estimated payments.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -99,8 +99,19 @@
   .btn { background: var(--teal); color: white; border: none; padding: 12px 32px; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: var(--font); }
   .btn:hover { background: #245a4c; }
 
-  .results { display: none; }
-  .results.visible { display: block; }
+  .results {
+    /* CLS fix: reserve vertical space upfront so the page doesn't shift when
+     * results render after auto-calculate. visibility:hidden keeps layout
+     * space allocated; .visible flips it back to visible. min-height is a
+     * conservative estimate of the typical rendered results height. */
+    visibility: hidden;
+    min-height: 760px;
+  }
+  .results.visible { visibility: visible; min-height: 0; }
+  @media (max-width: 600px) {
+    .results { min-height: 1000px; }
+    .results.visible { min-height: 0; }
+  }
 
   .hero-result { background: var(--teal); border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
   .hero-result .hero-value { font-size: 48px; font-weight: 700; letter-spacing: -1px; }
@@ -291,7 +302,50 @@
   }
   .empty-state h3 { color: var(--teal); font-size: 16px; margin-bottom: 8px; }
   .empty-state p { font-size: 14px; }
+
+  .state-guide {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 28px 32px; margin: 32px 0;
+  }
+  .state-guide h2 { font-size: 22px; font-weight: 700; margin: 0 0 16px; color: var(--dark); }
+  .state-guide h3 {
+    font-size: 16px; font-weight: 600; margin: 20px 0 8px; color: var(--dark);
+    padding: 0; border: none;
+  }
+  .state-guide p { font-size: 14px; color: var(--medium); margin: 0 0 12px; line-height: 1.7; }
+  .state-guide strong { color: var(--dark); font-weight: 600; }
+  .state-guide em { font-style: italic; }
+  @media (max-width: 600px) {
+    .state-guide { padding: 20px 18px; }
+    .state-guide h2 { font-size: 19px; }
+  }
+
+  .state-faq {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 28px 32px; margin: 32px 0;
+  }
+  .state-faq h2 { font-size: 22px; font-weight: 700; margin: 0 0 16px; color: var(--dark); }
+  .state-faq details { border-top: 1px solid var(--rule); padding: 16px 0; }
+  .state-faq details:first-of-type { border-top: none; padding-top: 4px; }
+  .state-faq summary {
+    font-size: 15px; font-weight: 600; color: var(--dark); cursor: pointer;
+    list-style: none; padding-right: 24px; position: relative; line-height: 1.4;
+  }
+  .state-faq summary::-webkit-details-marker { display: none; }
+  .state-faq summary::after {
+    content: '+'; position: absolute; right: 0; top: 0;
+    font-size: 22px; color: var(--teal); font-weight: 400;
+  }
+  .state-faq details[open] summary::after { content: '−'; }
+  .state-faq p { font-size: 14px; color: var(--medium); margin: 12px 0 0; line-height: 1.7; }
+  @media (max-width: 600px) {
+    .state-faq { padding: 20px 18px; }
+    .state-faq h2 { font-size: 19px; }
+  }
 </style>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"WebApplication","name":"New York Self-Employment Tax Calculator 2026 — Federal + State","url":"https://indie-calc.com/calculators/self-employment-tax/new-york/","description":"Free 2026 New York self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and New York state tax (graduated rates from 4% to 10.9%) on your freelance income. See take-home pay and quarterly estimated payments.","applicationCategory":"FinanceApplication","operatingSystem":"Any (browser-based)","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"creator":{"@type":"Organization","name":"IndieCalc","url":"https://indie-calc.com/"},"inLanguage":"en-US"}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How is self-employment tax calculated in New York for 2026?","acceptedAnswer":{"@type":"Answer","text":"Self-employment tax is a federal 15.3% tax on 92.35% of your net self-employment earnings (12.4% Social Security up to $184,500 for 2026 + 2.9% Medicare with no cap). It is the same in every state. New York freelancers pay this on top of federal income tax and New York state income tax."}},{"@type":"Question","name":"What state taxes do freelancers pay in New York?","acceptedAnswer":{"@type":"Answer","text":"As a freelancer in New York, you owe federal self-employment tax (15.3%), federal income tax, and New York state income tax on your net earnings. The exact state rate depends on your income level and filing status."}},{"@type":"Question","name":"Do I need to make quarterly estimated tax payments in New York?","acceptedAnswer":{"@type":"Answer","text":"Yes, if you expect to owe $1,000 or more in federal taxes for 2026, you must make quarterly estimated payments to the IRS. New York also requires estimated payments if you expect to owe state tax above its threshold. The 2026 federal due dates are April 15, June 15, September 15, and January 15, 2027."}},{"@type":"Question","name":"What deductions can New York freelancers claim in 2026?","acceptedAnswer":{"@type":"Answer","text":"Federal deductions for self-employed include the QBI deduction (up to 20% of qualified business income, made permanent under OBBBA), the deductible half of self-employment tax, self-employed health insurance premiums, retirement plan contributions (SEP IRA, Solo 401(k)), home office deduction, and ordinary business expenses. New York state-level deductions vary; consult a tax professional for state-specific items."}}]}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://indie-calc.com/"},{"@type":"ListItem","position":2,"name":"Self-Employment Tax","item":"https://indie-calc.com/calculators/self-employment-tax/"},{"@type":"ListItem","position":3,"name":"New York","item":"https://indie-calc.com/calculators/self-employment-tax/new-york/"}]}</script>
 </head>
 <body>
 
@@ -529,8 +583,43 @@
       <p style="font-size: 12px; color: var(--hint); margin-top: 6px;" id="lastUpdated"></p>
     </div>
   </section>
+  <section class="state-guide">
+    <h2>New York Freelancer Tax Guide for 2026</h2>
+    <h3>New York State Income Tax for Freelancers</h3>
+      <p>New York taxes self-employment income at graduated rates from 4% to 10.9%, with the top bracket kicking in at $25 million for single filers. Most freelancers fall in the 5.5–6.85% range (the 9.65% bracket starts above $1.08 million for single filers). New York's tax base starts with federal AGI rather than federal taxable income, so the federal QBI deduction (which is below-the-line) does <strong>not</strong> reduce New York taxable income — your 20% QBI benefit cuts federal tax only.</p>
 
-  <div class="methodology">
+      <h3>NYC and Yonkers Local Taxes</h3>
+      <p>If you live in New York City, add NYC's graduated income tax (3.078–3.876%) on top of state tax — making NYC freelancers' combined marginal rate among the highest in the country (up to ~14.8%). Yonkers residents pay a 16.75% surcharge on their state tax. Non-residents working in NYC don't owe NYC income tax (the commuter tax was repealed in 1999) but do still owe NY state tax on NY-sourced income.</p>
+
+      <h3>NY Pass-Through Entity Tax (PTET)</h3>
+      <p>Like California, New York offers a PTET election for S-Corps, partnerships, and LLCs taxed as such. The entity pays NY state tax (and NYC tax, separately) at graduated rates: 6.85% on the first $2M, 9.65% from $2M–$5M, 10.30% from $5M–$25M, and 10.90% above $25M. The federal deduction for the PTET payment effectively bypasses the SALT cap, while each partner/shareholder receives a corresponding NY state tax credit on their personal return — so net NY tax is roughly unchanged and the federal deduction is what's unlocked. For a freelancer earning $300K through an S-Corp in NYC, PTET savings can exceed $7,000/year.</p>
+
+      <h3>Quarterly Estimated Payments in New York</h3>
+      <p>NY follows the standard four-quarter federal schedule (April 15, June 15, September 15, January 15). File Form IT-2105. The safe harbor matches federal: 100% of prior year (110% if NY AGI > $150K). NYC residents must include estimated NYC tax in their state estimated payments — same form, separate calculation.</p>
+
+      <p style="font-size: 12px; color: var(--hint); margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule);"><strong>Note on 2026 brackets:</strong> New York's 2026 income tax brackets are derived from inflation-indexed adjustments to the 2025 official tables. The Department of Taxation and Finance typically finalizes 2026 bracket cutoffs late in the year. The graduated-rate ranges and structure shown here reflect the legislatively enacted schedule and the Department's annual indexing methodology, not speculative estimates.</p>
+  </section>
+<section class="state-faq" data-faq="indiecalc">
+    <h2>Frequently Asked Questions: New York Freelancer Taxes</h2>
+    <details>
+      <summary>How is self-employment tax calculated in New York for 2026?</summary>
+      <p>Self-employment tax is a federal 15.3% tax on 92.35% of your net self-employment earnings (12.4% Social Security up to $184,500 for 2026 + 2.9% Medicare with no cap). It is the same in every state. New York freelancers pay this on top of federal income tax and New York state income tax.</p>
+    </details>
+    <details>
+      <summary>What state taxes do freelancers pay in New York?</summary>
+      <p>As a freelancer in New York, you owe federal self-employment tax (15.3%), federal income tax, and New York state income tax on your net earnings. The exact state rate depends on your income level and filing status.</p>
+    </details>
+    <details>
+      <summary>Do I need to make quarterly estimated tax payments in New York?</summary>
+      <p>Yes, if you expect to owe $1,000 or more in federal taxes for 2026, you must make quarterly estimated payments to the IRS. New York also requires estimated payments if you expect to owe state tax above its threshold. The 2026 federal due dates are April 15, June 15, September 15, and January 15, 2027.</p>
+    </details>
+    <details>
+      <summary>What deductions can New York freelancers claim in 2026?</summary>
+      <p>Federal deductions for self-employed include the QBI deduction (up to 20% of qualified business income, made permanent under OBBBA), the deductible half of self-employment tax, self-employed health insurance premiums, retirement plan contributions (SEP IRA, Solo 401(k)), home office deduction, and ordinary business expenses. New York state-level deductions vary; consult a tax professional for state-specific items.</p>
+    </details>
+  </section>
+
+<div class="methodology">
     <h2>How This Calculator Works</h2>
     <ol>
       <li><strong>Self-employment tax:</strong> Net income × 92.35% × 15.3% (12.4% Social Security + 2.9% Medicare). Social Security capped at $184,500 for 2026.</li>

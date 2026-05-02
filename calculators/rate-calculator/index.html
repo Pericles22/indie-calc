@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Freelance Rate Calculator 2026 — What to Charge | IndieCalc</title>
-<meta name="description" content="Free freelance rate calculator for 2026. Work backwards from your income goal to find the hourly rate you need to charge after taxes and expenses. All 50 states.">
+<title>Freelance Hourly Rate Calculator 2026 — Reverse-Engineer Your Take-Home | IndieCalc</title>
+<meta name="description" content="Free 2026 freelance hourly rate calculator. Work backwards from your income goal to find the hourly rate you need to charge after taxes, expenses, and self-employment tax. All 51 states.">
 <link rel="canonical" href="https://indie-calc.com/calculators/rate-calculator/">
-<meta property="og:title" content="Freelance Rate Calculator 2026 — IndieCalc">
-<meta property="og:description" content="Find your required hourly rate by working backwards from your target take-home pay. Accounts for federal, state, and SE taxes.">
+<meta property="og:title" content="Freelance Hourly Rate Calculator 2026 — Reverse-Engineer Your Take-Home | IndieCalc">
+<meta property="og:description" content="Free 2026 freelance hourly rate calculator. Work backwards from your income goal to find the hourly rate you need to charge after taxes, expenses, and self-employment tax. All 51 states.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://indie-calc.com/calculators/rate-calculator/">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Freelance Rate Calculator 2026 — IndieCalc">
-<meta name="twitter:description" content="Find your required hourly rate by working backwards from your target take-home pay. Accounts for federal, state, and SE taxes.">
+<meta name="twitter:title" content="Freelance Hourly Rate Calculator 2026 — Reverse-Engineer Your Take-Home | IndieCalc">
+<meta name="twitter:description" content="Free 2026 freelance hourly rate calculator. Work backwards from your income goal to find the hourly rate you need to charge after taxes, expenses, and self-employment tax. All 51 states.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -102,8 +102,19 @@
   .accordion-body .field-help { font-size: 12px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
 
   /* Results */
-  .results { display: none; }
-  .results.visible { display: block; }
+  .results {
+    /* CLS fix: reserve vertical space upfront so the page doesn't shift when
+     * results render after auto-calculate. visibility:hidden keeps layout
+     * space allocated; .visible flips it back to visible. min-height is a
+     * conservative estimate of the typical rendered results height. */
+    visibility: hidden;
+    min-height: 760px;
+  }
+  .results.visible { visibility: visible; min-height: 0; }
+  @media (max-width: 600px) {
+    .results { min-height: 1000px; }
+    .results.visible { min-height: 0; }
+  }
 
   /* Hero rate number */
   .hero-result { background: var(--teal); border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
@@ -185,6 +196,8 @@
     .breakdown, .result-summary, .methodology { box-shadow: none; border: 1px solid #999; }
   }
 </style>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"WebApplication","name":"Freelance Hourly Rate Calculator 2026 — Reverse-Engineer Your Take-Home","url":"https://indie-calc.com/calculators/rate-calculator/","description":"Free 2026 freelance hourly rate calculator. Work backwards from your income goal to find the hourly rate you need to charge after taxes, expenses, and self-employment tax. All 51 states.","applicationCategory":"FinanceApplication","operatingSystem":"Any (browser-based)","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"creator":{"@type":"Organization","name":"IndieCalc","url":"https://indie-calc.com/"},"inLanguage":"en-US"}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://indie-calc.com/"},{"@type":"ListItem","position":2,"name":"Calculators","item":"https://indie-calc.com/calculators/"},{"@type":"ListItem","position":3,"name":"Freelance Rate Calculator","item":"https://indie-calc.com/calculators/rate-calculator/"}]}</script>
 </head>
 <body>
 

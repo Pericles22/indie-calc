@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Self-Employment Tax Calculator 2026 — Wisconsin | IndieCalc</title>
-<meta name="description" content="Free Wisconsin self-employment tax calculator for 2026. Calculate federal SE tax (15.3%), income tax, and Wisconsin state tax (graduated rates from 3.5% to 7.65%) on your freelance income. See take-home pay and quarterly estimated payments.">
+<title>Wisconsin Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc</title>
+<meta name="description" content="Free 2026 Wisconsin self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and Wisconsin state tax (graduated rates from 3.5% to 7.65%) on your freelance income. See take-home pay and quarterly estimated payments.">
 <link rel="canonical" href="https://indie-calc.com/calculators/self-employment-tax/wisconsin/">
-<meta property="og:title" content="Self-Employment Tax Calculator 2026 — Wisconsin | IndieCalc">
-<meta property="og:description" content="Calculate your federal SE tax, income tax, and Wisconsin state tax (graduated rates from 3.5% to 7.65%) on freelance income for 2026.">
+<meta property="og:title" content="Wisconsin Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc">
+<meta property="og:description" content="Free 2026 Wisconsin self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and Wisconsin state tax (graduated rates from 3.5% to 7.65%) on your freelance income. See take-home pay and quarterly estimated payments.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://indie-calc.com/calculators/self-employment-tax/wisconsin/">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Self-Employment Tax Calculator 2026 — Wisconsin | IndieCalc">
-<meta name="twitter:description" content="Calculate your federal SE tax, income tax, and Wisconsin state tax (graduated rates from 3.5% to 7.65%) on freelance income for 2026.">
+<meta name="twitter:title" content="Wisconsin Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc">
+<meta name="twitter:description" content="Free 2026 Wisconsin self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and Wisconsin state tax (graduated rates from 3.5% to 7.65%) on your freelance income. See take-home pay and quarterly estimated payments.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -99,8 +99,19 @@
   .btn { background: var(--teal); color: white; border: none; padding: 12px 32px; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: var(--font); }
   .btn:hover { background: #245a4c; }
 
-  .results { display: none; }
-  .results.visible { display: block; }
+  .results {
+    /* CLS fix: reserve vertical space upfront so the page doesn't shift when
+     * results render after auto-calculate. visibility:hidden keeps layout
+     * space allocated; .visible flips it back to visible. min-height is a
+     * conservative estimate of the typical rendered results height. */
+    visibility: hidden;
+    min-height: 760px;
+  }
+  .results.visible { visibility: visible; min-height: 0; }
+  @media (max-width: 600px) {
+    .results { min-height: 1000px; }
+    .results.visible { min-height: 0; }
+  }
 
   .hero-result { background: var(--teal); border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
   .hero-result .hero-value { font-size: 48px; font-weight: 700; letter-spacing: -1px; }
@@ -291,7 +302,33 @@
   }
   .empty-state h3 { color: var(--teal); font-size: 16px; margin-bottom: 8px; }
   .empty-state p { font-size: 14px; }
+
+  .state-faq {
+    background: var(--white); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 28px 32px; margin: 32px 0;
+  }
+  .state-faq h2 { font-size: 22px; font-weight: 700; margin: 0 0 16px; color: var(--dark); }
+  .state-faq details { border-top: 1px solid var(--rule); padding: 16px 0; }
+  .state-faq details:first-of-type { border-top: none; padding-top: 4px; }
+  .state-faq summary {
+    font-size: 15px; font-weight: 600; color: var(--dark); cursor: pointer;
+    list-style: none; padding-right: 24px; position: relative; line-height: 1.4;
+  }
+  .state-faq summary::-webkit-details-marker { display: none; }
+  .state-faq summary::after {
+    content: '+'; position: absolute; right: 0; top: 0;
+    font-size: 22px; color: var(--teal); font-weight: 400;
+  }
+  .state-faq details[open] summary::after { content: '−'; }
+  .state-faq p { font-size: 14px; color: var(--medium); margin: 12px 0 0; line-height: 1.7; }
+  @media (max-width: 600px) {
+    .state-faq { padding: 20px 18px; }
+    .state-faq h2 { font-size: 19px; }
+  }
 </style>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"WebApplication","name":"Wisconsin Self-Employment Tax Calculator 2026 — Federal + State","url":"https://indie-calc.com/calculators/self-employment-tax/wisconsin/","description":"Free 2026 Wisconsin self-employment tax calculator for freelancers. Calculate federal SE tax (15.3%), income tax, and Wisconsin state tax (graduated rates from 3.5% to 7.65%) on your freelance income. See take-home pay and quarterly estimated payments.","applicationCategory":"FinanceApplication","operatingSystem":"Any (browser-based)","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"creator":{"@type":"Organization","name":"IndieCalc","url":"https://indie-calc.com/"},"inLanguage":"en-US"}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How is self-employment tax calculated in Wisconsin for 2026?","acceptedAnswer":{"@type":"Answer","text":"Self-employment tax is a federal 15.3% tax on 92.35% of your net self-employment earnings (12.4% Social Security up to $184,500 for 2026 + 2.9% Medicare with no cap). It is the same in every state. Wisconsin freelancers pay this on top of federal income tax and Wisconsin state income tax."}},{"@type":"Question","name":"What state taxes do freelancers pay in Wisconsin?","acceptedAnswer":{"@type":"Answer","text":"As a freelancer in Wisconsin, you owe federal self-employment tax (15.3%), federal income tax, and Wisconsin state income tax on your net earnings. The exact state rate depends on your income level and filing status."}},{"@type":"Question","name":"Do I need to make quarterly estimated tax payments in Wisconsin?","acceptedAnswer":{"@type":"Answer","text":"Yes, if you expect to owe $1,000 or more in federal taxes for 2026, you must make quarterly estimated payments to the IRS. Wisconsin also requires estimated payments if you expect to owe state tax above its threshold. The 2026 federal due dates are April 15, June 15, September 15, and January 15, 2027."}},{"@type":"Question","name":"What deductions can Wisconsin freelancers claim in 2026?","acceptedAnswer":{"@type":"Answer","text":"Federal deductions for self-employed include the QBI deduction (up to 20% of qualified business income, made permanent under OBBBA), the deductible half of self-employment tax, self-employed health insurance premiums, retirement plan contributions (SEP IRA, Solo 401(k)), home office deduction, and ordinary business expenses. Wisconsin state-level deductions vary; consult a tax professional for state-specific items."}}]}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://indie-calc.com/"},{"@type":"ListItem","position":2,"name":"Self-Employment Tax","item":"https://indie-calc.com/calculators/self-employment-tax/"},{"@type":"ListItem","position":3,"name":"Wisconsin","item":"https://indie-calc.com/calculators/self-employment-tax/wisconsin/"}]}</script>
 </head>
 <body>
 
@@ -529,6 +566,26 @@
       <p style="font-size: 12px; color: var(--hint); margin-top: 6px;" id="lastUpdated"></p>
     </div>
   </section>
+  <section class="state-faq" data-faq="indiecalc">
+    <h2>Frequently Asked Questions: Wisconsin Freelancer Taxes</h2>
+    <details>
+      <summary>How is self-employment tax calculated in Wisconsin for 2026?</summary>
+      <p>Self-employment tax is a federal 15.3% tax on 92.35% of your net self-employment earnings (12.4% Social Security up to $184,500 for 2026 + 2.9% Medicare with no cap). It is the same in every state. Wisconsin freelancers pay this on top of federal income tax and Wisconsin state income tax.</p>
+    </details>
+    <details>
+      <summary>What state taxes do freelancers pay in Wisconsin?</summary>
+      <p>As a freelancer in Wisconsin, you owe federal self-employment tax (15.3%), federal income tax, and Wisconsin state income tax on your net earnings. The exact state rate depends on your income level and filing status.</p>
+    </details>
+    <details>
+      <summary>Do I need to make quarterly estimated tax payments in Wisconsin?</summary>
+      <p>Yes, if you expect to owe $1,000 or more in federal taxes for 2026, you must make quarterly estimated payments to the IRS. Wisconsin also requires estimated payments if you expect to owe state tax above its threshold. The 2026 federal due dates are April 15, June 15, September 15, and January 15, 2027.</p>
+    </details>
+    <details>
+      <summary>What deductions can Wisconsin freelancers claim in 2026?</summary>
+      <p>Federal deductions for self-employed include the QBI deduction (up to 20% of qualified business income, made permanent under OBBBA), the deductible half of self-employment tax, self-employed health insurance premiums, retirement plan contributions (SEP IRA, Solo 401(k)), home office deduction, and ordinary business expenses. Wisconsin state-level deductions vary; consult a tax professional for state-specific items.</p>
+    </details>
+  </section>
+
 
   <div class="methodology">
     <h2>How This Calculator Works</h2>

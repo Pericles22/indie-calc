@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Self-Employment Tax Calculator 2026 — Federal + State | IndieCalc</title>
-<meta name="description" content="Free self-employment tax calculator for 2026. Calculate federal SE tax (15.3%), income tax, and state tax on your freelance income. See your take-home pay and quarterly estimated payments.">
+<title>2026 Self-Employment Tax Calculator (Free) — All 51 States, OBBBA-Aware | IndieCalc</title>
+<meta name="description" content="Free 2026 self-employment tax calculator for freelancers. Federal SE tax (15.3%), income tax, QBI deduction, and state tax for all 51 states. OBBBA-aware. See your take-home pay and quarterly estimated payments.">
 <link rel="canonical" href="https://indie-calc.com/calculators/self-employment-tax/">
-<meta property="og:title" content="Self-Employment Tax Calculator 2026 — IndieCalc">
-<meta property="og:description" content="Calculate your federal SE tax, income tax, and state tax on freelance income. All 50 states, 2026 rates.">
+<meta property="og:title" content="2026 Self-Employment Tax Calculator (Free) — All 51 States, OBBBA-Aware | IndieCalc">
+<meta property="og:description" content="Free 2026 self-employment tax calculator for freelancers. Federal SE tax (15.3%), income tax, QBI deduction, and state tax for all 51 states. OBBBA-aware. See your take-home pay and quarterly estimated payments.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://indie-calc.com/calculators/self-employment-tax/">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Self-Employment Tax Calculator 2026 — IndieCalc">
-<meta name="twitter:description" content="Calculate your federal SE tax, income tax, and state tax on freelance income. All 50 states, 2026 rates.">
+<meta name="twitter:title" content="2026 Self-Employment Tax Calculator (Free) — All 51 States, OBBBA-Aware | IndieCalc">
+<meta name="twitter:description" content="Free 2026 self-employment tax calculator for freelancers. Federal SE tax (15.3%), income tax, QBI deduction, and state tax for all 51 states. OBBBA-aware. See your take-home pay and quarterly estimated payments.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -102,8 +102,19 @@
   .btn:hover { background: #245a4c; }
 
   /* Results */
-  .results { display: none; }
-  .results.visible { display: block; }
+  .results {
+    /* CLS fix: reserve vertical space upfront so the page doesn't shift when
+     * results render after auto-calculate. visibility:hidden keeps layout
+     * space allocated; .visible flips it back to visible. min-height is a
+     * conservative estimate of the typical rendered results height. */
+    visibility: hidden;
+    min-height: 760px;
+  }
+  .results.visible { visibility: visible; min-height: 0; }
+  @media (max-width: 600px) {
+    .results { min-height: 1000px; }
+    .results.visible { min-height: 0; }
+  }
 
   /* Hero take-home number */
   .hero-result { background: var(--teal); border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; color: white; }
@@ -304,6 +315,8 @@
   .empty-state h3 { color: var(--teal); font-size: 16px; margin-bottom: 8px; }
   .empty-state p { font-size: 14px; }
 </style>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"WebApplication","name":"2026 Self-Employment Tax Calculator (Free) — All 51 States, OBBBA-Aware","url":"https://indie-calc.com/calculators/self-employment-tax/","description":"Free 2026 self-employment tax calculator for freelancers. Federal SE tax (15.3%), income tax, QBI deduction, and state tax for all 51 states. OBBBA-aware. See your take-home pay and quarterly estimated payments.","applicationCategory":"FinanceApplication","operatingSystem":"Any (browser-based)","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"creator":{"@type":"Organization","name":"IndieCalc","url":"https://indie-calc.com/"},"inLanguage":"en-US"}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://indie-calc.com/"},{"@type":"ListItem","position":2,"name":"Calculators","item":"https://indie-calc.com/calculators/"},{"@type":"ListItem","position":3,"name":"Self-Employment Tax Calculator","item":"https://indie-calc.com/calculators/self-employment-tax/"}]}</script>
 </head>
 <body>
 
@@ -439,6 +452,18 @@
           <label for="qualifiedTips">Qualified Tips <span style="color:var(--hint); font-weight: 400;">(OBBBA &ldquo;No Tax on Tips&rdquo;)</span></label>
           <div class="prefix"><input type="number" id="qualifiedTips" placeholder="0" value="0"></div>
           <div class="field-help">Up to $25,000 of qualified tip income is exempt from federal income tax under OBBBA &sect;70201. Still subject to SE tax. Most freelancers do not have tip income.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="qualifiedOvertime">Qualified Overtime <span style="color:var(--hint); font-weight: 400;">(OBBBA &ldquo;No Tax on Overtime&rdquo;)</span></label>
+          <div class="prefix"><input type="number" id="qualifiedOvertime" placeholder="0" value="0"></div>
+          <div class="field-help">Up to $12,500 single / $25,000 MFJ of qualified W-2 overtime compensation is deductible above-the-line under OBBBA &sect;70202. Phases out by $100 per $1,000 of MAGI above $150K / $300K (zero at $275K / $550K). Applies to W-2 overtime, not Schedule C income.</div>
+        </div>
+        <div class="form-group">
+          <label for="charitableContrib">Charitable Contributions <span style="color:var(--hint); font-weight: 400;">(non-itemizer, OBBBA permanent)</span></label>
+          <div class="prefix"><input type="number" id="charitableContrib" placeholder="0" value="0"></div>
+          <div class="field-help">Cash gifts to public charities. If you take the standard deduction, up to $1,000 single / $2,000 MFJ is deductible above-the-line under OBBBA. Itemizers route charitable contributions through &ldquo;Other Itemized&rdquo; instead. Excludes DAFs, appreciated stock, and household goods.</div>
         </div>
       </div>
     </div>
@@ -792,7 +817,7 @@
   let debounceTimer;
   function debounce(fn, ms) { return function(...args) { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fn(...args), ms); }; }
 
-  document.querySelectorAll('#netProfit, #otherIncome, #numChildren, #healthInsurance, #retirementContrib, #homeOfficeSqft, #studentLoanInterest, #propertyTax, #otherItemized, #investmentIncome, #qualifiedTips').forEach(el => {
+  document.querySelectorAll('#netProfit, #otherIncome, #numChildren, #healthInsurance, #retirementContrib, #homeOfficeSqft, #studentLoanInterest, #propertyTax, #otherItemized, #investmentIncome, #qualifiedTips, #qualifiedOvertime, #charitableContrib').forEach(el => {
     el.addEventListener('input', debounce(() => { shouldScroll = false; calculate(); persistState(); }, 200));
   });
   document.querySelectorAll('#filingStatus, #state, #includeQBI, #isSSTB, #isSenior, #spouseIsSenior, #locality').forEach(el => {
@@ -832,7 +857,7 @@
 
   // URL state persistence: serialize form state to the URL hash so users
   // can share/bookmark a configured calculator. Hydrated on page load.
-  const STATE_PARAMS_NUM = ['netProfit', 'otherIncome', 'numChildren', 'healthInsurance', 'retirementContrib', 'homeOfficeSqft', 'studentLoanInterest'];
+  const STATE_PARAMS_NUM = ['netProfit', 'otherIncome', 'numChildren', 'healthInsurance', 'retirementContrib', 'homeOfficeSqft', 'studentLoanInterest', 'propertyTax', 'otherItemized', 'investmentIncome', 'qualifiedTips', 'qualifiedOvertime', 'charitableContrib'];
   const STATE_PARAMS_SEL = ['filingStatus', 'state'];
   const STATE_PARAMS_CHK = ['includeQBI', 'isSSTB', 'isSenior', 'spouseIsSenior'];
   function persistState() {
@@ -942,6 +967,8 @@
     const otherItemized = Math.max(0, parseFloat(document.getElementById('otherItemized').value) || 0);
     const investmentIncome = Math.max(0, parseFloat(document.getElementById('investmentIncome').value) || 0);
     const qualifiedTips = Math.max(0, parseFloat(document.getElementById('qualifiedTips').value) || 0);
+    const qualifiedOvertime = Math.max(0, parseFloat(document.getElementById('qualifiedOvertime').value) || 0);
+    const charitableContrib = Math.max(0, parseFloat(document.getElementById('charitableContrib').value) || 0);
     const localityEl = document.getElementById('locality');
     const locality = localityEl && localityEl.value ? localityEl.value : null;
 
@@ -956,7 +983,7 @@
         isSenior, spouseIsSenior, isSSTB,
         healthInsurance, retirementContrib, otherAboveLine,
         propertyTax, otherItemized,
-        investmentIncome, qualifiedTips, locality,
+        investmentIncome, qualifiedTips, qualifiedOvertime, charitableContrib, locality,
       },
       fedCopy,
       state,
@@ -1083,6 +1110,31 @@
           ? 'Capped at $25K (OBBBA §70201). Income tax exempt only — SE tax still applies.'
           : 'OBBBA §70201: tip income exempt from federal income tax (SE tax still applies)',
         tipText: tipCapped ? 'OBBBA cap' : 'OBBBA',
+      });
+    }
+    if (result.federalIncomeTax.overtimeDeduction > 0) {
+      const overtimeCapped = qualifiedOvertime > result.federalIncomeTax.overtimeDeduction;
+      const overtimePhaseoutActive = result.federalIncomeTax.overtimePhaseoutActive;
+      rows.push({
+        label: 'Qualified Overtime Deduction',
+        value: '(' + fmt(result.federalIncomeTax.overtimeDeduction) + ')',
+        tip: overtimePhaseoutActive
+          ? 'OBBBA §70202 cap reduced to ' + fmt(result.federalIncomeTax.overtimeCap) + ' due to MAGI phaseout ($100/$1K above $150K single / $300K MFJ).'
+          : (overtimeCapped
+              ? 'Capped at $12,500 single / $25,000 MFJ (OBBBA §70202). Income tax deductible above-the-line; W-2 payroll tax still applies.'
+              : 'OBBBA §70202: qualified overtime compensation deductible above-the-line.'),
+        tipText: overtimePhaseoutActive ? 'OBBBA phaseout' : (overtimeCapped ? 'OBBBA cap' : 'OBBBA'),
+      });
+    }
+    if (result.federalIncomeTax.charitableNonItemizerDeduction > 0) {
+      const charCapped = charitableContrib > result.federalIncomeTax.charitableNonItemizerDeduction;
+      rows.push({
+        label: 'Charitable Deduction (non-itemizer)',
+        value: '(' + fmt(result.federalIncomeTax.charitableNonItemizerDeduction) + ')',
+        tip: charCapped
+          ? 'Capped at $1,000 single / $2,000 MFJ for non-itemizers (OBBBA permanent). Cash gifts to public charities only.'
+          : 'OBBBA: cash charitable contributions deductible above-the-line for taxpayers who take the standard deduction.',
+        tipText: charCapped ? 'OBBBA cap' : 'OBBBA',
       });
     }
     if (result.federalIncomeTax.usedItemized) {
