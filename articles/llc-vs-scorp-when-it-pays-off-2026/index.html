@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLC vs S-Corp 2026: When Does the S-Corp Election Actually Pay Off? | IndieCalc</title>
+<meta name="description" content="When does S-Corp save freelancers money in 2026? Reasonable salary, payroll cost, QBI interaction, and the real breakeven (~$60K-$80K net) with worked examples.">
+<link rel="canonical" href="https://indie-calc.com/articles/llc-vs-scorp-when-it-pays-off-2026/">
+<meta property="og:title" content="LLC vs S-Corp 2026: When Does the S-Corp Election Actually Pay Off? | IndieCalc">
+<meta property="og:description" content="When does S-Corp save freelancers money in 2026? Reasonable salary, payroll cost, QBI interaction, and the real breakeven (~$60K-$80K net) with worked examples.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://indie-calc.com/articles/llc-vs-scorp-when-it-pays-off-2026/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LLC vs S-Corp 2026: When Does the S-Corp Election Actually Pay Off? | IndieCalc">
+<meta name="twitter:description" content="When does S-Corp save freelancers money in 2026? Reasonable salary, payroll cost, QBI interaction, and the real breakeven (~$60K-$80K net) with worked examples.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.7; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .header-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 20px; font-weight: 700; }
+  header h1 a { color: white; text-decoration: none; }
+  header h1 span { color: var(--teal); }
+  header nav a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; }
+
+  .article-header { padding: 48px 0 32px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+  .article-header .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .article-header h2 { font-size: 32px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+  .article-header .subtitle { font-size: 18px; color: var(--medium); line-height: 1.5; }
+  .article-header .meta { font-size: 13px; color: var(--light); margin-top: 16px; }
+
+  .article-body h3 { font-size: 22px; font-weight: 700; margin: 40px 0 16px; padding-top: 8px; }
+  .article-body h4 { font-size: 17px; font-weight: 600; margin: 28px 0 12px; }
+  .article-body p { font-size: 16px; color: var(--medium); margin-bottom: 20px; }
+  .article-body ul, .article-body ol { font-size: 16px; color: var(--medium); margin-bottom: 20px; padding-left: 24px; }
+  .article-body li { margin-bottom: 8px; }
+  .article-body strong { color: var(--dark); }
+
+  .callout { background: var(--teal-bg); border-left: 4px solid var(--teal); padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .callout p { margin-bottom: 0; font-size: 15px; }
+  .callout p + p { margin-top: 12px; }
+  .callout strong { color: var(--teal); }
+
+  .warning { background: #fff8f0; border-left: 4px solid #e8a84c; padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .warning p { margin-bottom: 0; font-size: 15px; color: #7a5a2a; }
+  .warning strong { color: #7a5a2a; }
+
+  .example-box { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 24px; margin: 24px 0; }
+  .example-box .example-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .example-box table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .example-box th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .example-box td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; color: var(--medium); }
+  .example-box td:last-child { text-align: right; font-weight: 500; }
+  .example-box tr.highlight td { font-weight: 700; color: var(--dark); }
+
+  .cta-box { background: var(--teal); border-radius: 12px; padding: 32px; margin: 36px 0; text-align: center; color: white; }
+  .cta-box h4 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: white; }
+  .cta-box p { font-size: 15px; opacity: 0.85; margin-bottom: 16px; color: white; }
+  .cta-box a { display: inline-block; background: white; color: var(--teal); padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; }
+  .cta-box a:hover { background: var(--teal-light); }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 36px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .article-header h2 { font-size: 24px; }
+    .article-body h3 { font-size: 19px; }
+  }
+</style>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"Article","headline":"LLC vs S-Corp 2026: When Does the S-Corp Election Actually Pay Off?","description":"When does S-Corp save freelancers money in 2026? Reasonable salary, payroll cost, QBI interaction, and the real breakeven (~$60K-$80K net) with worked examples.","url":"https://indie-calc.com/articles/llc-vs-scorp-when-it-pays-off-2026/","mainEntityOfPage":{"@type":"WebPage","@id":"https://indie-calc.com/articles/llc-vs-scorp-when-it-pays-off-2026/"},"author":{"@type":"Organization","name":"IndieCalc","url":"https://indie-calc.com/"},"publisher":{"@type":"Organization","name":"IndieCalc","url":"https://indie-calc.com/"},"datePublished":"2026-05-06","dateModified":"2026-05-06","inLanguage":"en-US"}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://indie-calc.com/"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://indie-calc.com/articles/"},{"@type":"ListItem","position":3,"name":"LLC vs S-Corp 2026: When Does the S-Corp Election Actually Pay Off?","item":"https://indie-calc.com/articles/llc-vs-scorp-when-it-pays-off-2026/"}]}</script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1><a href="../../">Indie<span>Calc</span></a></h1>
+    <nav><a href="../../">&larr; All Calculators</a></nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="article-header">
+    <div class="label">2026 Tax Guide</div>
+    <h2>LLC vs S-Corp in 2026: When the Election Actually Saves You Money (and When It's a Trap)</h2>
+    <p class="subtitle">Every freelancer hears the same advice: "form an S-Corp and save thousands in self-employment tax." It's true above a certain income, false below it, and the breakeven is higher than most people realize once you account for payroll cost and QBI.</p>
+    <p class="meta">Updated May 2026 &middot; 12 min read</p>
+  </div>
+
+  <div class="article-body">
+    <div class="callout" style="margin-top: 0;">
+      <p><strong>TL;DR &mdash; The S-Corp question in six points:</strong></p>
+      <p style="margin-top: 8px;">1. <strong>An LLC and an S-Corp are not opposites</strong> &mdash; "S-Corp" is a tax election an LLC (or corporation) can make. &nbsp;2. <strong>The savings come from SE tax</strong> &mdash; you pay 15.3% only on your "reasonable salary," not on profit distributions. &nbsp;3. <strong>The cost is real:</strong> ~$1,200&ndash;$2,500/year in payroll service + extra tax return + state fees. &nbsp;4. <strong>Breakeven is roughly $50K&ndash;$80K of net business income</strong>, depending on state fees, payroll cost, bookkeeping complexity, and how defensible your reasonable salary is &mdash; below that range, the S-Corp loses money. &nbsp;5. <strong>QBI interaction matters:</strong> S-Corp wages reduce your QBI deduction at higher incomes. &nbsp;6. <strong>"Reasonable salary" is the audit risk</strong> &mdash; pay yourself too little and the IRS will reclassify distributions as wages.</p>
+    </div>
+
+    <p>Walk into any freelancer Facebook group or r/freelance thread asking about taxes and within three replies someone will tell you to form an S-Corp. They're often right &mdash; but they're often wrong, too, because the math depends on numbers most people don't bother to plug in: your actual net income, your reasonable salary, the cost of compliance, and your QBI eligibility.</p>
+
+    <p>This guide walks through the actual math. By the end you should know whether the S-Corp election makes sense for your specific income level, and what you'd need to do operationally if you elect it.</p>
+
+    <h3>First: What "LLC vs S-Corp" Actually Means</h3>
+
+    <p>The phrasing is misleading. <strong>"LLC" is a legal structure. "S-Corp" is a tax election.</strong> They're not in the same category, which is why the comparison gets confusing.</p>
+
+    <p>Your business has two separate identities:</p>
+
+    <ul>
+      <li><strong>Legal entity:</strong> sole proprietor, single-member LLC, multi-member LLC, C-corp, etc. This is what you file with your state.</li>
+      <li><strong>Tax classification:</strong> sole prop (Schedule C), partnership, S-corp (Form 1120-S), C-corp (Form 1120). This is how the IRS taxes you.</li>
+    </ul>
+
+    <p>By default, a single-member LLC is taxed as a sole proprietor (Schedule C). That's the most common setup for freelancers. If you elect S-Corp tax treatment (file Form 2553), you keep the LLC legal structure but switch the tax classification.</p>
+
+    <p>So the real comparison freelancers should be making is:</p>
+
+    <ul>
+      <li><strong>Sole proprietor / default LLC</strong> (no election) vs.</li>
+      <li><strong>LLC with S-Corp election</strong></li>
+    </ul>
+
+    <p>Most freelancers don't actually need a C-corp; the structure forces double taxation that almost never benefits an owner-operator. We'll set that aside.</p>
+
+    <h3>How the Tax Savings Actually Work</h3>
+
+    <p>The reason an S-Corp can save money is one specific feature of the tax code: <strong>properly characterized S-Corp owner distributions are generally not subject to self-employment or FICA tax</strong>. (The "properly characterized" qualifier matters &mdash; if you under-pay yourself in salary, the IRS can reclassify distributions as wages, which we cover later.)</p>
+
+    <p>As a sole prop or default LLC, every dollar of your net business income is hit with 15.3% SE tax (12.4% Social Security on income up to $184,500 in 2026, plus 2.9% Medicare on all of it). On $100,000 of net income, SE tax alone is $14,130.</p>
+
+    <p>As an S-Corp, the IRS requires you to pay yourself a "reasonable salary" via W-2 payroll (subject to the same 15.3% in employer + employee FICA). Anything left over after salary is a "distribution" &mdash; not wages, not subject to FICA at all. That's the savings vehicle.</p>
+
+    <div class="example-box">
+      <div class="example-title">SE Tax Comparison: $120K Net Business Income</div>
+      <table>
+        <thead><tr><th></th><th>Sole Prop</th><th>S-Corp</th></tr></thead>
+        <tr><td>Net business income</td><td>$120,000</td><td>$120,000</td></tr>
+        <tr><td>Reasonable salary (W-2)</td><td>&mdash;</td><td>$60,000</td></tr>
+        <tr><td>Distribution (no FICA)</td><td>&mdash;</td><td>$60,000</td></tr>
+        <tr><td>SE tax base / FICA wages</td><td>$110,820 (92.35%)</td><td>$60,000</td></tr>
+        <tr><td>SE tax / FICA (15.3%)</td><td>$16,955</td><td>$9,180</td></tr>
+        <tr class="highlight"><td>Tax savings before costs</td><td></td><td>$7,775</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--light); margin-top: 8px;">The S-Corp saves $7,775 in payroll-type taxes. But that's gross savings &mdash; we haven't subtracted the cost of running an S-Corp yet.</p>
+    </div>
+
+    <div class="warning">
+      <p><strong>The 15.3% framing weakens at higher incomes.</strong> The headline savings rate of 15.3% only fully applies below the Social Security wage base ($184,500 in 2026). Above the cap, the Social Security component (12.4%) drops out and only the 2.9% Medicare portion remains on the additional income. And above $200,000 single / $250,000 joint, the <strong>0.9% Additional Medicare Tax</strong> applies to earned income (both W-2 wages and SE earnings), narrowing the wage-vs-distribution gap further. For very high earners, S-Corp savings come mostly from avoiding Medicare + Additional Medicare on the distribution portion &mdash; still meaningful, but smaller per dollar than the headline SE rate implies.</p>
+    </div>
+
+    <h3>What an S-Corp Actually Costs You</h3>
+
+    <p>The savings number above is what every "form an S-Corp!" influencer quotes. Here's what they leave out.</p>
+
+    <h4>1. Payroll service: $600&ndash;$1,500/year</h4>
+
+    <p>You can't just pay yourself from the business checking account anymore. You need a payroll provider (Gusto, ADP RUN, QuickBooks Payroll, OnPay) that runs scheduled payroll, withholds federal/state/FICA, files quarterly 941s, issues a W-2 in January, and remits payments to the IRS and state. Cheapest reputable option for a single-employee S-Corp is around $50/month. Add state-specific fees and you're looking at $700&ndash;$1,500/year.</p>
+
+    <h4>2. Separate tax return (Form 1120-S): $500&ndash;$1,500/year</h4>
+
+    <p>Your S-Corp files its own federal return (Form 1120-S) plus K-1s to shareholders (you). This is more complex than a Schedule C and most freelancers don't DIY it &mdash; you'll pay a CPA or tax preparer $500&ndash;$1,500. Higher in CA/NY metros.</p>
+
+    <h4>3. State franchise/excise/minimum tax: $0&ndash;$800/year</h4>
+
+    <p>Several states impose a flat fee or minimum tax on S-Corps regardless of income:</p>
+
+    <ul>
+      <li><strong>California:</strong> $800/year minimum franchise tax. Always.</li>
+      <li><strong>Tennessee:</strong> ~$300 minimum excise/franchise tax.</li>
+      <li><strong>Massachusetts:</strong> $456 minimum corporate excise.</li>
+      <li><strong>New York:</strong> $25&ndash;$4,500 sliding fixed-dollar minimum, depending on receipts.</li>
+      <li><strong>Texas, Florida, most no-income-tax states:</strong> $0.</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>State treatment isn't always pass-through.</strong> A handful of jurisdictions don't fully follow federal S-Corp recognition. New York City, for example, levies its Unincorporated Business Tax (UBT) on single-member LLCs but exempts S-Corps, which can flip the math in NYC's favor. Tennessee taxes S-Corp earnings through its franchise/excise structure regardless of federal pass-through treatment. New Hampshire's Business Profits Tax doesn't recognize S-Corp pass-through at all. Always check your state and local rules before electing &mdash; federal SE tax savings can be partially or fully offset by state-level treatment.</p>
+    </div>
+
+    <h4>4. Bookkeeping and admin overhead: variable</h4>
+
+    <p>S-Corps require cleaner books than sole props because the IRS scrutinizes them more. You'll want a real bookkeeping system (QuickBooks, Wave, or a bookkeeper). You'll also lose some flexibility &mdash; you can't just pull money out of the business at will; distributions need to be tracked and proportional to ownership.</p>
+
+    <h4>Total annual S-Corp overhead</h4>
+
+    <div class="example-box">
+      <div class="example-title">Realistic S-Corp Annual Cost (Single-Owner, Mid-Range State)</div>
+      <table>
+        <tr><td>Payroll service (Gusto-tier)</td><td>$700</td></tr>
+        <tr><td>S-Corp tax return prep (CPA)</td><td>$900</td></tr>
+        <tr><td>State franchise/minimum tax (e.g., MA)</td><td>$456</td></tr>
+        <tr><td>Bookkeeping software</td><td>$240</td></tr>
+        <tr class="highlight"><td>Total annual cost</td><td>$2,296</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--light); margin-top: 8px;">Higher in CA ($800 franchise tax adds on), higher in NYC metro ($1,500+ CPA fees). Lower in TX/FL/WA where there's no state minimum tax.</p>
+    </div>
+
+    <h3>The Real Breakeven</h3>
+
+    <p>So when does the S-Corp actually pay off? Roughly: when your gross SE-tax savings exceed your total annual S-Corp overhead.</p>
+
+    <p>The math depends on what "reasonable salary" you can defensibly pay yourself. The IRS doesn't publish a fixed rule &mdash; "reasonable" means what someone with your skills would earn doing the same work as a W-2 employee. Common rules of thumb:</p>
+
+    <ul>
+      <li>50/50 split (half salary, half distribution) for net income up to ~$200K.</li>
+      <li>60/40 split for higher incomes where reasonable salary would top out around the SS wage base ($184,500 in 2026).</li>
+      <li>Specialized professionals (lawyers, doctors, consultants) need to set salary closer to market rates for their profession; aggressive low-balling is the #1 trigger for IRS reclassification.</li>
+    </ul>
+
+    <div class="example-box">
+      <div class="example-title">Net S-Corp Benefit by Income Level (Assumes 50/50 Salary Split, $2,300 Annual Cost)</div>
+      <table>
+        <thead><tr><th>Net Business Income</th><th>SE Tax Savings (Gross)</th><th>Annual S-Corp Cost</th><th>Net Benefit</th></tr></thead>
+        <tr><td>$50,000</td><td>$3,233</td><td>$2,300</td><td>$933</td></tr>
+        <tr><td>$60,000</td><td>$3,879</td><td>$2,300</td><td>$1,579</td></tr>
+        <tr><td>$80,000</td><td>$5,172</td><td>$2,300</td><td>$2,872</td></tr>
+        <tr><td>$100,000</td><td>$6,465</td><td>$2,300</td><td>$4,165</td></tr>
+        <tr><td>$150,000</td><td>$9,698</td><td>$2,300</td><td>$7,398</td></tr>
+        <tr><td>$200,000</td><td>$11,628</td><td>$2,300</td><td>$9,328</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--light); margin-top: 8px;">Pure SE tax math, before QBI considerations. Assumes you can defensibly pay yourself a 50% salary &mdash; not always realistic for high earners or specialized professionals.</p>
+    </div>
+
+    <p>The naive breakeven sits around <strong>$50,000&ndash;$60,000 of net income</strong>. Above that, the S-Corp wins on pure SE tax math; below that, you're paying $2,300/year to save less than $2,300 in SE tax. In practice, real-world breakeven runs <strong>$50K&ndash;$80K depending on state fees, payroll cost, bookkeeping discipline, and how defensibly you can set your reasonable salary</strong> &mdash; the high end if you're in California (with its $800 franchise minimum) or paying NYC-metro CPA rates, the low end in a no-state-tax state with cheap payroll and clean books.</p>
+
+    <p>But this is before the QBI complication.</p>
+
+    <h3>The QBI Complication</h3>
+
+    <p>The Qualified Business Income deduction (now permanent under the OBBBA &mdash; see our <a href="../2026-obbba-freelancer-tax-changes/">2026 OBBBA guide</a>) lets pass-through business owners deduct 20% of qualified business income. For sole props and default LLCs, "qualified business income" is roughly your net Schedule C income. For S-Corps, it's the K-1 distribution &mdash; <em>not</em> the W-2 wages you paid yourself.</p>
+
+    <p>This sounds neutral, but it isn't. By moving income from Schedule C to W-2, you're shrinking your QBI base. At lower incomes the QBI deduction shrinks dollar-for-dollar with the salary you pay yourself; the savings on SE tax mostly cancel against the lost income tax savings on QBI.</p>
+
+    <div class="example-box">
+      <div class="example-title">QBI Effect at $120K Net Income (Single)</div>
+      <table>
+        <thead><tr><th></th><th>Sole Prop</th><th>S-Corp</th></tr></thead>
+        <tr><td>Net business income</td><td>$120,000</td><td>$120,000</td></tr>
+        <tr><td>QBI base (rough)</td><td>$110,820</td><td>$60,000 distribution</td></tr>
+        <tr><td>QBI deduction (20%)</td><td>$22,164</td><td>$12,000</td></tr>
+        <tr><td>Lost QBI deduction</td><td></td><td>$10,164</td></tr>
+        <tr><td>Income tax cost (at 22% bracket)</td><td></td><td>~$2,236</td></tr>
+        <tr><td>SE tax savings</td><td></td><td>$7,775</td></tr>
+        <tr><td>S-Corp annual overhead</td><td></td><td>$2,300</td></tr>
+        <tr class="highlight"><td>Net S-Corp benefit (after QBI &amp; cost)</td><td></td><td>~$3,239</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--light); margin-top: 8px;">Including the QBI shrinkage moves the breakeven up significantly. The naive "$60K breakeven" is closer to <strong>$80K&ndash;$100K</strong> when you account for QBI.</p>
+    </div>
+
+    <p>At incomes above the QBI phase-in thresholds ($191,950 single / $383,900 joint in 2026), the calculus shifts again. For "specified service trades" (consulting, law, accounting, health, etc.) above those thresholds, the QBI deduction phases out anyway &mdash; so the S-Corp's QBI cost goes to zero and the SE tax savings stand alone. Counterintuitively, very-high-earning consultants often gain more from S-Corp than mid-earning ones.</p>
+
+    <div class="callout">
+      <p><strong>The wage-limitation reversal for non-SSTBs.</strong> For non-specified-service businesses above the same thresholds &mdash; product, software, e-commerce, manufacturing, most trades &mdash; the QBI deduction is capped at the <em>greater</em> of (a) 50% of W-2 wages paid by the business or (b) 25% of wages plus 2.5% of qualified property. With zero W-2 wages and no qualified property, that ceiling is zero. So above the threshold, paying yourself W-2 wages through an S-Corp can <strong>preserve or even expand</strong> your allowable QBI deduction rather than shrink it. At very high non-SSTB incomes, the S-Corp election can win on both SE tax savings and QBI eligibility simultaneously &mdash; the opposite of the moderate-income dynamic.</p>
+    </div>
+
+    <h3>The Reasonable Salary Audit Risk</h3>
+
+    <p>The S-Corp's entire savings depend on you setting your W-2 salary below your total business income. The IRS knows this and watches for owners who aggressively under-salary themselves. A consultant netting $300K who pays themselves $40K is a classic audit profile.</p>
+
+    <p>What "reasonable" means:</p>
+
+    <ul>
+      <li>Comparable W-2 salary for someone with your experience, doing your kind of work, in your geographic area.</li>
+      <li>Defensible against a Glassdoor / BLS salary survey.</li>
+      <li>Documented &mdash; ideally you've written down the methodology you used to arrive at the salary.</li>
+    </ul>
+
+    <p>If the IRS reclassifies your distributions as wages, you owe back FICA (15.3%) on the reclassified amount, plus penalties and interest. The savings evaporate quickly. The recent <em>Watson v. Commissioner</em> and similar Tax Court cases have consistently sided with the IRS when owner-officers underpaid themselves dramatically.</p>
+
+    <div class="warning">
+      <p><strong>The 60% rule of thumb is not law.</strong> The "pay yourself 60% of revenue as salary" guidance you've seen on YouTube is industry folklore, not an IRS rule. The actual standard is "reasonable for the work performed." For a software developer in NYC netting $200K, "reasonable" might be $150K (closer to market W-2 salary), which leaves only $50K as distribution and shrinks the S-Corp savings significantly.</p>
+    </div>
+
+    <h3>Other Costs People Forget</h3>
+
+    <ul>
+      <li><strong>Solo 401k contribution caps shrink.</strong> The "employee" portion of your Solo 401k is capped by your W-2 wages. Pay yourself a $50K salary and your max employee deferral is bounded by that. The "employer" portion (25% of compensation) is also based on salary. S-Corps generally have lower retirement contribution capacity than sole props at the same total income.</li>
+      <li><strong>State unemployment insurance (SUTA) and federal (FUTA) on your salary.</strong> ~$420/year on the first $7,000 of wages. Small but real.</li>
+      <li><strong>Workers' comp insurance.</strong> Some states require it even for owner-only S-Corps; others let you opt out via affidavit. Check your state.</li>
+      <li><strong>Increased audit attention.</strong> S-Corps as a category are audited at higher rates than Schedule C filers. The audit math has gotten worse since the 2024 IRS funding boost.</li>
+      <li><strong>Switching back is harder than switching in.</strong> Once you elect S-Corp status, reverting to default LLC taxation requires waiting five years (with limited exceptions). Don't elect until you're confident the savings will persist.</li>
+    </ul>
+
+    <h3>When the S-Corp Election Is Almost Always Right</h3>
+
+    <ul>
+      <li>Net business income consistently above ~$100,000.</li>
+      <li>You're already itemizing your bookkeeping (separate business bank account, accounting software, etc.).</li>
+      <li>You expect income to stay at or above current level for at least 3&ndash;5 years.</li>
+      <li>Your work is genuinely a service business where you can defensibly set salary below total revenue (i.e., your skill commands a normal-employee salary that's less than what you actually clear in profit).</li>
+      <li>You're in a state with no franchise/minimum tax (TX, FL, NV, WA, WY, SD).</li>
+    </ul>
+
+    <h3>When the S-Corp Election Is Usually Wrong</h3>
+
+    <ul>
+      <li>Net business income under ~$60,000. The SE tax savings just don't cover the overhead.</li>
+      <li>Income is volatile or declining. You'll keep paying S-Corp overhead in low-income years.</li>
+      <li>You're in California ($800 franchise tax adds significantly to overhead).</li>
+      <li>Your "reasonable salary" would need to be ~80%+ of net income (lawyers, doctors, very-senior consultants doing exactly what they'd do as a W-2 employee).</li>
+      <li>You hate paperwork enough that you'll inevitably miss deadlines (late 1120-S = $235/month per shareholder penalty).</li>
+      <li>You haven't separated business and personal finances yet. Get that infrastructure first.</li>
+    </ul>
+
+    <h3>How to Actually Make the Election</h3>
+
+    <p>If after running the numbers you decide an S-Corp election makes sense:</p>
+
+    <ol>
+      <li><strong>Form an LLC first</strong> if you don't have one. (You can also elect S-Corp on a corporation, but LLC + S-Corp election is the standard freelancer structure.)</li>
+      <li><strong>Get an EIN</strong> from the IRS if you don't have one (free, takes 10 minutes online).</li>
+      <li><strong>File Form 2553</strong> to elect S-Corp tax treatment. Must be filed within 2 months and 15 days of the start of the tax year you want it to apply to. Late elections are possible with reasonable cause but require extra paperwork.</li>
+      <li><strong>Set up payroll</strong> through Gusto / ADP / OnPay before you start paying yourself wages.</li>
+      <li><strong>Open separate business accounts</strong> if you haven't. The IRS wants to see clean separation between owner and entity.</li>
+      <li><strong>Document your reasonable salary methodology.</strong> Save the BLS data, Glassdoor screenshots, or salary surveys you used to set your number.</li>
+    </ol>
+
+    <div class="cta-box">
+      <h4>Compare your numbers side by side</h4>
+      <p>IndieCalc's LLC vs S-Corp calculator runs your actual income through both scenarios &mdash; including reasonable salary, payroll cost, QBI, and state franchise taxes &mdash; and tells you exactly when the election pays off.</p>
+      <a href="../../calculators/llc-vs-scorp/">Compare LLC vs S-Corp &rarr;</a>
+    </div>
+
+    <h3>Common Mistakes</h3>
+
+    <ol>
+      <li><strong>Electing S-Corp too early.</strong> Most freelancers should run as a default LLC for the first 1&ndash;2 years until income stabilizes above the breakeven.</li>
+      <li><strong>Setting reasonable salary by vibes.</strong> Document the basis for your salary number with real comparable wage data.</li>
+      <li><strong>Forgetting QBI in the comparison.</strong> Free online S-Corp calculators usually ignore QBI entirely, which overstates the S-Corp benefit by thousands at mid incomes.</li>
+      <li><strong>Failing to run actual payroll.</strong> Some S-Corp owners skip W-2s entirely and treat all draws as distributions. This is a guaranteed audit problem.</li>
+      <li><strong>Underestimating the bookkeeping discipline required.</strong> S-Corps demand cleaner books than sole props. If you can't keep up, the savings get eaten by accountant cleanup fees.</li>
+    </ol>
+
+    <div class="disclaimer-box">
+      <strong>Disclaimer:</strong> This article is for informational purposes only and does not constitute tax, legal, or financial advice. The S-Corp election has long-term consequences and interacts with state corporate law, payroll regulations, and IRS reasonable-compensation standards. Consult a qualified CPA or tax attorney before electing S-Corp status.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">All Calculators</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+</body>
+</html>

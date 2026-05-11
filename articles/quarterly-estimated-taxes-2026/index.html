@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quarterly Estimated Taxes for Freelancers (2026): Due Dates, Safe Harbor, and How to Avoid Penalties | IndieCalc</title>
+<meta name="description" content="2026 quarterly estimated tax guide for freelancers. Due dates, safe harbor rules (100%/110%), underpayment penalty math, first-year exception, and worked examples.">
+<link rel="canonical" href="https://indie-calc.com/articles/quarterly-estimated-taxes-2026/">
+<meta property="og:title" content="Quarterly Estimated Taxes for Freelancers (2026): Due Dates, Safe Harbor, and How to Avoid Penalties | IndieCalc">
+<meta property="og:description" content="2026 quarterly estimated tax guide for freelancers. Due dates, safe harbor rules (100%/110%), underpayment penalty math, first-year exception, and worked examples.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://indie-calc.com/articles/quarterly-estimated-taxes-2026/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Quarterly Estimated Taxes for Freelancers (2026): Due Dates, Safe Harbor, and How to Avoid Penalties | IndieCalc">
+<meta name="twitter:description" content="2026 quarterly estimated tax guide for freelancers. Due dates, safe harbor rules (100%/110%), underpayment penalty math, first-year exception, and worked examples.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2d6a5a;
+    --teal-light: #e8f5f0;
+    --teal-bg: #f0faf6;
+    --dark: #1a1a2e;
+    --medium: #4a4a5a;
+    --light: #8a8a9a;
+    --rule: #e2e2e8;
+    --bg: #fafbfc;
+    --white: #ffffff;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); color: var(--dark); background: var(--bg); line-height: 1.7; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--dark); color: white; padding: 16px 0; }
+  header .header-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 20px; font-weight: 700; }
+  header h1 a { color: white; text-decoration: none; }
+  header h1 span { color: var(--teal); }
+  header nav a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; }
+
+  .article-header { padding: 48px 0 32px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+  .article-header .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .article-header h2 { font-size: 32px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+  .article-header .subtitle { font-size: 18px; color: var(--medium); line-height: 1.5; }
+  .article-header .meta { font-size: 13px; color: var(--light); margin-top: 16px; }
+
+  .article-body h3 { font-size: 22px; font-weight: 700; margin: 40px 0 16px; padding-top: 8px; }
+  .article-body h4 { font-size: 17px; font-weight: 600; margin: 28px 0 12px; }
+  .article-body p { font-size: 16px; color: var(--medium); margin-bottom: 20px; }
+  .article-body ul, .article-body ol { font-size: 16px; color: var(--medium); margin-bottom: 20px; padding-left: 24px; }
+  .article-body li { margin-bottom: 8px; }
+  .article-body strong { color: var(--dark); }
+
+  .callout { background: var(--teal-bg); border-left: 4px solid var(--teal); padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .callout p { margin-bottom: 0; font-size: 15px; }
+  .callout p + p { margin-top: 12px; }
+  .callout strong { color: var(--teal); }
+
+  .warning { background: #fff8f0; border-left: 4px solid #e8a84c; padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0; }
+  .warning p { margin-bottom: 0; font-size: 15px; color: #7a5a2a; }
+  .warning strong { color: #7a5a2a; }
+
+  .example-box { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 24px; margin: 24px 0; }
+  .example-box .example-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-bottom: 12px; }
+  .example-box table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .example-box th { text-align: left; font-weight: 500; color: var(--light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .example-box td { padding: 8px 0; border-bottom: 1px solid #f0f0f5; color: var(--medium); }
+  .example-box td:last-child { text-align: right; font-weight: 500; }
+  .example-box tr.highlight td { font-weight: 700; color: var(--dark); }
+
+  .cta-box { background: var(--teal); border-radius: 12px; padding: 32px; margin: 36px 0; text-align: center; color: white; }
+  .cta-box h4 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: white; }
+  .cta-box p { font-size: 15px; opacity: 0.85; margin-bottom: 16px; color: white; }
+  .cta-box a { display: inline-block; background: white; color: var(--teal); padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; }
+  .cta-box a:hover { background: var(--teal-light); }
+
+  .disclaimer-box { background: #fff8f0; border: 1px solid #f0d8b8; border-radius: 8px; padding: 16px; margin: 36px 0; font-size: 12px; color: #8a6a3a; line-height: 1.6; }
+
+  footer { background: var(--dark); color: rgba(255,255,255,0.4); padding: 24px 0; font-size: 12px; text-align: center; margin-top: 48px; }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .article-header h2 { font-size: 24px; }
+    .article-body h3 { font-size: 19px; }
+  }
+</style>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"Article","headline":"Quarterly Estimated Taxes for Freelancers (2026): Due Dates, Safe Harbor, and How to Avoid Penalties","description":"2026 quarterly estimated tax guide for freelancers. Due dates, safe harbor rules (100%/110%), underpayment penalty math, first-year exception, and worked examples.","url":"https://indie-calc.com/articles/quarterly-estimated-taxes-2026/","mainEntityOfPage":{"@type":"WebPage","@id":"https://indie-calc.com/articles/quarterly-estimated-taxes-2026/"},"author":{"@type":"Organization","name":"IndieCalc","url":"https://indie-calc.com/"},"publisher":{"@type":"Organization","name":"IndieCalc","url":"https://indie-calc.com/"},"datePublished":"2026-05-06","dateModified":"2026-05-06","inLanguage":"en-US"}</script>
+<script type="application/ld+json" data-schema="indiecalc">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://indie-calc.com/"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://indie-calc.com/articles/"},{"@type":"ListItem","position":3,"name":"Quarterly Estimated Taxes for Freelancers (2026)","item":"https://indie-calc.com/articles/quarterly-estimated-taxes-2026/"}]}</script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1><a href="../../">Indie<span>Calc</span></a></h1>
+    <nav><a href="../../">&larr; All Calculators</a></nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="article-header">
+    <div class="label">2026 Tax Guide</div>
+    <h2>Quarterly Estimated Taxes for Freelancers in 2026: Due Dates, Safe Harbor, and How to Avoid Penalties</h2>
+    <p class="subtitle">The IRS expects you to pay tax on freelance income four times a year, not once. Miss a deadline or underpay and you owe penalty interest &mdash; even if you pay your full bill in April. Here's how the rules actually work.</p>
+    <p class="meta">Updated May 2026 &middot; 11 min read</p>
+  </div>
+
+  <div class="article-body">
+    <div class="callout" style="margin-top: 0;">
+      <p><strong>TL;DR &mdash; The 6 things every freelancer should know:</strong></p>
+      <p style="margin-top: 8px;">1. <strong>2026 due dates:</strong> April 15, June 15, September 15, January 15 (2027). &nbsp;2. <strong>You must pay if</strong> you'll owe more than $1,000 at year-end. &nbsp;3. <strong>Safe harbor:</strong> pay 100% of last year's total tax (110% if your prior AGI was over $150K) and the IRS can't penalize you, no matter what you actually earn. &nbsp;4. <strong>Penalty isn't a fine</strong> &mdash; it's interest on what you underpaid, currently around 8% annualized. &nbsp;5. <strong>If your prior-year total tax was zero</strong>, the safe harbor amount is also zero &mdash; so first-year freelancers with no prior-year tax liability often owe no underpayment penalty even with zero estimated payments. &nbsp;6. <strong>Pay online</strong> via IRS Direct Pay or EFTPS &mdash; mailing checks is slower and easier to lose.</p>
+    </div>
+
+    <p>If you got a W-2 paycheck before going freelance, your employer was withholding federal and state tax from every check and sending it to the IRS for you. The IRS got paid as you earned. When you go independent, that machinery disappears &mdash; but the IRS's expectation that you pay tax as you earn does not. That's what quarterly estimated taxes are: you sending the government roughly what would have been withheld, four times a year.</p>
+
+    <p>Skip them and you don't just owe more in April &mdash; you owe an underpayment penalty on top of the bill. The penalty is small in any single quarter but compounds across the year, and the rules around <em>when</em> the IRS considers you "safe" are not intuitive. This guide walks through every part of it.</p>
+
+    <h3>The 2026 Quarterly Tax Due Dates</h3>
+
+    <p>Estimated taxes are paid in four installments based on income earned in roughly-quarterly periods. The dates are not actually a quarter apart &mdash; the second one comes only two months after the first &mdash; which is the single most common reason people miss them.</p>
+
+    <div class="example-box">
+      <div class="example-title">2026 Federal Quarterly Tax Deadlines</div>
+      <table>
+        <thead><tr><th>Quarter</th><th>Income Period</th><th>Due Date</th></tr></thead>
+        <tr><td>Q1 2026</td><td>Jan 1 &ndash; Mar 31, 2026</td><td>April 15, 2026</td></tr>
+        <tr><td>Q2 2026</td><td>Apr 1 &ndash; May 31, 2026</td><td>June 15, 2026</td></tr>
+        <tr><td>Q3 2026</td><td>Jun 1 &ndash; Aug 31, 2026</td><td>September 15, 2026</td></tr>
+        <tr><td>Q4 2026</td><td>Sep 1 &ndash; Dec 31, 2026</td><td>January 15, 2027</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--light); margin-top: 8px;">If a due date falls on a weekend or federal holiday, the deadline shifts to the next business day. None of the 2026 dates fall on weekends.</p>
+    </div>
+
+    <p>Most states with income tax follow the same schedule, though a handful (notably Iowa, Hawaii, Virginia) use slightly different dates. Check your state department of revenue for the exact local schedule.</p>
+
+    <div class="callout">
+      <p><strong>Skipping Q4 (the January payment).</strong> If you file your full federal tax return and pay any balance due by <strong>January 31, 2027</strong>, you can skip the January 15 estimated payment entirely. This is rarely worth the effort &mdash; you'd need your 1099s, all expense records, and a finished return in two weeks &mdash; but it's a legitimate option if you're the rare freelancer who closes the books fast.</p>
+    </div>
+
+    <h3>Who Actually Has to Pay Estimated Taxes</h3>
+
+    <p>The IRS rule is simple: you owe estimated taxes for 2026 if both of the following are true:</p>
+
+    <ul>
+      <li>You expect to owe at least <strong>$1,000</strong> in federal tax for the year after subtracting any withholding and refundable credits.</li>
+      <li>You expect your withholding plus refundable credits to be less than the smaller of (a) 90% of your 2026 tax, or (b) 100% of your 2025 tax (110% if your 2025 AGI was over $150,000).</li>
+    </ul>
+
+    <p>For most freelancers with no W-2 job and no spouse with withholding, the first condition is automatic. Self-employment tax alone is 14.1% of your net income (after the 92.35% adjustment), so anyone netting more than about $7,000 from freelancing already owes more than $1,000 in tax.</p>
+
+    <h4>What if you have a day job too?</h4>
+
+    <p>If you also have W-2 income, your employer's withholding counts toward your total tax payments for the year. Many freelancers with side income simply increase their W-2 withholding (file a new Form W-4) instead of making quarterly payments. Withholding has a unique advantage: the IRS treats it as if it were paid evenly across the year regardless of when it actually happened. A bump to your December withholding can cure an underpayment from January.</p>
+
+    <h3>The Safe Harbor Rule (Why You Probably Don't Need to Predict Your Income)</h3>
+
+    <p>Here is the most useful concept in the entire estimated tax system: the <strong>safe harbor</strong>. If you pay enough through quarterly estimates, the IRS will not assess an underpayment penalty &mdash; <em>regardless of what you actually owe at year-end</em>.</p>
+
+    <p>You hit safe harbor by paying, across your four installments, the <strong>smaller</strong> of these two amounts:</p>
+
+    <ul>
+      <li><strong>90% of your current year's total tax</strong> (i.e., what you'll owe for 2026), OR</li>
+      <li><strong>100% of your prior year's total tax</strong> (i.e., what your 2025 return showed). Bumped to <strong>110% if your prior year's AGI was over $150,000</strong> ($75,000 if married filing separately).</li>
+    </ul>
+
+    <p>The prior-year version is the powerful one. You already know exactly what your 2025 tax was &mdash; it's on line 24 of your Form 1040. Divide it by four, send that amount each quarter, and you are bulletproof against penalties even if you triple your income in 2026.</p>
+
+    <div class="example-box">
+      <div class="example-title">Worked Example: Safe Harbor in Action</div>
+      <table>
+        <tr><td>2025 total tax (from your 1040 line 24)</td><td>$22,000</td></tr>
+        <tr><td>2025 AGI</td><td>$95,000</td></tr>
+        <tr><td>Safe harbor: 100% of prior year (AGI under $150K)</td><td>$22,000</td></tr>
+        <tr><td>Per quarter ($22,000 &divide; 4)</td><td>$5,500</td></tr>
+        <tr class="highlight"><td>2026 actual income (huge year)</td><td>$200,000</td></tr>
+        <tr class="highlight"><td>2026 actual tax owed</td><td>$58,000</td></tr>
+        <tr class="highlight"><td>Balance due in April 2027</td><td>$36,000</td></tr>
+        <tr class="highlight"><td>Underpayment penalty</td><td>$0</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--light); margin-top: 8px;">Because total payments hit 100% of 2025's tax, no penalty applies &mdash; even though the freelancer owes $36K extra in April.</p>
+    </div>
+
+    <p>This is why most experienced freelancers don't bother forecasting their year. They just take last year's tax bill, divide by four, and pay that. The April reckoning is whatever it is, but no penalty is added on top.</p>
+
+    <div class="warning">
+      <p><strong>The 110% trap for higher earners.</strong> If your 2025 AGI was above $150,000, the prior-year safe harbor jumps from 100% to 110%. On a $30,000 prior-year tax bill, that's the difference between paying $7,500 per quarter and $8,250 per quarter &mdash; $3,000 more across the year. Easy to miss when copying last year's payment plan.</p>
+    </div>
+
+    <h3>How the Penalty Actually Works</h3>
+
+    <p>The "underpayment penalty" sounds like a fixed fine. It's not. It's <strong>interest charged on the amount you were short, for the period you were short</strong>. The IRS sets the rate quarterly &mdash; it's tied to the federal short-term rate plus 3 percentage points and changes every three months. For individual taxpayers in 2026, the rate is <strong>7% annualized in Q1 and 6% in Q2</strong>; recent years have ranged from 3% to 8%. Check the IRS's quarterly Revenue Ruling for the current period's rate.</p>
+
+    <p>Critically, the penalty is calculated <em>per quarter</em>, not on your year-end balance. If you underpay Q1 by $2,000 and don't catch up until Q4, you pay penalty interest on that $2,000 for roughly nine months. If you skip Q1 entirely and pay double in Q2, you still owe penalty interest on Q1's gap for two months.</p>
+
+    <div class="example-box">
+      <div class="example-title">Example: What a Penalty Actually Looks Like</div>
+      <table>
+        <tr><td>Q1 underpayment</td><td>$2,000</td></tr>
+        <tr><td>Days underpaid (April 15 to June 15)</td><td>61 days</td></tr>
+        <tr><td>Penalty rate (6% annualized, Q2 2026)</td><td>~1.00%</td></tr>
+        <tr class="highlight"><td>Q1 penalty (cured at Q2)</td><td>~$20</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--light); margin-top: 8px;">A $2,000 underpayment caught one quarter late costs roughly $20 at the current 6% rate. Not catastrophic, but it scales with the size and duration of the gap &mdash; and the rate has been climbing in recent years.</p>
+    </div>
+
+    <p>The IRS calculates this for you on Form 2210 when you file your return. Most tax software (TurboTax, FreeTaxUSA, H&amp;R Block) handles it automatically. You'll see the penalty on Form 1040, line 38, added to whatever you already owe.</p>
+
+    <h3>The First-Year Freelancer Exception</h3>
+
+    <p>If 2026 is your first year with self-employment income &mdash; you went freelance mid-year, or you had a W-2 job all of 2025 with full withholding &mdash; the math is much friendlier than it looks.</p>
+
+    <p>The prior-year safe harbor uses your <strong>2025 total tax</strong>. If your 2025 tax bill was fully covered by W-2 withholding (typical for someone with only a salary), then "100% of prior year tax" might just mean "what you already paid through your W-2." You're effectively pre-covered for 2026 even with zero estimated tax payments.</p>
+
+    <div class="callout">
+      <p><strong>The cleanest example.</strong> You earned $80,000 W-2 in 2025 and had $12,000 withheld &mdash; covering your full $12,000 federal tax bill. In January 2026 you quit and went freelance, earning $150,000 over the year. Your 2026 tax bill might be $40,000. As long as you pay quarterlies totaling at least $12,000 (the prior-year tax), <strong>no penalty applies</strong>. You'll owe $28,000 with your April 2027 return, but no penalty interest.</p>
+      <p>And if your <em>2025</em> total tax liability was actually zero &mdash; not just refunded, but zero on line 24 &mdash; the prior-year safe harbor amount for 2026 is effectively zero, so you owe no estimated tax penalty for 2026 regardless of what you earn. (This requires your 2025 tax year to have been a full 12 months with zero total tax. It's not technically a special "first-year freelancer exemption" &mdash; it's the prior-year safe harbor working out to $0 because there was no prior tax to be 100% of.)</p>
+    </div>
+
+    <h3>How to Actually Calculate Your Quarterly Payment</h3>
+
+    <p>You have two reasonable approaches: the safe harbor method (set it and forget it) or the current-year method (more accurate, more work).</p>
+
+    <h4>Method 1: The Safe Harbor (recommended for most)</h4>
+
+    <ol>
+      <li>Open your 2025 Form 1040.</li>
+      <li>Look at line 24 ("total tax").</li>
+      <li>If your 2025 AGI (line 11) was over $150,000, multiply line 24 by 1.10. Otherwise use it as-is.</li>
+      <li>Divide by 4. That's your quarterly payment.</li>
+    </ol>
+
+    <p>That's it. You're penalty-proof for 2026. The April balance might be large or small depending on how 2026 actually goes, but the IRS won't add penalty interest.</p>
+
+    <h4>Method 2: The Current-Year Estimate</h4>
+
+    <p>If you expect 2026 to be much lower-income than 2025 (say, you took a sabbatical), the safe harbor would have you overpaying all year and getting a giant refund. In that case, estimate your actual 2026 tax: project income, apply the QBI deduction, calculate SE tax (15.3% on 92.35% of net income up to the $184,500 SS cap), apply your bracket, take 90%, divide by four.</p>
+
+    <p>This is exactly what our calculator does in 30 seconds with no math on your end:</p>
+
+    <div class="cta-box">
+      <h4>Get your exact quarterly payment</h4>
+      <p>Our quarterly tax calculator applies all 2026 OBBBA rules, computes both safe-harbor amounts, and tells you which is lower. Federal and state, all 51 jurisdictions.</p>
+      <a href="../../calculators/quarterly-tax/">Calculate Quarterly Payments &rarr;</a>
+    </div>
+
+    <h3>How to Pay (and What to Avoid)</h3>
+
+    <p>The IRS accepts quarterly payments through several channels. In rough order of how painless they are:</p>
+
+    <ul>
+      <li><strong>IRS Direct Pay</strong> (<em>directpay.irs.gov</em>) &mdash; free, takes 5 minutes, pulls from your bank account. The right default for most freelancers.</li>
+      <li><strong>EFTPS</strong> (<em>eftps.gov</em>) &mdash; the Treasury's payment system. Requires a one-time enrollment (PIN mailed to you, takes ~5 business days). Once enrolled, it lets you schedule payments months in advance and view your full payment history. Worth setting up if you're freelancing for the long haul.</li>
+      <li><strong>IRS2Go app</strong> &mdash; same as Direct Pay but on your phone.</li>
+      <li><strong>Credit/debit card</strong> via the IRS's processors &mdash; works but charges a 1.85%&ndash;1.98% fee. Only worth it if you're chasing card rewards that exceed the fee.</li>
+      <li><strong>Mail a check with Form 1040-ES</strong> &mdash; allowed but slow, and lost-in-the-mail problems are real. Avoid if you can.</li>
+    </ul>
+
+    <p>For state estimated taxes, every state has its own portal. California has FTB Web Pay, New York has its Online Services portal, etc. Search "[your state] estimated tax payment" to find the official site.</p>
+
+    <div class="warning">
+      <p><strong>Don't rely on memory.</strong> Set four calendar reminders for the year, ideally a week before each due date. The June 15 deadline is the most-missed because it's only two months after April 15 and most people aren't expecting it. Missing a quarter doesn't lose you the safe harbor, but it does start the penalty clock running.</p>
+    </div>
+
+    <h3>What If You Already Missed a Quarter?</h3>
+
+    <p>Pay it as soon as you can. The penalty interest is calculated daily, so a payment one week late costs less than a payment three months late. Pay the missed quarter's amount through Direct Pay, mark it for the correct quarter, and continue with your normal schedule. There is no separate "late penalty" submission &mdash; the IRS will calculate the interest when you file your annual return.</p>
+
+    <p>If you're significantly behind &mdash; you didn't pay any of Q1 through Q3 &mdash; you can't fully cure the safe harbor at this point, but you can stop the bleeding. Pay what you can in Q4, and consider increasing W-2 withholding (if you have any W-2 income) since withholding is treated as paid evenly across the year. A December withholding bump can retroactively reduce your earlier underpayments.</p>
+
+    <h3>Uneven Income? The Annualized Installment Method</h3>
+
+    <p>The standard quarterly schedule assumes income arrives evenly across the year &mdash; one-quarter of total income each period. That's rarely how freelance income actually works. A consultant who closes a $200K Q4 contract and earned almost nothing in Q1 looks "underpaid" for Q1 through Q3 under the standard rules, even though no income existed yet for them to pay tax on.</p>
+
+    <p>The IRS allows uneven earners to use the <strong>annualized income installment method</strong> on Form 2210, Schedule AI. Instead of dividing your annual tax by four, you calculate tax on the income you actually earned through each cumulative period (Jan&ndash;Mar, Jan&ndash;May, Jan&ndash;Aug, Jan&ndash;Dec) and pay accordingly. If 80% of your income genuinely landed in Q4, your required Q1 payment is much smaller &mdash; and the underpayment penalty drops accordingly.</p>
+
+    <p>The trade-off is paperwork. Schedule AI requires you to compute income, deductions, and tax for four overlapping periods rather than once at year-end. Most tax software (TurboTax, FreeTaxUSA, H&amp;R Block) handles it well if you opt in, but you'll need to track period-by-period numbers throughout the year, not just at filing time.</p>
+
+    <div class="callout">
+      <p><strong>When the annualized method actually helps.</strong> Use it if your income is genuinely back-loaded &mdash; seasonal work (wedding photographers, tax preparers, holiday-retail makers), big Q4 product launches, large irregular consulting payouts, or you started freelancing partway through the year. Skip it if your income is roughly even across quarters; the safe harbor method is simpler and produces the same outcome.</p>
+    </div>
+
+    <h3>State Estimated Taxes</h3>
+
+    <p>If you live in one of the 41 states with income tax, you almost certainly owe state estimated taxes too. State rules vary, but most mirror the federal structure: same four due dates (with rare exceptions), similar safe harbor concepts, similar small penalties for underpayment.</p>
+
+    <p>Three things change state-to-state:</p>
+
+    <ul>
+      <li><strong>Threshold for owing estimates.</strong> California requires estimates if you'll owe over $500 ($250 MFS). New York's threshold is $300. Most states sit between $200 and $1,000.</li>
+      <li><strong>Payment schedule.</strong> California uses a non-standard schedule: 30%, 40%, 0%, 30% (yes, Q3 is zero). Most states stick to four equal payments.</li>
+      <li><strong>Where to pay.</strong> Each state has its own portal. There's no "IRS Direct Pay" for state taxes &mdash; you'll need a separate login for each state where you owe.</li>
+    </ul>
+
+    <h3>Common Mistakes to Avoid</h3>
+
+    <ol>
+      <li><strong>Forgetting that "tax" includes self-employment tax.</strong> Quarterly payments need to cover both your income tax AND your SE tax. A freelancer netting $80K who only sets aside for income tax will be roughly $11,000 short on SE tax alone.</li>
+      <li><strong>Assuming the QBI deduction reduces your SE tax.</strong> It doesn't. The QBI deduction lowers your <em>income tax</em>; SE tax is calculated on your full net business income before QBI is applied.</li>
+      <li><strong>Using last year's safe harbor when prior AGI was over $150K.</strong> The 110% bump trips up high earners every year.</li>
+      <li><strong>Paying state estimates to the wrong agency.</strong> Some states have separate departments for income tax vs. business tax. Make sure you're paying the right one.</li>
+      <li><strong>Forgetting Q4.</strong> January 15 lands right after the holidays. Calendar it now.</li>
+    </ol>
+
+    <div class="cta-box">
+      <h4>Don't guess &mdash; calculate</h4>
+      <p>IndieCalc's quarterly tax calculator handles federal + state, applies the OBBBA rules, and shows both the safe harbor amount and the current-year estimate side by side. Free, no signup.</p>
+      <a href="../../calculators/quarterly-tax/">Calculate Quarterly Payments &rarr;</a>
+    </div>
+
+    <div class="disclaimer-box">
+      <strong>Disclaimer:</strong> This article is for informational purposes only and does not constitute tax, legal, or financial advice. Tax laws are complex, IRS interest rates change quarterly, and individual circumstances vary. Consult a qualified tax professional before making decisions based on this information.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 IndieCalc &middot; <a href="../../">All Calculators</a> &middot; <a href="../../privacy/">Privacy</a> &middot; <a href="../../terms/">Terms</a></p>
+    <p>Not tax advice &mdash; consult your accountant or adviser.</p>
+  </div>
+</footer>
+
+</body>
+</html>
